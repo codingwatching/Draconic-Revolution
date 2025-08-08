@@ -5,6 +5,8 @@ public class PlayerModelHandler : MonoBehaviour {
 	public GameObject parent;
 	private Animator animator;
 	private CharacterController controller;
+	private AnimationHandler animationHandler;
+	private bool isMale;
 
 	[Header("Materials")]
 	public Material plainClothingMaterial;
@@ -19,12 +21,20 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	public void Awake(){
 		this.animator = this.parent.AddComponent<Animator>();
+		this.animationHandler = this.parent.AddComponent<AnimationHandler>();
 
 		this.controller = this.parent.GetComponent<CharacterController>();
 
 		if(this.controller == null){
 			this.controller = this.parent.AddComponent<CharacterController>();
 		}
+	}
+
+	public void Start(){
+		if(this.isMale)
+			this.animationHandler.Init("BASE_Character_Man");
+		else
+			this.animationHandler.Init("BASE_Character_Woman");
 	}
 
 
@@ -49,11 +59,15 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	// Builds player character
 	public void BuildModel(CharacterAppearance app, bool isMale, bool isPlayerCharacter){
+		this.isMale = isMale;
+
 		if(this.characterBuilder == null){
-			if(isMale)
+			if(isMale){
 				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Man"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
-			else
+			}
+			else{
 				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Woman"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
+			}
 
 			this.characterBuilder.Build();
 		}

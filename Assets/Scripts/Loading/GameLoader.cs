@@ -15,10 +15,6 @@ public class GameLoader : MonoBehaviour {
 	private StructureLoader structureLoader;
 	private AnimationLoader animationLoader;
 
-	#if UNITY_EDITOR
-	private AnimationControlBuilder animationControlBuilder;
-	#endif
-
 	private static readonly string SERVER_SCENE = "Assets/Scenes/Server.unity";
 
 	void Awake(){
@@ -33,12 +29,6 @@ public class GameLoader : MonoBehaviour {
 		this.voxelLoader = new VoxelLoader(this.isClient, this.prefabObjects);
 		this.audioLoader = new AudioLoader(this.isClient);
 		this.structureLoader = new StructureLoader(this.isClient);
-
-        #if UNITY_EDITOR
-        	this.animationControlBuilder = new AnimationControlBuilder(this.isClient);
-            this.animationControlBuilder.Build();
-        #endif
-
         this.animationLoader = new AnimationLoader(this.isClient);
 		
 		this.shaderLoader.Load();

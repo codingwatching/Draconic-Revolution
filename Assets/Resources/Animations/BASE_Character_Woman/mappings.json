@@ -1,0 +1,31 @@
+{
+	"data": [
+		{
+			"type": "play_on",
+			"targetLayer": "Full Torso",
+			"playState": "Punch1-Normal-Man",
+			"currentState": "On Air",
+			"currentLayer": ""
+		},
+		{
+			"type": "play_on",
+			"targetLayer": "Bottom",
+			"playState": "Moving Forward",
+			"currentState": "Idle Hand",
+			"currentLayer": ""
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Moving Forward",
+			"currentLayer": "",
+			"playState": "Idle Hand"
+		},
+		{
+			"type": "stop_layers",
+			"playState": "Jump End",
+			"targetLayer": "",
+			"stop_layers": ["Bottom", "Full Torso", "Head"]
+		}
+	]
+}

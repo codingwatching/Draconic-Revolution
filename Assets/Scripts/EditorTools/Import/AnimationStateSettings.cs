@@ -24,7 +24,7 @@ public class AnimationStateSettings {
 		if(this.isBlendTree){
 			BlendTree blendTree = this.blendTree.Build(this.name, animations);
 			state.motion = blendTree;
-			AssetDatabase.AddObjectToAsset(blendTree, animatorController);
+			//AssetDatabase.AddObjectToAsset(blendTree, animatorController);
 
 			// Adding BlendTree Parameter
 			AnimatorControllerParameter acp = this.blendTree.blendParameter.Build();
