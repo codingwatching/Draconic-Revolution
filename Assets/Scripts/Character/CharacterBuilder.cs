@@ -46,7 +46,8 @@ public class CharacterBuilder{
 
 	// Settings
 	private static readonly int ROOT_BONE_INDEX = 0;
-	private static readonly string ARMATURE_NAME = "Armature";
+	private static readonly string ARMATURE_NAME_MALE = "ManArmt";
+	private static readonly string ARMATURE_NAME_FEMALE = "WomanArmt";
 	private static readonly Vector3 POS_1 = new Vector3(0f, 0f, 0f);
 	private static readonly Quaternion ROT_1 = Quaternion.Euler(new Vector3(270, 0, 0));
 	private static readonly Vector3 SCL_1 = new Vector3(100f, 100f, 100f);
@@ -76,9 +77,9 @@ public class CharacterBuilder{
 		this.renderer = this.modelRoot.AddComponent<SkinnedMeshRenderer>();
 
 		if(isMale)
-			this.armature.name = ARMATURE_NAME;
+			this.armature.name = ARMATURE_NAME_MALE;
 		else
-			this.armature.name = ARMATURE_NAME;
+			this.armature.name = ARMATURE_NAME_FEMALE;
 
 		plainClothingMaterial = clothing;
 		dragonSkinMaterial = dragonskin;
@@ -86,6 +87,7 @@ public class CharacterBuilder{
 		dragonHornMaterial = dragonhorn;
 
 		FixArmature();
+		this.animator.Rebind();
 	}
 
 	// Whenever clothes are being changed

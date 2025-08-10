@@ -32,9 +32,9 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	public void Start(){
 		if(this.isMale)
-			this.animationHandler.Init("BASE_Character_Man");
+			this.animationHandler.Init("BASE_Character_Man", AnimationLoader.GetController("BASE_Character_Man"));
 		else
-			this.animationHandler.Init("BASE_Character_Woman");
+			this.animationHandler.Init("BASE_Character_Woman", AnimationLoader.GetController("BASE_Character_Woman"));
 	}
 
 

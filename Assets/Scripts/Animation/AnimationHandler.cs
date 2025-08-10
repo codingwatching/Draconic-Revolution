@@ -11,10 +11,11 @@ public class AnimationHandler : MonoBehaviour {
 	private ShapeKeyAnimator shapeKeyAnimator;
 	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
 
-	public void Init(string controllerName){
+	public void Init(string controllerName, RuntimeAnimatorController controller){
 		LoadMapping(controllerName);
 		this.INIT = true;
 		this.animator = GetComponent<Animator>();
+		
 		this.shapeKeyAnimator = this.transform.Find("Model").GetComponent<ShapeKeyAnimator>();
 	}
 
