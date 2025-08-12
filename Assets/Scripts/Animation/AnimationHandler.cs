@@ -7,16 +7,20 @@ using UnityEngine.Animations;
 public class AnimationHandler : MonoBehaviour {
 	private bool INIT = false;
 
+	private GameObject armature;
 	private Animator animator;
 	private ShapeKeyAnimator shapeKeyAnimator;
+	private ProceduralAnimationRigController rigController;
 	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
 
 	public void Init(string controllerName, RuntimeAnimatorController controller){
 		LoadMapping(controllerName);
 		this.INIT = true;
+
 		this.animator = GetComponent<Animator>();
-		
 		this.shapeKeyAnimator = this.transform.Find("Model").GetComponent<ShapeKeyAnimator>();
+		this.rigController = new ProceduralAnimationRigController(this.gameObject, controllerName);
+		this.rigController.Build();
 	}
 
 	// Plays bone animation
@@ -42,6 +46,10 @@ public class AnimationHandler : MonoBehaviour {
 			return;
 
 		this.shapeKeyAnimator.Play(shapeKey, settings);
+	}
+
+	public void AssignAimTracker(Transform tracker){
+		this.rigController.AssignHeadTrackingSource(tracker);
 	}
 
 	// Returns true if boneRequest plays the animation

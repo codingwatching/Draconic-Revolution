@@ -6,6 +6,8 @@ using UnityEngine;
 public class AnimationLoader : BaseLoader {
 	private static Dictionary<string, RuntimeAnimatorController> controllers = new Dictionary<string, RuntimeAnimatorController>();
 	private static Dictionary<string, AnimationStateMapping[]> stateMappings = new Dictionary<string, AnimationStateMapping[]>();
+	private static Dictionary<string, MultiAimData[]> rigs = new Dictionary<string, MultiAimData[]>();
+	private static Dictionary<string, string> armatureName = new Dictionary<string, string>();
 	private static bool isClient;
 
 	private static readonly string CONTROLLERS_PATHS = "SerializedData/AnimatorControllers";
@@ -18,6 +20,8 @@ public class AnimationLoader : BaseLoader {
 		if(isClient){
 			LoadCharacterControllers();
 			LoadStateMappings();
+			LoadRigs();
+			LoadArmatureName();
 		}
 
 		return true;
@@ -25,6 +29,48 @@ public class AnimationLoader : BaseLoader {
 
 	public static RuntimeAnimatorController GetController(string controller){return controllers[controller];}
 	public static AnimationStateMapping[] GetAnimationMapping(string controller){return stateMappings[controller];}
+	public static MultiAimData[] GetRig(string controller){return rigs[controller];}
+	public static bool ContainsRig(string controller){return rigs.ContainsKey(controller);}
+	public static string GetArmatureName(string controller){return armatureName[controller];}
+
+	private void LoadArmatureName(){
+		string respath;
+
+		foreach(string controllerName in controllers.Keys){
+			respath = $"{ANIMATION_RESFOLDER}{controllerName}/armature";
+
+			TextAsset armature = Resources.Load<TextAsset>(respath);
+
+			if(armature == null){
+				throw new AnimationImportException($"Couldn't locate the Armature Name: {respath} while loading Animations");
+			}
+
+			armatureName.Add(controllerName, armature.text);
+		}	
+	}
+
+	private void LoadRigs(){
+		string respath;
+		Wrapper<MultiAimData> wrapper;
+
+		foreach(string controllerName in controllers.Keys){
+			respath = $"{ANIMATION_RESFOLDER}{controllerName}/rigs";
+
+			TextAsset rigsJson = Resources.Load<TextAsset>(respath);
+
+			if(rigsJson == null){
+				throw new AnimationImportException($"Couldn't locate the Rigs: {respath} while loading Animations");
+			}
+
+			wrapper = JsonUtility.FromJson<Wrapper<MultiAimData>>(rigsJson.text);
+
+			foreach(MultiAimData rig in wrapper.data){
+				rig.PostDeserializationSetup();
+			}
+
+			rigs.Add(controllerName, wrapper.data);
+		}		
+	}
 
 	private void LoadCharacterControllers(){
 		RuntimeAnimatorController currentController;
