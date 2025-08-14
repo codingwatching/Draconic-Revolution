@@ -15,13 +15,23 @@ public class ProceduralAnimationRigController {
 	private MultiAimData[] multiAimData;
 	private List<MultiAimConstraint> multiAimConstraints;
 
+	private static Transform parentEyeTrackers;
+
 	public ProceduralAnimationRigController(GameObject characterObject, string controllerName){
 		this.parent = characterObject;
 		this.armature = this.parent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
 		this.controllerName = controllerName;
 		this.multiAimConstraints = new List<MultiAimConstraint>();
 
+		if(parentEyeTrackers == null){
+			parentEyeTrackers = GameObject.Find("EyeTrackers").transform;
+		}
+
 		GenerateEyeTrackerObject();
+	}
+
+	public void Delete(){
+		GameObject.Destroy(this.eyeTracker.gameObject);
 	}
 
 	public void ChangeState(string state){
@@ -45,16 +55,15 @@ public class ProceduralAnimationRigController {
 				continue;
 
 			data = this.multiAimConstraints[i].data;
-			wta = data.sourceObjects;
+			wta = new WeightedTransformArray();
 
-			if(wta.Count > 1){
-				wta.RemoveAt(1);
-			}
-
+			wta.Add(new WeightedTransform(this.eyeTracker, 1 - this.multiAimData[i].intensity));
 			wta.Add(new WeightedTransform(t, this.multiAimData[i].intensity));
 			data.sourceObjects = wta;
 			this.multiAimConstraints[i].data = data;
 		}
+
+		this.rigBuilder.Build();
 	}
 
 	public void Build(){
@@ -87,8 +96,9 @@ public class ProceduralAnimationRigController {
 		GameObject go = new GameObject();
 
 		go.name = "Eye Tracker";
-		go.transform.parent = this.parent.transform.Find("Camera");
+		go.transform.parent = parentEyeTrackers;
 		go.transform.localPosition = new Vector3(0,0,10);
+		go.AddComponent<CameraViewTarget>().SetCamera(this.parent.transform.Find("Camera"));
 
 		this.eyeTracker = go.transform;
 	}

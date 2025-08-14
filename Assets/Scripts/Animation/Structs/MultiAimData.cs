@@ -40,7 +40,9 @@ public class MultiAimData{
 			offset = this.offset,
 			limits = this.limits,
 			aimAxis = MultiAimConstraintData.Axis.Z,
-			upAxis = MultiAimConstraintData.Axis.Y
+			upAxis = MultiAimConstraintData.Axis.Y,
+			worldUpType = MultiAimConstraintData.WorldUpType.Vector,
+			worldUpAxis = MultiAimConstraintData.Axis.Y
 		};
 
 		arr.Add(new WeightedTransform(eyeTracker, 1-intensity));

@@ -6,12 +6,12 @@
 			"active_states": ["normal", "attack"],
 			"constrainedXAxis": true,
 			"constrainedYAxis": true,
-			"constrainedZAxis": false,
-			"maintain_offset": true,
-			"intensity": 0.5,
+			"constrainedZAxis": true,
+			"maintain_offset": false,
+			"intensity": 0,
 			"limits": {
-				"x": -80,
-				"y": 80
+				"x": -60,
+				"y": 60
 			},
 			"offset": {
 				"x": 0,
