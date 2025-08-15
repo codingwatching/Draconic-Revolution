@@ -13,7 +13,7 @@ public class AnimationHandler : MonoBehaviour {
 	private ProceduralAnimationRigController rigController;
 	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
 
-	public void Init(string controllerName, RuntimeAnimatorController controller){
+	public void Init(string controllerName, RuntimeAnimatorController controller, bool isUserCharacter=false){
 		LoadMapping(controllerName);
 		this.INIT = true;
 
