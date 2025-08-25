@@ -19,7 +19,7 @@ public class ProceduralAnimationRigController {
 
 	public ProceduralAnimationRigController(GameObject characterObject, string controllerName){
 		this.parent = characterObject;
-		this.armature = this.parent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
+		this.armature = this.parent.transform.Find($"TP-Rig/{AnimationLoader.GetArmatureName(controllerName)}");
 		this.controllerName = controllerName;
 		this.multiAimConstraints = new List<MultiAimConstraint>();
 

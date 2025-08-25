@@ -290,6 +290,8 @@ public static class AnimationControlBuilder {
 			acs = JsonUtility.FromJson<AnimationControllerSettings>(controllerJson.text);
 			acs.PostDeserializationSetup();
 
+			Debug.Log($"Importing {controllerName}");
+
 			controllerSettings.Add(controllerName, acs);
 		}
 	}

@@ -13,7 +13,7 @@ public class AnimationLoader : BaseLoader {
 	private static readonly string CONTROLLERS_PATHS = "SerializedData/AnimatorControllers";
 	private static readonly string ANIMATION_RESFOLDER = "Animations/";
 
-
+	
 	public AnimationLoader(bool isClient){AnimationLoader.isClient = isClient;}
 
 	public override bool Load(){

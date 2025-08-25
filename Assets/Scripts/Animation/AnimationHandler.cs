@@ -6,8 +6,8 @@ using UnityEngine.Animations;
 
 public class AnimationHandler : MonoBehaviour {
 	private bool INIT = false;
+	private bool isPlayer = false;
 
-	private GameObject armature;
 	private Animator animator;
 	private ShapeKeyAnimator shapeKeyAnimator;
 	private ProceduralAnimationRigController rigController;
@@ -16,9 +16,10 @@ public class AnimationHandler : MonoBehaviour {
 	public void Init(string controllerName, RuntimeAnimatorController controller, bool isUserCharacter=false){
 		LoadMapping(controllerName);
 		this.INIT = true;
+		this.isPlayer = isUserCharacter;
 
-		this.animator = GetComponent<Animator>();
-		this.shapeKeyAnimator = this.transform.Find("Model").GetComponent<ShapeKeyAnimator>();
+		this.animator = this.transform.Find("TP-Rig").GetComponent<Animator>();
+		this.shapeKeyAnimator = this.transform.Find("TP-Rig/Model").GetComponent<ShapeKeyAnimator>();
 		this.rigController = new ProceduralAnimationRigController(this.gameObject, controllerName);
 		this.rigController.Build();
 	}

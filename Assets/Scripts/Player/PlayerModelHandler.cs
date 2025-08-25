@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class PlayerModelHandler : MonoBehaviour {
 	public GameObject parent;
-	private Animator animator;
 	private CharacterController controller;
 	private AnimationHandler animationHandler;
 	private bool isMale;
@@ -20,7 +19,6 @@ public class PlayerModelHandler : MonoBehaviour {
 
 
 	public void Awake(){
-		this.animator = this.parent.AddComponent<Animator>();
 		this.animationHandler = this.parent.AddComponent<AnimationHandler>();
 
 		this.controller = this.parent.GetComponent<CharacterController>();
@@ -40,12 +38,6 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	// Builds any character other than Player
 	public GameObject BuildModel(GameObject go, CharacterAppearance app, bool isMale){
-		this.animator = go.GetComponent<Animator>();
-
-		if(this.animator == null){
-			this.animator = go.AddComponent<Animator>();
-		}
-
 		if(isMale)
 			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Man"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
 		else

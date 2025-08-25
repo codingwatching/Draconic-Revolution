@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 
 public class CharacterBuilder{
 	private GameObject parent;
+	private GameObject thirdPersonRig;
+	private GameObject firstPersonRig;
 	private SkinnedMeshRenderer renderer;
 	private Animator animator;
 	private GameObject armature;
@@ -59,15 +61,17 @@ public class CharacterBuilder{
 			EMPTY_OBJECT_PREFAB = GameObject.Find(EMPTY_OBJECT_PATHNAME);
 
 		this.parent = par;
+		this.thirdPersonRig = SetupNewGO("TP-Rig", this.parent.transform);
+
 		this.isMale = isMale;
 		this.appearance = app;
-		this.animator = par.GetComponent<Animator>();
+		this.animator = this.thirdPersonRig.AddComponent<Animator>();
 		this.animator.runtimeAnimatorController = animations;
 		this.armature = ModelHandler.GetArmature(isMale:isMale, rotated:true);
-		this.armature.transform.SetParent(this.parent.transform);
+		this.armature.transform.SetParent(this.thirdPersonRig.transform);
 
 		this.modelRoot = GameObject.Instantiate(EMPTY_OBJECT_PREFAB);
-		this.modelRoot.transform.parent = this.parent.transform;
+		this.modelRoot.transform.SetParent(this.thirdPersonRig.transform);
 		this.modelRoot.name = "Model";
 
 		if(isPlayerCharacter){
@@ -175,6 +179,17 @@ public class CharacterBuilder{
 
 		this.meshMat.Clear();
 		this.animator.Rebind();
+	}
+
+	private GameObject SetupNewGO(string name, Transform parent){
+		GameObject go = new GameObject();
+		go.transform.SetParent(parent);
+		go.name = name;
+		go.transform.localPosition = Vector3.zero;
+		go.transform.localRotation = Quaternion.identity;
+		go.transform.localScale = Vector3.one;
+
+		return go;
 	}
 
 	// Copy ShapeKeys data from a given mesh and saves to cache
