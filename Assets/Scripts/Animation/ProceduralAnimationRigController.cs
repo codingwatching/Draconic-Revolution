@@ -19,9 +19,10 @@ public class ProceduralAnimationRigController {
 
 	public ProceduralAnimationRigController(GameObject characterObject, string controllerName){
 		this.parent = characterObject;
-		this.armature = this.parent.transform.Find($"TP-Rig/{AnimationLoader.GetArmatureName(controllerName)}");
 		this.controllerName = controllerName;
 		this.multiAimConstraints = new List<MultiAimConstraint>();
+
+		this.armature = this.parent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
 
 		if(parentEyeTrackers == null){
 			parentEyeTrackers = GameObject.Find("EyeTrackers").transform;
@@ -98,7 +99,7 @@ public class ProceduralAnimationRigController {
 		go.name = "Eye Tracker";
 		go.transform.parent = parentEyeTrackers;
 		go.transform.localPosition = new Vector3(0,0,10);
-		go.AddComponent<CameraViewTarget>().SetCamera(this.parent.transform.Find("Camera"));
+		go.AddComponent<CameraViewTarget>().SetCamera(this.parent.transform.parent.Find("Camera"));
 
 		this.eyeTracker = go.transform;
 	}

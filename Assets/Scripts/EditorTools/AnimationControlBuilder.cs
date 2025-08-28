@@ -43,6 +43,9 @@ public static class AnimationControlBuilder {
 
 	[MenuItem("Editor Tools/Animations/Build Controllers")]
 	private static void Build(){
+		AssetDatabase.Refresh();
+		Cleanup();
+		DeleteClips();
 		LoadControllerSettings();
 		LoadLayersSettings();
 		LoadStatesSettings();
@@ -74,6 +77,12 @@ public static class AnimationControlBuilder {
 	        animations.Clear();
 	        foreach(Dictionary<string, int> lay in layers.Values){lay.Clear();}
 	        layers.Clear();
+	}
+
+	private static void DeleteClips(){
+        AssetDatabase.DeleteAsset("Assets/Resources/AnimationClips");
+        AssetDatabase.CreateFolder("Assets/Resources", "AnimationClips");
+        AssetDatabase.Refresh();
 	}
 
 	private static void SaveControllerPath(){
@@ -204,17 +213,14 @@ public static class AnimationControlBuilder {
 
 	private static void BuildControllers(){
 		AnimatorController controller;
-		string path, tempPath;
+		string path;
 
 		foreach(AnimationControllerSettings acs in controllerSettings.Values){
 			path = $"{SAVED_CHARACTER_CONTROLLER_PATH}{acs.controllerName}";
-			tempPath = $"{SAVED_CHARACTER_CONTROLLER_PATH}{acs.controllerName}_temp.controller";
 
 			if(File.Exists($"{path}.controller")){
 				AssetDatabase.DeleteAsset($"{path}.controller");
 				controller = AnimatorController.CreateAnimatorControllerAtPath($"{path}.controller");
-				//AssetDatabase.DeleteAsset($"{path}_temp.controller.meta");
-				//File.Move($"{tempPath}", $"{path}.controller");
 			}
 			else{
 				controller = AnimatorController.CreateAnimatorControllerAtPath($"{path}.controller");
@@ -232,14 +238,13 @@ public static class AnimationControlBuilder {
 
 		Object[] allAssets = AssetDatabase.LoadAllAssetRepresentationsAtPath(acs.fbxFile);
 
-		AnimationClip clip;
+		AnimationClip clip, auxClip;
 
 	    foreach(Object asset in allAssets){
 	        if(asset is AnimationClip){
 	        	clip = (AnimationClip)asset;
 	        	
 	        	if(acs.Contains(clip.name)){
-	        		// Setting clip to 
 					AnimationClip newClip = new AnimationClip();
 					EditorUtility.CopySerialized(clip, newClip);
 					AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(newClip);
@@ -247,10 +252,19 @@ public static class AnimationControlBuilder {
 					AnimationUtility.SetAnimationClipSettings(newClip, settings);
 
 					string clipFilename = newClip.name.Replace('|', '_');
-					newClip.name = clipFilename;
-					AssetDatabase.CreateAsset(newClip, $"{ANIMATION_CLIPS_PATH}{clipFilename}.anim");
 
-	        		animations[acs.controllerName].Add(SelectAfterUnderscore(newClip.name), newClip);
+					auxClip = AssetDatabase.LoadAssetAtPath<AnimationClip>($"{ANIMATION_CLIPS_PATH}{clipFilename}.anim");
+
+					if(auxClip == null){
+						newClip.name = clipFilename;
+						AssetDatabase.CreateAsset(newClip, $"{ANIMATION_CLIPS_PATH}{clipFilename}.anim");
+		        		animations[acs.controllerName].Add(SelectAfterUnderscore(newClip.name), newClip);
+		        		Debug.Log($"Added key: {SelectAfterUnderscore(newClip.name)}");
+		        	}
+		        	else{
+		        		animations[acs.controllerName].Add(SelectAfterUnderscore(auxClip.name), auxClip);
+		        		Debug.Log($"======= Added clip: {SelectAfterUnderscore(auxClip.name)}");
+		        	}
 	        	}
 	        }
 	    }
@@ -289,8 +303,6 @@ public static class AnimationControlBuilder {
 
 			acs = JsonUtility.FromJson<AnimationControllerSettings>(controllerJson.text);
 			acs.PostDeserializationSetup();
-
-			Debug.Log($"Importing {controllerName}");
 
 			controllerSettings.Add(controllerName, acs);
 		}

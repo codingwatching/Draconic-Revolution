@@ -2,10 +2,10 @@
 	"data": [
 		{
 			"name": "<Empty>",
-			"clip": "",
+			"clip": "Idle-Man",
 			"layer": "",
 			"isBlendTree": false,
-			"isDefaultState": false
+			"isDefaultState": true
 		},
 		{
 			"name": "Moving Forward",
@@ -14,7 +14,7 @@
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "",
+				"clipA": "Idle-Man",
 				"minThreshold": 0,
 				"clipB": "RunForward-Man-FP",
 				"maxThreshold": 1,

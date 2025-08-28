@@ -8,14 +8,20 @@ public class CharacterBuilder{
 	private GameObject parent;
 	private GameObject thirdPersonRig;
 	private GameObject firstPersonRig;
-	private SkinnedMeshRenderer renderer;
-	private Animator animator;
-	private GameObject armature;
-	private GameObject modelRoot;
-	private Transform rootBone;
+	private SkinnedMeshRenderer tpRenderer;
+	private SkinnedMeshRenderer fpRenderer;
+	private Animator tpAnimator;
+	private Animator fpAnimator;
+	private GameObject tpArmature;
+	private GameObject fpArmature;
+
+	private GameObject tpModelRoot;
+	private GameObject fpModelRoot;
+
 	private BoneRenderer boneRenderer;
 	private CharacterAppearance appearance;
 	private bool isMale;
+	private bool isPlayer;
 	private HairlinePlane hairline = new HairlinePlane(Vector3.zero, Vector3.zero, false);
 
 	// Mesh Cache
@@ -48,15 +54,13 @@ public class CharacterBuilder{
 
 	// Settings
 	private static readonly int ROOT_BONE_INDEX = 0;
-	private static readonly string ARMATURE_NAME_MALE = "ManArmt";
-	private static readonly string ARMATURE_NAME_FEMALE = "WomanArmt";
 	private static readonly Vector3 POS_1 = new Vector3(0f, 0f, 0f);
 	private static readonly Quaternion ROT_1 = Quaternion.Euler(new Vector3(270, 0, 0));
 	private static readonly Vector3 SCL_1 = new Vector3(100f, 100f, 100f);
 	private static readonly string EMPTY_OBJECT_PATHNAME = "----- PrefabModels -----/EmptyObject";
 
 
-	public CharacterBuilder(GameObject par, RuntimeAnimatorController animations, CharacterAppearance app, Material clothing, Material dragonhorn, Material dragonskin, Material eye, bool isMale, bool isPlayerCharacter){
+	public CharacterBuilder(GameObject par, RuntimeAnimatorController tdAnimations, RuntimeAnimatorController fpAnimations, CharacterAppearance app, Material clothing, Material dragonhorn, Material dragonskin, Material eye, bool isMale, bool isPlayerCharacter){
 		if(EMPTY_OBJECT_PREFAB == null)
 			EMPTY_OBJECT_PREFAB = GameObject.Find(EMPTY_OBJECT_PATHNAME);
 
@@ -64,34 +68,48 @@ public class CharacterBuilder{
 		this.thirdPersonRig = SetupNewGO("TP-Rig", this.parent.transform);
 
 		this.isMale = isMale;
+		this.isPlayer = isPlayerCharacter;
 		this.appearance = app;
-		this.animator = this.thirdPersonRig.AddComponent<Animator>();
-		this.animator.runtimeAnimatorController = animations;
-		this.armature = ModelHandler.GetArmature(isMale:isMale, rotated:true);
-		this.armature.transform.SetParent(this.thirdPersonRig.transform);
 
-		this.modelRoot = GameObject.Instantiate(EMPTY_OBJECT_PREFAB);
-		this.modelRoot.transform.SetParent(this.thirdPersonRig.transform);
-		this.modelRoot.name = "Model";
+		this.tpAnimator = this.thirdPersonRig.AddComponent<Animator>();
+		this.tpAnimator.runtimeAnimatorController = tdAnimations;
 
-		if(isPlayerCharacter){
-			this.modelRoot.layer = 9;
-		}
+		this.tpArmature = ModelHandler.GetArmature(isMale:isMale, rotated:true);
+		this.tpArmature.transform.SetParent(this.thirdPersonRig.transform);
 
-		this.renderer = this.modelRoot.AddComponent<SkinnedMeshRenderer>();
+		this.tpModelRoot = GameObject.Instantiate(EMPTY_OBJECT_PREFAB);
+		this.tpModelRoot.transform.SetParent(this.thirdPersonRig.transform);
+		this.tpModelRoot.name = "Model";
+		this.tpModelRoot.layer = 9;
 
-		if(isMale)
-			this.armature.name = ARMATURE_NAME_MALE;
-		else
-			this.armature.name = ARMATURE_NAME_FEMALE;
+		this.tpRenderer = this.tpModelRoot.AddComponent<SkinnedMeshRenderer>();
 
 		plainClothingMaterial = clothing;
 		dragonSkinMaterial = dragonskin;
 		eyeMaterial = eye;
 		dragonHornMaterial = dragonhorn;
 
+		if(this.isPlayer){
+			this.firstPersonRig = SetupNewGO("FP-Rig", this.parent.transform);
+			this.fpModelRoot = SetupNewGO("Model", this.firstPersonRig.transform);
+
+			this.fpRenderer = this.fpModelRoot.AddComponent<SkinnedMeshRenderer>();
+			
+			this.fpArmature = ModelHandler.GetArmature(isMale:isMale, rotated:true);
+			this.fpArmature.transform.SetParent(this.firstPersonRig.transform);
+
+			this.firstPersonRig.layer = 12;
+			this.fpModelRoot.layer = 12;
+			this.fpArmature.layer = 12;
+
+			this.fpAnimator = this.firstPersonRig.AddComponent<Animator>();
+			this.fpAnimator.runtimeAnimatorController = fpAnimations;
+			this.fpAnimator.Rebind();
+		}
+
+		this.tpAnimator.Rebind();
+
 		FixArmature();
-		this.animator.Rebind();
 	}
 
 	// Whenever clothes are being changed
@@ -104,6 +122,8 @@ public class CharacterBuilder{
 	 * Builds the character model from CharacterAppearance by doing Combined Skinned Meshing (Mesh Stitching)
 	 */
 	public void Build(){
+        List<Material> mats = new List<Material>();
+
 		SkinnedMeshRenderer modelRenderer;
 		Mesh combinedMesh = new Mesh();
 		combinedMesh.name = "PlayerMesh";
@@ -111,7 +131,7 @@ public class CharacterBuilder{
 
 		// Hat
 		modelRenderer = ModelHandler.GetModelByCode(ModelType.HEADGEAR, this.appearance.hat.code).GetComponent<SkinnedMeshRenderer>();
-        SetBoneMap(modelRenderer.bones);
+		SetBoneMap(modelRenderer.bones);
         combinedMesh.bindposes = modelRenderer.sharedMesh.bindposes;
 		SetHairline(modelRenderer.sharedMesh);
 		SaveShapeKeys(modelRenderer.sharedMesh);
@@ -163,22 +183,38 @@ public class CharacterBuilder{
         AddGeometryToMesh(modelRenderer.sharedMesh, modelRenderer, this.appearance, ModelType.ESSENTIAL);
         GameObject.Destroy(modelRenderer.gameObject);
 
-		Transform[] newBones = ModelHandler.GetArmatureBones(this.armature.transform, BONE_MAP);
+		Transform[] newBones = ModelHandler.GetArmatureBones(this.tpArmature.transform, BONE_MAP);
 		#if UNITY_EDITOR
 			if(boneRenderer.transforms == null)
 				boneRenderer.transforms = newBones;
 		#endif
 
+        // First Person Model
+        if(this.isPlayer){
+        	modelRenderer = ModelHandler.GetModelByCode(ModelType.CLOTHES, this.appearance.torso.code).GetComponent<SkinnedMeshRenderer>();
+        	this.fpRenderer.sharedMesh = modelRenderer.sharedMesh;
+        	GameObject.Destroy(modelRenderer.gameObject);
+        	this.fpRenderer.rootBone = newBones[ROOT_BONE_INDEX];
+        	this.fpRenderer.bones = newBones;
+
+			for(int i=0; i < this.fpRenderer.sharedMesh.subMeshCount; i++){
+				mats.Add(SetMaterial(ModelType.CLOTHES, this.appearance.GetInfo(ModelType.CLOTHES), this.appearance.skinColor, this.appearance.race, i));
+			}
+
+        	this.fpRenderer.materials = mats.ToArray();
+
+    	}
+
 		BuildMesh(combinedMesh);
 
-		this.renderer.sharedMesh = combinedMesh;
-		this.renderer.rootBone = newBones[ROOT_BONE_INDEX];
-		this.renderer.bones = newBones;
-		this.renderer.materials = this.meshMat.ToArray();
-		this.renderer.gameObject.AddComponent<ShapeKeyAnimator>();
+		this.tpRenderer.sharedMesh = combinedMesh;
+		this.tpRenderer.rootBone = newBones[ROOT_BONE_INDEX];
+		this.tpRenderer.bones = newBones;
+		this.tpRenderer.materials = this.meshMat.ToArray();
+		this.tpRenderer.gameObject.AddComponent<ShapeKeyAnimator>();
 
 		this.meshMat.Clear();
-		this.animator.Rebind();
+		this.tpAnimator.Rebind();
 	}
 
 	private GameObject SetupNewGO(string name, Transform parent){
@@ -365,16 +401,16 @@ public class CharacterBuilder{
 	}
 
 	private void FixArmature(){
-		this.armature.transform.localRotation = ROT_1;
-		this.armature.transform.localPosition = POS_1;
-		this.armature.transform.localScale = SCL_1;
-		this.boneRenderer = this.armature.AddComponent<BoneRenderer>();
+		this.tpArmature.transform.localRotation = ROT_1;
+		this.tpArmature.transform.localPosition = POS_1;
+		this.tpArmature.transform.localScale = SCL_1;
+		this.boneRenderer = this.tpArmature.AddComponent<BoneRenderer>();
 
-		LoadRootBone();
-	}
-
-	private void LoadRootBone(){
-		this.rootBone = this.armature.transform.Find("Hips").transform;
+		if(this.isPlayer){
+			this.fpArmature.transform.localRotation = ROT_1;
+			this.fpArmature.transform.localPosition = POS_1;
+			this.fpArmature.transform.localScale = SCL_1;
+		}
 	}
 
 	private Material SetMaterial(ModelType type, ClothingInfo info, Color skin, Race r, int index){

@@ -2,10 +2,10 @@
 	"data": [
 		{
 			"name": "<Empty>",
-			"clip": "",
+			"clip": "Idle-Woman",
 			"layer": "",
 			"isBlendTree": false,
-			"isDefaultState": false
+			"isDefaultState": true
 		},
 		{
 			"name": "Moving Forward",
@@ -14,7 +14,7 @@
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "WalkForward-Woman-FP",
+				"clipA": "Idle-Woman",
 				"minThreshold": 0,
 				"clipB": "RunForward-Woman-FP",
 				"maxThreshold": 1,

@@ -6,10 +6,11 @@
 	"statesFile": "Animations/BASE_Character_Woman_FP/states",
 	"transitionFile": "Animations/BASE_Character_Woman_FP/transitions",
 	"animations": [
-		{"name": "IdleHand-Man-FP", "loop": true},
-		{"name": "Punch1-Normal-Man-FP", "loop": false},
-		{"name": "Punch2-Normal-Man-FP", "loop": false},
-		{"name": "Punch3-Normal-Man-FP", "loop": false},
-		{"name": "RunForward-Man-FP", "loop": true}
+		{"name": "Idle-Woman", "loop": true},
+		{"name": "IdleHand-Woman-FP", "loop": true},
+		{"name": "Punch1-Normal-Woman-FP", "loop": false},
+		{"name": "Punch2-Normal-Woman-FP", "loop": false},
+		{"name": "Punch3-Normal-Woman-FP", "loop": false},
+		{"name": "RunForward-Woman-FP", "loop": true}
 	]
 }

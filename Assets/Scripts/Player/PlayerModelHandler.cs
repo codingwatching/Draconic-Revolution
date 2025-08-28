@@ -30,18 +30,18 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	public void Start(){
 		if(this.isMale)
-			this.animationHandler.Init("BASE_Character_Man", AnimationLoader.GetController("BASE_Character_Man"));
+			this.animationHandler.Init("BASE_Character_Man", isUserCharacter:true);
 		else
-			this.animationHandler.Init("BASE_Character_Woman", AnimationLoader.GetController("BASE_Character_Woman"));
+			this.animationHandler.Init("BASE_Character_Woman", isUserCharacter:true);
 	}
 
 
 	// Builds any character other than Player
 	public GameObject BuildModel(GameObject go, CharacterAppearance app, bool isMale){
 		if(isMale)
-			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Man"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
+			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Man"), AnimationLoader.GetController("BASE_Character_Man_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
 		else
-			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Woman"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
+			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Woman"), AnimationLoader.GetController("BASE_Character_Woman_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
 
 		this.characterBuilder.Build();
 		Rescale(app.race, go);
@@ -55,10 +55,10 @@ public class PlayerModelHandler : MonoBehaviour {
 
 		if(this.characterBuilder == null){
 			if(isMale){
-				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Man"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
+				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Man"), AnimationLoader.GetController("BASE_Character_Man_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
 			}
 			else{
-				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Woman"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
+				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Woman"), AnimationLoader.GetController("BASE_Character_Woman_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
 			}
 
 			this.characterBuilder.Build();

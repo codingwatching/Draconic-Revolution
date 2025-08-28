@@ -8,20 +8,28 @@ public class AnimationHandler : MonoBehaviour {
 	private bool INIT = false;
 	private bool isPlayer = false;
 
-	private Animator animator;
+	private Animator tpAnimator;
+	private Animator fpAnimator;
 	private ShapeKeyAnimator shapeKeyAnimator;
 	private ProceduralAnimationRigController rigController;
 	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
 
-	public void Init(string controllerName, RuntimeAnimatorController controller, bool isUserCharacter=false){
+	public void Init(string controllerName, bool isUserCharacter=false){
+		Transform tpParent = this.transform.Find("TP-Rig");
+		Transform fpParent = this.transform.Find("FP-Rig");
+
 		LoadMapping(controllerName);
 		this.INIT = true;
 		this.isPlayer = isUserCharacter;
 
-		this.animator = this.transform.Find("TP-Rig").GetComponent<Animator>();
-		this.shapeKeyAnimator = this.transform.Find("TP-Rig/Model").GetComponent<ShapeKeyAnimator>();
-		this.rigController = new ProceduralAnimationRigController(this.gameObject, controllerName);
+		this.tpAnimator = tpParent.GetComponent<Animator>();
+		this.shapeKeyAnimator = tpParent.GetComponent<ShapeKeyAnimator>();
+		this.rigController = new ProceduralAnimationRigController(tpParent.gameObject, controllerName);
 		this.rigController.Build();
+
+		if(this.isPlayer){
+			this.fpAnimator = fpParent.GetComponent<Animator>();
+		}
 	}
 
 	// Plays bone animation
@@ -37,7 +45,7 @@ public class AnimationHandler : MonoBehaviour {
 			}
 		}
 		else{
-			this.animator.CrossFade(request.name, 0.1f, layer:this.animator.GetLayerIndex(request.layer));
+			this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
 		}
 	}
 
@@ -55,7 +63,7 @@ public class AnimationHandler : MonoBehaviour {
 
 	// Returns true if boneRequest plays the animation
 	private bool HandleBoneRequest(AnimationStateMapping mapping){
-		AnimatorStateInfo currentState = this.animator.GetCurrentAnimatorStateInfo(this.animator.GetLayerIndex(mapping.currentLayer));
+		AnimatorStateInfo currentState = this.tpAnimator.GetCurrentAnimatorStateInfo(this.tpAnimator.GetLayerIndex(mapping.currentLayer));
 
 		switch(mapping.GetMapType()){
 			case AnimationStateMappingType.PLAY_ON:
@@ -71,7 +79,7 @@ public class AnimationHandler : MonoBehaviour {
 
 	private bool PlayOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
 		if(currentState.IsName(mapping.currentState)){
-			this.animator.CrossFade(mapping.playState, 0.1f, layer:this.animator.GetLayerIndex(mapping.targetLayer));
+			this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
 			return true;
 		}
 
@@ -80,8 +88,8 @@ public class AnimationHandler : MonoBehaviour {
 
 	private bool ContinueCurrentOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
 		if(currentState.IsName(mapping.currentState)){
-			this.animator.Play(mapping.currentState, this.animator.GetLayerIndex(mapping.targetLayer), normalizedTime:currentState.normalizedTime);
-			this.animator.Play(mapping.playState, this.animator.GetLayerIndex(mapping.currentLayer));
+			this.tpAnimator.Play(mapping.currentState, this.tpAnimator.GetLayerIndex(mapping.targetLayer), normalizedTime:currentState.normalizedTime);
+			this.tpAnimator.Play(mapping.playState, this.tpAnimator.GetLayerIndex(mapping.currentLayer));
 			return true;
 		}
 
@@ -93,10 +101,10 @@ public class AnimationHandler : MonoBehaviour {
 
 		for(int i=0; i < layers.Length; i++){
 			// Plays the default layer state
-			this.animator.CrossFade(0, 0.1f, layer:this.animator.GetLayerIndex(layers[i]));
+			this.tpAnimator.CrossFade(0, 0.1f, layer:this.tpAnimator.GetLayerIndex(layers[i]));
 		}
 
-		this.animator.CrossFade(mapping.playState, 0.1f, layer:this.animator.GetLayerIndex(mapping.targetLayer));
+		this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
 		return true;
 	}
 

@@ -6,6 +6,7 @@
 	"statesFile": "Animations/BASE_Character_Man_FP/states",
 	"transitionFile": "Animations/BASE_Character_Man_FP/transitions",
 	"animations": [
+		{"name": "Idle-Man", "loop": true},
 		{"name": "IdleHand-Man-FP", "loop": true},
 		{"name": "Punch1-Normal-Man-FP", "loop": false},
 		{"name": "Punch2-Normal-Man-FP", "loop": false},
