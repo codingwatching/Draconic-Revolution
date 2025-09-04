@@ -190,7 +190,7 @@ public static class ModelHandler{
 		armature.GetComponentsInChildren<Transform>(listTransforms);
 		
 		foreach(Transform t in listTransforms){
-			if(!t.name.EndsWith("end") && t.name != "Armature"){
+			if(!t.name.EndsWith("end")){
 				if(mapping.ContainsKey(t.name)){
 					array[mapping[t.name]] = t;
 				}

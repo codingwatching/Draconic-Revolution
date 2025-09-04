@@ -8,6 +8,7 @@ public class ProceduralAnimationRigController {
 	private string controllerName;
 	private string currentState;
 	private GameObject parent;
+	private GameObject animatorParent;
 	private Transform eyeTracker;
 	private Transform armature;
 	private GameObject proceduralRig;
@@ -17,12 +18,13 @@ public class ProceduralAnimationRigController {
 
 	private static Transform parentEyeTrackers;
 
-	public ProceduralAnimationRigController(GameObject characterObject, string controllerName){
+	public ProceduralAnimationRigController(GameObject characterObject, GameObject animatorParent, string controllerName){
 		this.parent = characterObject;
+		this.animatorParent = animatorParent;
 		this.controllerName = controllerName;
 		this.multiAimConstraints = new List<MultiAimConstraint>();
 
-		this.armature = this.parent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
+		this.armature = this.animatorParent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
 
 		if(parentEyeTrackers == null){
 			parentEyeTrackers = GameObject.Find("EyeTrackers").transform;
@@ -76,9 +78,9 @@ public class ProceduralAnimationRigController {
 
 		this.proceduralRig = new GameObject();
 		this.proceduralRig.name = "Procedural Rig";
-		this.proceduralRig.transform.parent = this.parent.transform;
+		this.proceduralRig.transform.parent = this.animatorParent.transform;
 		rig = this.proceduralRig.AddComponent<Rig>();
-		this.rigBuilder = this.parent.AddComponent<RigBuilder>();
+		this.rigBuilder = this.animatorParent.AddComponent<RigBuilder>();
 		this.multiAimData = AnimationLoader.GetRig(this.controllerName);
 
 		for(int i=0; i < this.multiAimData.Length; i++){

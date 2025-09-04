@@ -24,7 +24,7 @@ public class AnimationHandler : MonoBehaviour {
 
 		this.tpAnimator = tpParent.GetComponent<Animator>();
 		this.shapeKeyAnimator = tpParent.GetComponent<ShapeKeyAnimator>();
-		this.rigController = new ProceduralAnimationRigController(tpParent.gameObject, controllerName);
+		this.rigController = new ProceduralAnimationRigController(tpParent.gameObject, tpParent.Find("Animator").gameObject, controllerName);
 		this.rigController.Build();
 
 		if(this.isPlayer){
