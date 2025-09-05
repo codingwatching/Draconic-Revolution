@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.Animations.Rigging;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering;
 
 public class CharacterBuilder{
 	private GameObject parent;
@@ -19,6 +20,8 @@ public class CharacterBuilder{
 
 	private GameObject tpModelRoot;
 	private GameObject fpModelRoot;
+
+	private RotationTowardsTarget fpRotation;
 
 	private BoneRenderer boneRenderer;
 	private CharacterAppearance appearance;
@@ -98,6 +101,7 @@ public class CharacterBuilder{
 			
 			this.fpArmature = ModelHandler.GetArmature(isMale:isMale, rotated:true);
 			this.fpArmature.transform.SetParent(this.fpAnimGO.transform);
+			this.fpRotation = this.fpAnimGO.AddComponent<RotationTowardsTarget>();
 
 			this.firstPersonRig.layer = 12;
 			this.fpModelRoot.layer = 12;
@@ -204,6 +208,7 @@ public class CharacterBuilder{
 			}
 
         	this.fpRenderer.materials = mats.ToArray();
+        	this.fpRenderer.shadowCastingMode = ShadowCastingMode.Off;
 
     	}
 
@@ -216,6 +221,10 @@ public class CharacterBuilder{
 		this.tpRenderer.gameObject.AddComponent<ShapeKeyAnimator>();
 
 		this.meshMat.Clear();
+	}
+
+	public void SetFirstPersonRotation(ProceduralAnimationRigController rigControllerFP){
+		this.fpRotation.Setup(rigControllerFP.GetCamera().transform);
 	}
 
 	private GameObject SetupNewGO(string name, Transform parent){

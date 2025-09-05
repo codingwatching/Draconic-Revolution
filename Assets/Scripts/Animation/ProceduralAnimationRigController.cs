@@ -15,6 +15,7 @@ public class ProceduralAnimationRigController {
 	private RigBuilder rigBuilder;
 	private MultiAimData[] multiAimData;
 	private List<MultiAimConstraint> multiAimConstraints;
+	private GameObject camera;
 
 	private static Transform parentEyeTrackers;
 
@@ -23,6 +24,7 @@ public class ProceduralAnimationRigController {
 		this.animatorParent = animatorParent;
 		this.controllerName = controllerName;
 		this.multiAimConstraints = new List<MultiAimConstraint>();
+		this.camera = this.parent.transform.parent.Find("Camera").gameObject;
 
 		this.armature = this.animatorParent.transform.Find(AnimationLoader.GetArmatureName(controllerName));
 
@@ -36,6 +38,9 @@ public class ProceduralAnimationRigController {
 	public void Delete(){
 		GameObject.Destroy(this.eyeTracker.gameObject);
 	}
+
+	public GameObject GetEyeTracker(){return this.eyeTracker.gameObject;}
+	public GameObject GetCamera(){return this.camera;}
 
 	public void ChangeState(string state){
 		if(currentState == state)
@@ -101,7 +106,7 @@ public class ProceduralAnimationRigController {
 		go.name = "Eye Tracker";
 		go.transform.parent = parentEyeTrackers;
 		go.transform.localPosition = new Vector3(0,0,10);
-		go.AddComponent<CameraViewTarget>().SetCamera(this.parent.transform.parent.Find("Camera"));
+		go.AddComponent<CameraViewTarget>().SetCamera(this.camera.transform);
 
 		this.eyeTracker = go.transform;
 	}

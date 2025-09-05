@@ -15,8 +15,6 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	private CharacterBuilder characterBuilder;
 
-	private static readonly Quaternion ROTATION = Quaternion.Euler(new Vector3(0, -90, 0));
-
 
 	public void Awake(){
 		this.animationHandler = this.parent.AddComponent<AnimationHandler>();
@@ -30,9 +28,9 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	public void Start(){
 		if(this.isMale)
-			this.animationHandler.Init("BASE_Character_Man", isUserCharacter:true);
+			this.animationHandler.Init("BASE_Character_Man", this.characterBuilder, isUserCharacter:true);
 		else
-			this.animationHandler.Init("BASE_Character_Woman", isUserCharacter:true);
+			this.animationHandler.Init("BASE_Character_Woman", this.characterBuilder, isUserCharacter:true);
 	}
 
 

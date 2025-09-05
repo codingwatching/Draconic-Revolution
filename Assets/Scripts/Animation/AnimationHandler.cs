@@ -11,10 +11,11 @@ public class AnimationHandler : MonoBehaviour {
 	private Animator tpAnimator;
 	private Animator fpAnimator;
 	private ShapeKeyAnimator shapeKeyAnimator;
-	private ProceduralAnimationRigController rigController;
+	private ProceduralAnimationRigController rigControllerTP;
+	private ProceduralAnimationRigController rigControllerFP;
 	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
 
-	public void Init(string controllerName, bool isUserCharacter=false){
+	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
 		Transform fpParent = this.transform.Find("FP-Rig");
 
@@ -24,13 +25,18 @@ public class AnimationHandler : MonoBehaviour {
 
 		this.tpAnimator = tpParent.GetComponent<Animator>();
 		this.shapeKeyAnimator = tpParent.GetComponent<ShapeKeyAnimator>();
-		this.rigController = new ProceduralAnimationRigController(tpParent.gameObject, tpParent.Find("Animator").gameObject, controllerName);
-		this.rigController.Build();
+		this.rigControllerTP = new ProceduralAnimationRigController(tpParent.gameObject, tpParent.Find("Animator").gameObject, controllerName);
+		this.rigControllerTP.Build();
 
 		if(this.isPlayer){
 			this.fpAnimator = fpParent.GetComponent<Animator>();
+			this.rigControllerFP = new ProceduralAnimationRigController(fpParent.gameObject, fpParent.Find("Animator").gameObject, $"{controllerName}_FP");
+			this.rigControllerFP.Build();
+
+			SetFirstPersonRotation(firstPersonBuilder);
 		}
 	}
+
 
 	// Plays bone animation
 	public void Play(BoneAnimationRequest request){
@@ -58,7 +64,12 @@ public class AnimationHandler : MonoBehaviour {
 	}
 
 	public void AssignAimTracker(Transform tracker){
-		this.rigController.AssignHeadTrackingSource(tracker);
+		this.rigControllerTP.AssignHeadTrackingSource(tracker);
+		this.rigControllerFP.AssignHeadTrackingSource(tracker);
+	}
+
+	private void SetFirstPersonRotation(CharacterBuilder builder){
+		builder.SetFirstPersonRotation(rigControllerFP);
 	}
 
 	// Returns true if boneRequest plays the animation
