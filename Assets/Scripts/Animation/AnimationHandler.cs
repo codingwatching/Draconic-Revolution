@@ -18,19 +18,21 @@ public class AnimationHandler : MonoBehaviour {
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
 		Transform fpParent = this.transform.Find("FP-Rig");
+		Transform tpAnimObj = tpParent.Find("Animator");
+		Transform fpAnimObj = fpParent.Find("Animator");
 
 		LoadMapping(controllerName);
 		this.INIT = true;
 		this.isPlayer = isUserCharacter;
 
-		this.tpAnimator = tpParent.GetComponent<Animator>();
+		this.tpAnimator = tpAnimObj.GetComponent<Animator>();
 		this.shapeKeyAnimator = tpParent.GetComponent<ShapeKeyAnimator>();
-		this.rigControllerTP = new ProceduralAnimationRigController(tpParent.gameObject, tpParent.Find("Animator").gameObject, controllerName);
+		this.rigControllerTP = new ProceduralAnimationRigController(tpParent.gameObject, tpAnimObj.gameObject, controllerName);
 		this.rigControllerTP.Build();
 
 		if(this.isPlayer){
-			this.fpAnimator = fpParent.GetComponent<Animator>();
-			this.rigControllerFP = new ProceduralAnimationRigController(fpParent.gameObject, fpParent.Find("Animator").gameObject, $"{controllerName}_FP");
+			this.fpAnimator = fpAnimObj.GetComponent<Animator>();
+			this.rigControllerFP = new ProceduralAnimationRigController(fpParent.gameObject, fpAnimObj.gameObject, $"{controllerName}_FP");
 			this.rigControllerFP.Build();
 
 			SetFirstPersonRotation(firstPersonBuilder);
@@ -43,15 +45,28 @@ public class AnimationHandler : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
+		bool found = false;
+		int stateHash = Animator.StringToHash(request.name);
+
 		if(this.stateMappings.ContainsKey(request)){
 			for(int i=0; i < this.stateMappings[request].Count; i++){
 				if(HandleBoneRequest(this.stateMappings[request][i])){
+					found = true;
 					break;
 				}
+			}
+
+			if(!found){
+				this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
 			}
 		}
 		else{
 			this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
+		}
+
+		if(this.isPlayer){
+			if(this.fpAnimator.HasState(this.tpAnimator.GetLayerIndex(request.layer), stateHash))
+				this.fpAnimator.CrossFade(request.name, 0.1f);
 		}
 	}
 

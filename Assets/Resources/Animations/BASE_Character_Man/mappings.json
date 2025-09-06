@@ -3,7 +3,7 @@
 		{
 			"type": "play_on",
 			"targetLayer": "Full Torso",
-			"playState": "Punch1-Normal-Man",
+			"playState": "Punch 1",
 			"currentState": "On Air",
 			"currentLayer": ""
 		},

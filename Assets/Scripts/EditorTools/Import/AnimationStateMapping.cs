@@ -27,5 +27,14 @@ public class AnimationStateMapping {
 				this.mappingType = AnimationStateMappingType.PLAY_ON;
 				break;
 		}
+
+		if(this.currentLayer == "")
+			this.currentLayer = "Base Layer";
+		if(this.targetLayer == "")
+			this.targetLayer = "Base Layer";
+	}
+
+	public override string ToString(){
+		return $"Type: {this.type} -- if CurrentLayer = {this.currentLayer} and state is = {this.currentState}, then play state {this.playState} at layer {this.targetLayer}";
 	}
 }
