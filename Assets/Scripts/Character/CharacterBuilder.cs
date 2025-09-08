@@ -83,7 +83,9 @@ public class CharacterBuilder{
 		this.tpModelRoot = GameObject.Instantiate(EMPTY_OBJECT_PREFAB);
 		this.tpModelRoot.transform.SetParent(this.tpAnimGO.transform);
 		this.tpModelRoot.name = "Model";
-		this.tpModelRoot.layer = 9;
+
+		if(this.isPlayer)
+			this.tpModelRoot.layer = 9;
 
 		this.tpRenderer = this.tpModelRoot.AddComponent<SkinnedMeshRenderer>();
 
@@ -189,7 +191,6 @@ public class CharacterBuilder{
         GameObject.Destroy(modelRenderer.gameObject);
 
 		Transform[] newBonesTP = ModelHandler.GetArmatureBones(this.tpArmature.transform, BONE_MAP);
-		Transform[] newBonesFP = ModelHandler.GetArmatureBones(this.fpArmature.transform, BONE_MAP);
 		#if UNITY_EDITOR
 			if(boneRenderer.transforms == null)
 				boneRenderer.transforms = newBonesTP;
@@ -197,6 +198,8 @@ public class CharacterBuilder{
 
         // First Person Model
         if(this.isPlayer){
+    		Transform[] newBonesFP = ModelHandler.GetArmatureBones(this.fpArmature.transform, BONE_MAP);
+
         	modelRenderer = ModelHandler.GetModelByCode(ModelType.CLOTHES, this.appearance.torso.code).GetComponent<SkinnedMeshRenderer>();
         	this.fpRenderer.sharedMesh = modelRenderer.sharedMesh;
         	GameObject.Destroy(modelRenderer.gameObject);

@@ -17,9 +17,7 @@ public class AnimationHandler : MonoBehaviour {
 
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
-		Transform fpParent = this.transform.Find("FP-Rig");
 		Transform tpAnimObj = tpParent.Find("Animator");
-		Transform fpAnimObj = fpParent.Find("Animator");
 
 		LoadMapping(controllerName);
 		this.INIT = true;
@@ -31,6 +29,9 @@ public class AnimationHandler : MonoBehaviour {
 		this.rigControllerTP.Build();
 
 		if(this.isPlayer){
+			Transform fpParent = this.transform.Find("FP-Rig");
+			Transform fpAnimObj = fpParent.Find("Animator");
+			
 			this.fpAnimator = fpAnimObj.GetComponent<Animator>();
 			this.rigControllerFP = new ProceduralAnimationRigController(fpParent.gameObject, fpAnimObj.gameObject, $"{controllerName}_FP");
 			this.rigControllerFP.Build();

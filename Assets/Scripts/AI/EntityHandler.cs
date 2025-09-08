@@ -73,6 +73,7 @@ public class EntityHandler
 
 	public void AddPlayer(ulong code, float3 pos, float3 dir){
 		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(dir.x, dir.y, dir.z));
+		
 		go.name = "Player_" + code;
 		this.playerObject.Add(code, go);
 		this.playerItem.Add(code, 0);

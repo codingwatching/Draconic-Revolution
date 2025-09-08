@@ -28,13 +28,23 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	// Builds any character other than Player
 	public GameObject BuildModel(GameObject go, CharacterAppearance app, bool isMale){
-		if(isMale)
-			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Man"), AnimationLoader.GetController("BASE_Character_Man_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
-		else
-			this.characterBuilder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Woman"), AnimationLoader.GetController("BASE_Character_Woman_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
+		CharacterBuilder builder;
+		AnimationHandler anim;
 
-		this.characterBuilder.Build();
+		if(isMale)
+			builder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Man"), AnimationLoader.GetController("BASE_Character_Man_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
+		else
+			builder = new CharacterBuilder(go, AnimationLoader.GetController("BASE_Character_Woman"), AnimationLoader.GetController("BASE_Character_Woman_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, false);
+
+		builder.Build();
 		Rescale(app.race, go);
+
+		anim = go.AddComponent<AnimationHandler>();
+
+		if(isMale)
+			anim.Init("BASE_Character_Man", this.characterBuilder, isUserCharacter:false);
+		else
+			anim.Init("BASE_Character_Woman", this.characterBuilder, isUserCharacter:false);
 
 		return go;
 	}

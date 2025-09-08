@@ -247,7 +247,6 @@ public class ChunkLoader : MonoBehaviour
         // Garbage Collect Unity Assets
         if(this.timer % 600 == 0){
             Resources.UnloadUnusedAssets();
-            this.playerModelHandler.GetAnimationHandler().Play(new BoneAnimationRequest("Jump Start", ""));
         }
 
         // Fix Unloaded Chunks
