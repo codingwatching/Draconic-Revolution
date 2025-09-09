@@ -24,7 +24,7 @@
 			"constrained_bone": "Hips/LowerTorso/UpperTorso/Neck/Head",
 			"active_states": ["normal", "attack"],
 			"constrainedXAxis": true,
-			"constrainedYAxis": false,
+			"constrainedYAxis": true,
 			"constrainedZAxis": false,
 			"maintain_offset": false,
 			"intensity": 0,

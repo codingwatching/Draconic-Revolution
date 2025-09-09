@@ -403,10 +403,12 @@ public static class NetDecoder
 		Array.Copy(array, 0, data, pos, array.Length);
 	}
 
-	public static void WriteString(string a, byte[] data, int pos){
+	public static int WriteString(string a, byte[] data, int pos){
 		for(int i=0; i < a.Length; i++){
 			data[pos+i] = (byte)a[i];
 		}
+
+		return a.Length;
 	}
 
 	public static void WriteChunkPos(ChunkPos cp, byte[] data, int pos){
