@@ -422,9 +422,10 @@ public struct NetMessage
 		int lenName, lenLayer;
 
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
-		lenName = NetDecoder.WriteString(stateName, NetMessage.buffer, 9);
-		lenLayer = NetDecoder.WriteString(stateLayer, NetMessage.buffer, 9+lenName);
-		this.size = 9 + lenName + lenLayer;
+		NetDecoder.WriteUshort((ushort)stateName.Length, NetMessage.buffer, 9);
+		lenName = NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
+		lenLayer = NetDecoder.WriteString(stateLayer, NetMessage.buffer, 11+lenName);
+		this.size = 11 + lenName + lenLayer;
 	}
 }
 

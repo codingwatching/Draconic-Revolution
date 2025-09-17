@@ -6,6 +6,7 @@ public class PlayerModelHandler : MonoBehaviour {
 	private CharacterController controller;
 	private AnimationHandler animationHandler;
 	private bool isMale;
+	private bool INIT = false;
 
 	[Header("Materials")]
 	public Material plainClothingMaterial;
@@ -26,6 +27,18 @@ public class PlayerModelHandler : MonoBehaviour {
 		}
 	}
 
+	public void DeleteModel(GameObject parent){
+		if(this.parent == null)
+			return;
+		Transform t = parent.transform.Find("TP-Rig");
+
+		if(t == null){
+			return;
+		}
+
+		GameObject.DestroyImmediate(t.gameObject);
+	}
+
 	// Builds any character other than Player
 	public GameObject BuildModel(GameObject go, CharacterAppearance app, bool isMale){
 		CharacterBuilder builder;
@@ -39,13 +52,19 @@ public class PlayerModelHandler : MonoBehaviour {
 		builder.Build();
 		Rescale(app.race, go);
 
-		anim = go.AddComponent<AnimationHandler>();
+		if(INIT){
+			anim = go.GetComponent<AnimationHandler>();
+		}
+		else{
+			anim = go.AddComponent<AnimationHandler>();			
+		}
 
 		if(isMale)
 			anim.Init("BASE_Character_Man", this.characterBuilder, isUserCharacter:false);
 		else
 			anim.Init("BASE_Character_Woman", this.characterBuilder, isUserCharacter:false);
 
+		INIT = true;
 		return go;
 	}
 

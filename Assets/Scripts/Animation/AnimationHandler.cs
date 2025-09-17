@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.Animations.Rigging;
 
 public class AnimationHandler : MonoBehaviour {
 	private bool INIT = false;
@@ -20,7 +21,6 @@ public class AnimationHandler : MonoBehaviour {
 		Transform tpAnimObj = tpParent.Find("Animator");
 
 		LoadMapping(controllerName);
-		this.INIT = true;
 		this.isPlayer = isUserCharacter;
 
 		this.tpAnimator = tpAnimObj.GetComponent<Animator>();
@@ -38,6 +38,8 @@ public class AnimationHandler : MonoBehaviour {
 
 			SetFirstPersonRotation(firstPersonBuilder);
 		}
+
+		this.INIT = true;
 	}
 
 

@@ -248,6 +248,9 @@ public class Client
 			case NetCode.SENDITEMINHAND:
 				SendItemInHand(data);
 				break;
+			case NetCode.SENDANIMATIONLAYER:
+				SendAnimationLayer(data);
+				break;
 			default:
 				Debug.Log("UNKNOWN NETMESSAGE RECEIVED: " + (NetCode)data[0]);
 				break;
@@ -695,7 +698,19 @@ public class Client
 		ushort item = NetDecoder.ReadUshort(data, 9);
 		byte amount = data[11];
 
-		this.entityHandler.UpdatePlayerItem(playerCode, item, amount);
+		if(playerCode != Configurations.accountID)
+			this.entityHandler.UpdatePlayerItem(playerCode, item, amount);
+	}
+
+	// Receives from server a single AnimationState for a player
+	private void SendAnimationLayer(byte[] data){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		ushort nameSize = NetDecoder.ReadUshort(data, 9);
+		string stateName = NetDecoder.ReadString(data, 11, nameSize);
+		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
+
+		if(playerCode != Configurations.accountID)
+			this.entityHandler.AnimateBone(playerCode, stateName, layer);
 	}
 
 	/* ================================================================================ */

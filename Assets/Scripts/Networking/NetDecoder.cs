@@ -91,6 +91,9 @@ public static class NetDecoder
 	}
 
 	public static string ReadString(byte[] data, int pos, int size){
+		if(size == 0)
+			return "";
+
 		string result = System.Text.Encoding.UTF8.GetString(data, pos, size);
 		return result;
 	}

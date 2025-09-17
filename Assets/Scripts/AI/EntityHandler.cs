@@ -11,6 +11,7 @@ public class EntityHandler
 
 	private Dictionary<ulong, CharacterSheet> playerSheet;
 	private Dictionary<ulong, GameObject> playerObject;
+	private Dictionary<ulong, AnimationHandler> playerAnimations;
 	private Dictionary<ulong, ushort> playerItem;
 	private Dictionary<ulong, DeltaMove> playerCurrentPositions;
 	private Dictionary<ulong, ItemEntity> dropObject;
@@ -28,6 +29,7 @@ public class EntityHandler
 		this.playerCurrentPositions = new Dictionary<ulong, DeltaMove>();
 		this.dropObject = new Dictionary<ulong, ItemEntity>();
 		this.dropCurrentPositions = new Dictionary<ulong, DeltaMove>();
+		this.playerAnimations = new Dictionary<ulong, AnimationHandler>();
 		this.cl = cl;
 		this.playerModelHandler = cl.playerModelHandler;
 	}
@@ -73,11 +75,12 @@ public class EntityHandler
 
 	public void AddPlayer(ulong code, float3 pos, float3 dir){
 		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(dir.x, dir.y, dir.z));
-		
+
 		go.name = "Player_" + code;
 		this.playerObject.Add(code, go);
 		this.playerItem.Add(code, 0);
 		this.playerCurrentPositions.Add(code, new DeltaMove(pos, dir));
+		this.playerAnimations.Add(code, null);
 		RunSingleActivation(EntityType.PLAYER, code, pos);
 	}
 
@@ -92,7 +95,11 @@ public class EntityHandler
 
 	public bool UpdatePlayerModel(ulong code, CharacterAppearance app, bool isMale){
 		if(this.playerObject.ContainsKey(code)){
+			this.playerModelHandler.DeleteModel(this.playerObject[code]);
+
 			this.playerObject[code] = this.playerModelHandler.BuildModel(this.playerObject[code], app, isMale);
+			this.playerAnimations[code] = this.playerObject[code].GetComponent<AnimationHandler>();
+
 			return true;
 		}
 		return false;
@@ -105,6 +112,14 @@ public class EntityHandler
 		this.dropObject.Add(code, newItemEntity);
 		this.dropCurrentPositions.Add(code, new DeltaMove(pos, dir));
 		RunSingleActivation(EntityType.DROP, code, pos);
+	}
+
+	public void AnimateBone(ulong code, string stateName, string layerName){
+		BoneAnimationRequest request = new BoneAnimationRequest(stateName, layerName);
+
+		if(this.playerAnimations.ContainsKey(code)){
+			this.playerAnimations[code].Play(request);
+		}
 	}
 
 	// Triggers whenever a t(x) position is received. Moves entity to t(x-1) position received
@@ -151,6 +166,7 @@ public class EntityHandler
 			this.playerItem.Remove(code);
 			this.playerCurrentPositions.Remove(code);
 			this.playerSheet.Remove(code);
+			this.playerAnimations.Remove(code);
 			this.cl.sfx.RemoveEntitySFX(new EntityID(type, code));
 		}
 		else if(type == EntityType.DROP){
