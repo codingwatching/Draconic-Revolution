@@ -416,6 +416,17 @@ public struct NetMessage
 		NetDecoder.WriteByte(amount, NetMessage.buffer, 11);
 		this.size = 12;
 	}
+
+	// Client or Server sends AnimatorState name and layer for a given playerCode (Should expand into all entities later)
+	public void SendAnimationLayer(ulong playerCode, string stateName, string stateLayer){
+		int lenName, lenLayer;
+
+		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
+		NetDecoder.WriteUshort((ushort)stateName.Length, NetMessage.buffer, 9);
+		lenName = NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
+		lenLayer = NetDecoder.WriteString(stateLayer, NetMessage.buffer, 11+lenName);
+		this.size = 11 + lenName + lenLayer;
+	}
 }
 
 public enum NetCode{
@@ -455,6 +466,7 @@ public enum NetCode{
 	SENDCHARSHEET,
 	SENDHOTBARPOSITION,
 	SENDITEMINHAND,
+	SENDANIMATIONLAYER,
 	DISCONNECTINFO, // No call
 	DISCONNECT  // No call
 }

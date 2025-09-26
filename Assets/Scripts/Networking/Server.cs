@@ -412,6 +412,9 @@ public class Server
 			case NetCode.SENDHOTBARPOSITION:
 				SendHotbarPosition(data, id);
 				break;
+			case NetCode.SENDANIMATIONLAYER:
+				SendAnimationLayer(data, id);
+				break;
 			case NetCode.DISCONNECTINFO:
 				DisconnectInfo(id);
 				break;
@@ -1367,6 +1370,23 @@ public class Server
 				this.SendToClientsExcept(id, message);
 			}
 		}
+	}
+
+	// Receives an AnimationLayer from a player
+	public void SendAnimationLayer(byte[] data, ulong id){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		ushort nameSize = NetDecoder.ReadUshort(data, 9);
+		string stateName = NetDecoder.ReadString(data, 11, nameSize);
+		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
+
+		if(id != playerCode)
+			return;
+
+		NetMessage message;
+		message = new NetMessage(NetCode.SENDANIMATIONLAYER);
+		message.SendAnimationLayer(playerCode, stateName, layer);
+
+		this.SendToClientsExcept(id, message);
 	}
 
 	// Receives a Disconnect message from InfoClient

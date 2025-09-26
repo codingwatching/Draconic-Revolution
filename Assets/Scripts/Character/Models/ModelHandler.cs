@@ -116,17 +116,31 @@ public static class ModelHandler{
 	}
 
 	public static GameObject GetArmature(bool isMale=true, bool rotated=false){
+		GameObject go;
+
 		if(isMale){
-			if(rotated)
-				return GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_MALE), Vector3.zero, ROTATION);
-			else
-				return GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_MALE));
+			if(rotated){
+				go = GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_MALE), Vector3.zero, ROTATION);
+				go.name = ARMATURE_MALE;
+				return go;
+			}
+			else{
+				go = GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_MALE));
+				go.name = ARMATURE_MALE;
+				return go;
+			}
 		}
 		else{
-			if(rotated)
-				return GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_FEMALE), Vector3.zero, ROTATION);
-			else
-				return GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_FEMALE));
+			if(rotated){
+				go = GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_FEMALE), Vector3.zero, ROTATION);
+				go.name = ARMATURE_FEMALE;
+				return go;
+			}
+			else{
+				go = GameObject.Instantiate(GameObject.Find("ModelAssets/" + ARMATURE_FEMALE));
+				go.name = ARMATURE_FEMALE;
+				return go;
+			}
 		}
 	}
 
@@ -176,7 +190,7 @@ public static class ModelHandler{
 		armature.GetComponentsInChildren<Transform>(listTransforms);
 		
 		foreach(Transform t in listTransforms){
-			if(!t.name.EndsWith("end") && t.name != "Armature"){
+			if(!t.name.EndsWith("end")){
 				if(mapping.ContainsKey(t.name)){
 					array[mapping[t.name]] = t;
 				}

@@ -250,7 +250,7 @@ Following I will present a list of the concepts that exist in the current Alpha 
 |Storage Voxels|Core|Alpha|:heavy_check_mark:|:soon:|:x:|:x:
 |Character Models|3D|Alpha|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Character Rigging|3D|Alpha|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
-|Basic Animations|3D|Alpha|:heavy_check_mark:|:heavy_check_mark:|:warning:|:x:
+|Basic Animations|3D|Alpha|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:soon:
 |Weapon Animations|3D|Alpha|:x:|:x:|:x:|:x:
 |Basic Enemy Models|3D|Alpha|:x:|:x:|:x:|:x:|
 |Basic AI|AI|Alpha|:heavy_check_mark:|:soon:|:soon:|:x:
