@@ -67,7 +67,6 @@ public class MainControllerManager : MonoBehaviour
         mouseY = val.Get<Vector2>().y;
     }
 
-    // Mouse Camera Look
     public void OnMovement(InputValue val){
         movementX = val.Get<Vector2>().x;
         movementZ = val.Get<Vector2>().y;

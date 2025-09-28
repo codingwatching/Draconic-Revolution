@@ -7,43 +7,92 @@ public class PlayerMovement : MonoBehaviour
 {
     // Unity Reference
     public ChunkLoader cl;
+    public CharacterController controller;
+    public MainControllerManager controls;
 
     // Movement properties
-	public CharacterController controller;
+    /*
 	public float speed = 5f;
 	public float gravity = -19.62f;
 	public float jumpHeight = 5f;
-    public LayerMask layerMask;
-    public bool isGrounded;
-	public Vector3 velocity;
-    public Vector3 move;
-    private int jumpticks = 6
-    ; // Amount of ticks the skinWidth will stick to new blocks
-    public MainControllerManager controls;
+    private int jumpticks = 6; // Amount of ticks the skinWidth will stick to new blocks
+    */
 
-    // Position properties
-    private ChunkPos currentPos;
-    private ChunkPos lastPos;
-    private CastCoord cacheCoord;
+    // Movement variables
+    public float maxNaturalSpeed = 5f;
+    public float drag = 5f;
+    private float momentum = 0f;
+    private Vector3 velocity = Vector3.zero;
+    private Vector3 direction;
+    private float movementAlignment = 0f;
 
-    // Cache
-    private NetMessage movementMessage;
-    private Vector3 position;
-    private Vector3 rotation;
+    // Growth
+    public float momentumGrowth = 2.4f;
+    public float minimumMomentumToStop = 0.3f;
+
 
     void OnDestroy(){
         this.controller = null;
     }
 
+    private Vector3 CalculateDirection(){return (this.transform.right * this.controls.movementX + this.transform.forward * this.controls.movementZ).normalized;}
+
+    private float CalculateMovementAlignment(){
+        if(this.velocity.magnitude == 0){
+            this.movementAlignment = 1f;
+        }
+        else{
+            this.movementAlignment = Vector3.Dot(this.velocity.normalized, this.direction);
+        }
+
+        if(this.movementAlignment >= 0.9995f){
+            this.movementAlignment = 1f;
+        }
+        else if(this.movementAlignment <= 0.05f){
+            this.movementAlignment *= this.drag * 12;
+        }
+
+        return this.movementAlignment;
+    }
+
+    private float CalculateMomentum(){
+        if(this.direction != Vector3.zero){
+            return Mathf.Clamp(this.momentum + (this.movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
+        }
+        else{
+            if(this.momentum <= this.minimumMomentumToStop){
+                return 0f;
+            }
+
+            return Mathf.Clamp(this.momentum - (this.drag * Time.deltaTime), 0f, 1f);
+        }
+    }
+
+    private Vector3 CalculateFinalVelocity(){
+        if(this.direction == Vector3.zero){
+            return this.velocity.normalized * this.momentum * this.maxNaturalSpeed;
+        }
+        else{
+            return this.direction * this.momentum * this.maxNaturalSpeed;
+        }
+    }
+
     // Update is called once per frame
-    void Update()
-    {
-        isGrounded = controller.isGrounded;
+    void Update(){
+        this.direction = CalculateDirection();
+        this.movementAlignment = CalculateMovementAlignment();
+        this.momentum = CalculateMomentum();
+        this.velocity = CalculateFinalVelocity();
 
+        this.controller.Move(this.velocity * Time.deltaTime);
+
+        //Debug.Log($"Dir: {this.direction} -- Align: {this.movementAlignment} -- Momentum: {this.momentum}");
+
+
+        /*
         if(!controls.freecam){
-
             // If is Grounded
-        	if(isGrounded){
+        	if(this.controller.isGrounded){
         		velocity.y = -0.1f;
         	}
             // If not, gravity affects
@@ -61,7 +110,7 @@ public class PlayerMovement : MonoBehaviour
             }
 
 
-            if(controls.jumping && isGrounded){
+            if(controls.jumping && this.controller.isGrounded){
                 velocity.y = jumpHeight;
                 jumpticks = 10;
                 controller.skinWidth = 0.4f;
@@ -86,7 +135,6 @@ public class PlayerMovement : MonoBehaviour
 
         // If on Freecam
         else{
-
             float x = controls.movementX;
             float z = controls.movementZ;
 
@@ -104,6 +152,7 @@ public class PlayerMovement : MonoBehaviour
                 velocity.y = 0;
             }
         }
+        */
     }
 
     // Headbumping Mechanics
