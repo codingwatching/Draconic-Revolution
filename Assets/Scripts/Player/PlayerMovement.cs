@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -24,70 +24,54 @@ public class PlayerMovement : MonoBehaviour
     private float momentum = 0f;
     private Vector3 velocity = Vector3.zero;
     private Vector3 direction;
+    private Vector3 finalMovement;
     private float movementAlignment = 0f;
 
     // Growth
     public float momentumGrowth = 2.4f;
     public float minimumMomentumToStop = 0.3f;
 
+    // Knockback
+    public float knockbackAlignment = 0f;
+    public Vector3 knockbackForce = Vector3.zero;
+    public float knockbackMomentum = 0f;
+
 
     void OnDestroy(){
         this.controller = null;
     }
 
-    private Vector3 CalculateDirection(){return (this.transform.right * this.controls.movementX + this.transform.forward * this.controls.movementZ).normalized;}
-
-    private float CalculateMovementAlignment(){
-        if(this.velocity.magnitude == 0){
-            this.movementAlignment = 1f;
+    public void AddKnockback(Vector3 dir, float momentum){
+        if(this.knockbackMomentum == 0f){
+            this.knockbackAlignment = CalculateMovementAlignment(this.velocity, dir);
+            this.knockbackMomentum = momentum;
+            this.knockbackForce = dir.normalized; // * momentum
         }
         else{
-            this.movementAlignment = Vector3.Dot(this.velocity.normalized, this.direction);
+            this.knockbackForce = (this.knockbackForce * this.knockbackMomentum) + (dir * momentum);
+            this.knockbackMomentum = this.knockbackForce.magnitude;
+            this.knockbackForce = this.knockbackForce.normalized;
+            this.knockbackAlignment = CalculateMovementAlignment(this.velocity, this.knockbackForce);
         }
 
-        if(this.movementAlignment >= 0.9995f){
-            this.movementAlignment = 1f;
-        }
-        else if(this.movementAlignment <= 0.05f){
-            this.movementAlignment *= this.drag * 12;
-        }
-
-        return this.movementAlignment;
-    }
-
-    private float CalculateMomentum(){
-        if(this.direction != Vector3.zero){
-            return Mathf.Clamp(this.momentum + (this.movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
-        }
-        else{
-            if(this.momentum <= this.minimumMomentumToStop){
-                return 0f;
-            }
-
-            return Mathf.Clamp(this.momentum - (this.drag * Time.deltaTime), 0f, 1f);
-        }
-    }
-
-    private Vector3 CalculateFinalVelocity(){
-        if(this.direction == Vector3.zero){
-            return this.velocity.normalized * this.momentum * this.maxNaturalSpeed;
-        }
-        else{
-            return this.direction * this.momentum * this.maxNaturalSpeed;
+        if(this.knockbackAlignment <= 0){
+            this.momentum = Mathf.Max(this.momentum * (this.knockbackAlignment * momentum), 0f);
         }
     }
 
     // Update is called once per frame
     void Update(){
         this.direction = CalculateDirection();
-        this.movementAlignment = CalculateMovementAlignment();
+        this.movementAlignment = CalculateMovementAlignment(this.velocity, this.direction);
         this.momentum = CalculateMomentum();
         this.velocity = CalculateFinalVelocity();
+        this.finalMovement = CalculateFinalMovement();
 
-        this.controller.Move(this.velocity * Time.deltaTime);
+        this.controller.Move(this.finalMovement * Time.deltaTime);
 
-        //Debug.Log($"Dir: {this.direction} -- Align: {this.movementAlignment} -- Momentum: {this.momentum}");
+        //Debug.Log($"Dir: {this.direction} -- Align: {this.movementAlignment} -- Momentum: {this.momentum} -- Knockback Mom: {this.knockbackMomentum} -- FinalMovement: {this.finalMovement}");
 
+        this.knockbackMomentum = CalculateKnockbackMomentumDecay();
 
         /*
         if(!controls.freecam){
@@ -155,8 +139,70 @@ public class PlayerMovement : MonoBehaviour
         */
     }
 
+    private Vector3 CalculateDirection(){return (this.transform.right * this.controls.movementX + this.transform.forward * this.controls.movementZ).normalized;}
+
+    private float CalculateMovementAlignment(Vector3 dir1, Vector3 dir2){
+        float align = 0f;
+
+        if(this.velocity.magnitude == 0){
+            align = 1f;
+        }
+        else{
+            align = Vector3.Dot(dir1.normalized, dir2.normalized);
+        }
+
+        if(align >= 0.9995f){
+            align = 1f;
+        }
+        else if(align <= 0.05f){
+            align *= this.drag * 12;
+        }
+
+        return align;
+    }
+
+    private float CalculateMomentum(){
+        if(this.direction != Vector3.zero){
+            return Mathf.Clamp(this.momentum + (this.movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
+        }
+        else{
+            if(this.momentum + this.knockbackMomentum <= this.minimumMomentumToStop){
+                return 0f;
+            }
+
+            return Mathf.Clamp(this.momentum - (this.drag * Time.deltaTime), 0f, 1f);
+        }
+    }
+
+    private float CalculateKnockbackMomentumDecay(){
+        float newMomentum = 0f;
+
+        if(this.knockbackMomentum == 0f)
+            return 0f;
+
+        newMomentum = this.knockbackMomentum - (drag * 2 * Time.deltaTime);
+
+        if(newMomentum <= this.minimumMomentumToStop)
+            return 0f;
+
+        return newMomentum;
+    }
+
+    private Vector3 CalculateFinalVelocity(){
+        if(this.direction == Vector3.zero){
+            return this.velocity.normalized * this.momentum * this.maxNaturalSpeed;
+        }
+        else{
+            return this.direction * this.momentum * this.maxNaturalSpeed;
+        }
+    }
+
+    private Vector3 CalculateFinalMovement(){
+        return this.velocity + (this.knockbackForce * this.knockbackMomentum);
+    }
+
     // Headbumping Mechanics
-    void OnControllerColliderHit(ControllerColliderHit hit){
+    private void OnControllerColliderHit(ControllerColliderHit hit){
         if(this.controller.isGrounded || controls.freecam)
             return;
 

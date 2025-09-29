@@ -35,6 +35,7 @@ public class MainControllerManager : MonoBehaviour
     public PlayerRaycast raycast;
     public Transform playerCamera;
     public ChunkLoader cl;
+    public PlayerMovement playerMovement; // TEST
 
     // Locks
     private bool LOCK_MOUSE1 = false;
@@ -95,6 +96,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleGravity(){
         gravityHack = !gravityHack;
+        this.playerMovement.AddKnockback(Vector3.forward, 30f);
     }
 
     public void OnPrefabRead(){
@@ -107,6 +109,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleFreeCam(){
         freecam = !freecam;
+        this.playerMovement.AddKnockback(Vector3.back, 30f);
     }
 
     public void OnShifting(){

@@ -660,16 +660,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cl: {fileID: 1192772367}
   controller: {fileID: 59614820}
-  speed: 5
-  gravity: -19.62
-  jumpHeight: 6
-  layerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  isGrounded: 0
-  velocity: {x: 0, y: 0, z: 0}
-  move: {x: 0, y: 0, z: 0}
   controls: {fileID: 1635249984}
+  maxNaturalSpeed: 5
+  drag: 5
+  momentumGrowth: 2.4
+  minimumMomentumToStop: 0.3
+  knockbackAlignment: 0
+  knockbackForce: {x: 0, y: 0, z: 0}
+  knockbackMomentum: 0
 --- !u!114 &59614824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29034,6 +29032,7 @@ MonoBehaviour:
   raycast: {fileID: 59614824}
   playerCamera: {fileID: 1912773808}
   cl: {fileID: 1192772367}
+  playerMovement: {fileID: 59614823}
 --- !u!4 &1635249985
 Transform:
   m_ObjectHideFlags: 0
