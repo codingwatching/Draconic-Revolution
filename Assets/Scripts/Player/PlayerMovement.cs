@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private Vector3 direction;
     private Vector3 finalMovement;
     private float movementAlignment = 0f;
+    public float jumpHeight = 5f;
 
     // Growth
     public float momentumGrowth = 2.4f;
@@ -72,18 +73,9 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    private float CalculateGravityAcceleration(){
-        if(this.controller.isGrounded){
-            return -0.01f;
-        }
-
-        float quadraticFactor = Mathf.Max(this.gravityMomentum + (this.gravityAcceleration * Time.fixedDeltaTime) / this.gravityMaxAccelerationTime, this.gravityAcceleration) / this.gravityAcceleration;
-
-        return Mathf.Pow(quadraticFactor, 1f) * this.gravityAcceleration;
-    }
-
     void FixedUpdate(){
         this.gravityMomentum = CalculateGravityAcceleration();
+        JumpCheck();
     }
 
     // Update is called once per frame
@@ -165,6 +157,19 @@ public class PlayerMovement : MonoBehaviour
             }
         }
         */
+    }
+
+    private void JumpCheck(){
+        if(this.controller.isGrounded && this.controls.jumping)
+            this.gravityMomentum = this.jumpHeight;
+    }
+
+    private float CalculateGravityAcceleration(){
+        if(this.controller.isGrounded){
+            return -0.01f;
+        }
+
+        return Mathf.Max(this.gravityMomentum + (this.gravityAcceleration * Time.fixedDeltaTime) / this.gravityMaxAccelerationTime, this.gravityAcceleration);
     }
 
     private Vector3 CalculateDirection(){return (this.transform.right * this.controls.movementX + this.transform.forward * this.controls.movementZ).normalized;}
