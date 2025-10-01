@@ -36,17 +36,24 @@ public class PlayerMovement : MonoBehaviour
     public Vector3 knockbackForce = Vector3.zero;
     public float knockbackMomentum = 0f;
 
+    // Gravity
+    public float gravityMomentum = 0f;
+    private float gravityAcceleration = -25f;
+    private float gravityMaxAccelerationTime = 1.6f;
+
 
     void OnDestroy(){
         this.controller = null;
     }
 
     public void AddKnockback(Vector3 dir, float momentum){
+        // If has no other knockback happening
         if(this.knockbackMomentum == 0f){
             this.knockbackAlignment = CalculateMovementAlignment(this.velocity, dir);
             this.knockbackMomentum = momentum;
-            this.knockbackForce = dir.normalized; // * momentum
+            this.knockbackForce = dir.normalized;
         }
+        // Handles multiple knockback at the same time
         else{
             this.knockbackForce = (this.knockbackForce * this.knockbackMomentum) + (dir * momentum);
             this.knockbackMomentum = this.knockbackForce.magnitude;
@@ -54,9 +61,29 @@ public class PlayerMovement : MonoBehaviour
             this.knockbackAlignment = CalculateMovementAlignment(this.velocity, this.knockbackForce);
         }
 
+        // Adjust gravity momentum
+        if(this.gravityMomentum < 0f){
+            this.gravityMomentum += Mathf.Max(this.knockbackForce.y * this.knockbackMomentum, 0f);
+        }
+
+        // Fast Stop
         if(this.knockbackAlignment <= 0){
             this.momentum = Mathf.Max(this.momentum * (this.knockbackAlignment * momentum), 0f);
         }
+    }
+
+    private float CalculateGravityAcceleration(){
+        if(this.controller.isGrounded){
+            return -0.01f;
+        }
+
+        float quadraticFactor = Mathf.Max(this.gravityMomentum + (this.gravityAcceleration * Time.fixedDeltaTime) / this.gravityMaxAccelerationTime, this.gravityAcceleration) / this.gravityAcceleration;
+
+        return Mathf.Pow(quadraticFactor, 1f) * this.gravityAcceleration;
+    }
+
+    void FixedUpdate(){
+        this.gravityMomentum = CalculateGravityAcceleration();
     }
 
     // Update is called once per frame
@@ -69,7 +96,8 @@ public class PlayerMovement : MonoBehaviour
 
         this.controller.Move(this.finalMovement * Time.deltaTime);
 
-        //Debug.Log($"Dir: {this.direction} -- Align: {this.movementAlignment} -- Momentum: {this.momentum} -- Knockback Mom: {this.knockbackMomentum} -- FinalMovement: {this.finalMovement}");
+        if(this.gravityMomentum < -0.01f)
+            Debug.Log($"Momentum: {this.momentum} -- Knockback Mom: {this.knockbackMomentum} -- GravityMomentum: {this.gravityMomentum} -- FinalMovement: {this.finalMovement}");
 
         this.knockbackMomentum = CalculateKnockbackMomentumDecay();
 
@@ -198,7 +226,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private Vector3 CalculateFinalMovement(){
-        return this.velocity + (this.knockbackForce * this.knockbackMomentum);
+        return this.velocity + (this.knockbackForce * this.knockbackMomentum) + (this.gravityMomentum * Vector3.up);
     }
 
     // Headbumping Mechanics
