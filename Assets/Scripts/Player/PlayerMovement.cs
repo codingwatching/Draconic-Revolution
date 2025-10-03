@@ -42,9 +42,34 @@ public class PlayerMovement : MonoBehaviour
     private float gravityAcceleration = -25f;
     private float gravityMaxAccelerationTime = 1.6f;
 
+    // Running
+    private float maxRunningMomentum = 1f;
+    private float runMomentumGrowth = 0.7f;
+    private float runMomentumDecrease = 3f;
+    private float runMomentumBoost = 0f;
+
 
     void OnDestroy(){
         this.controller = null;
+    }
+
+    void FixedUpdate(){
+        this.gravityMomentum = CalculateGravityAcceleration();
+        JumpCheck();
+    }
+
+    // Update is called once per frame
+    void Update(){
+        this.direction = CalculateDirection();
+        this.movementAlignment = CalculateMovementAlignment(this.velocity, this.direction);
+        this.momentum = CalculateMomentum();
+        this.runMomentumBoost = CalculateRunMomentumBoost();
+        this.velocity = CalculateFinalVelocity();
+        this.finalMovement = CalculateFinalMovement();
+
+        this.controller.Move(this.finalMovement * Time.deltaTime);
+
+        this.knockbackMomentum = CalculateKnockbackMomentumDecay();
     }
 
     public void AddKnockback(Vector3 dir, float momentum){
@@ -73,90 +98,12 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void FixedUpdate(){
-        this.gravityMomentum = CalculateGravityAcceleration();
-        JumpCheck();
-    }
-
-    // Update is called once per frame
-    void Update(){
-        this.direction = CalculateDirection();
-        this.movementAlignment = CalculateMovementAlignment(this.velocity, this.direction);
-        this.momentum = CalculateMomentum();
-        this.velocity = CalculateFinalVelocity();
-        this.finalMovement = CalculateFinalMovement();
-
-        this.controller.Move(this.finalMovement * Time.deltaTime);
-
-        if(this.gravityMomentum < -0.01f)
-            Debug.Log($"Momentum: {this.momentum} -- Knockback Mom: {this.knockbackMomentum} -- GravityMomentum: {this.gravityMomentum} -- FinalMovement: {this.finalMovement}");
-
-        this.knockbackMomentum = CalculateKnockbackMomentumDecay();
-
-        /*
-        if(!controls.freecam){
-            // If is Grounded
-        	if(this.controller.isGrounded){
-        		velocity.y = -0.1f;
-        	}
-            // If not, gravity affects
-            else{
-                velocity.y += gravity * Time.deltaTime;
-            }
-
-            float x = controls.movementX;
-            float z = controls.movementZ;
-
-            // Only move if not in menu
-            if(!MainControllerManager.InUI){
-                move = transform.right * x + transform.forward * z;
-                controller.Move(move * speed * Time.deltaTime);
-            }
-
-
-            if(controls.jumping && this.controller.isGrounded){
-                velocity.y = jumpHeight;
-                jumpticks = 10;
-                controller.skinWidth = 0.4f;
-            }
-
-            // Block Sticking
-            if(jumpticks > 0){
-                jumpticks--;
-            }
-            else{
-                controller.skinWidth = 0.008f;
-            }
-
-            // If gravity hack is toggled
-            if(controls.gravityHack){
-                velocity.y = 20f;
-            }
-
-            // Gravity
-            controller.Move(velocity * Time.deltaTime);
+    private float CalculateRunMomentumBoost(){
+        if(this.momentum == 1 && MainControllerManager.shifting && CheckValidRunDirection()){
+            return Mathf.Clamp(this.runMomentumBoost + (this.movementAlignment * this.runMomentumGrowth * Time.deltaTime), 0, this.maxRunningMomentum);
         }
-
-        // If on Freecam
-        else{
-            float x = controls.movementX;
-            float z = controls.movementZ;
-
-            move = transform.right * x + transform.forward * z;
-            controller.Move(move * speed * Time.deltaTime);
-
-            if(controls.jumping){
-                velocity.y = 5;
-                controller.Move(velocity * Time.deltaTime);
-                velocity.y = 0;
-            }
-            else if(MainControllerManager.shifting && !MainControllerManager.InUI){
-                velocity.y = -5;
-                controller.Move(velocity * Time.deltaTime);
-                velocity.y = 0;
-            }
-        }
-        */
+        
+        return Mathf.Clamp(this.runMomentumBoost - (this.movementAlignment * this.runMomentumDecrease * Time.deltaTime), 0, this.maxRunningMomentum);
     }
 
     private void JumpCheck(){
@@ -226,12 +173,20 @@ public class PlayerMovement : MonoBehaviour
             return this.velocity.normalized * this.momentum * this.maxNaturalSpeed;
         }
         else{
-            return this.direction * this.momentum * this.maxNaturalSpeed;
+            return this.direction * (this.momentum + this.runMomentumBoost) * this.maxNaturalSpeed;
         }
     }
 
     private Vector3 CalculateFinalMovement(){
         return this.velocity + (this.knockbackForce * this.knockbackMomentum) + (this.gravityMomentum * Vector3.up);
+    }
+
+    private bool CheckValidRunDirection(){
+        float alignment = Vector3.Dot(this.transform.forward, this.direction);
+
+        if(alignment >= 0.7f)
+            return true;
+        return false;
     }
 
     // Headbumping Mechanics
