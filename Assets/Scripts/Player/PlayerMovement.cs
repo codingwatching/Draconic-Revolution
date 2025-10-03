@@ -10,14 +10,6 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public MainControllerManager controls;
 
-    // Movement properties
-    /*
-	public float speed = 5f;
-	public float gravity = -19.62f;
-	public float jumpHeight = 5f;
-    private int jumpticks = 6; // Amount of ticks the skinWidth will stick to new blocks
-    */
-
     // Movement variables
     public float maxNaturalSpeed = 5f;
     public float drag = 5f;
@@ -47,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
     private float runMomentumGrowth = 0.7f;
     private float runMomentumDecrease = 3f;
     private float runMomentumBoost = 0f;
+    private float povAdjustment = 15f;
 
 
     void OnDestroy(){
@@ -70,6 +63,8 @@ public class PlayerMovement : MonoBehaviour
         this.controller.Move(this.finalMovement * Time.deltaTime);
 
         this.knockbackMomentum = CalculateKnockbackMomentumDecay();
+
+        UpdateFOV();
     }
 
     public void AddKnockback(Vector3 dir, float momentum){
@@ -187,6 +182,13 @@ public class PlayerMovement : MonoBehaviour
         if(alignment >= 0.7f)
             return true;
         return false;
+    }
+
+    private void UpdateFOV(){
+        if(this.runMomentumBoost == 0 && this.cl.playerRaycast.playerCamera.fieldOfView == Configurations.fieldOfView)
+            return;
+
+        this.cl.playerRaycast.playerCamera.fieldOfView = Configurations.fieldOfView + Mathf.Lerp(0, this.povAdjustment, this.runMomentumBoost/this.maxRunningMomentum);
     }
 
     // Headbumping Mechanics
