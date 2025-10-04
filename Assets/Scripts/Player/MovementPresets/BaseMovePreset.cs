@@ -12,12 +12,7 @@ public abstract class BaseMovePreset {
     protected float momentumGrowth = 2.4f;
     protected float minimumMomentumToStop = 0.3f;
 
-    // Knockback
-    protected float knockbackAlignment = 0f;
-    protected float knockbackMomentum = 0f;
-
     // Gravity
-    protected float gravityMomentum = 0f;
     protected float gravityAcceleration = -25f;
     protected float gravityMaxAccelerationTime = 1.6f;
 
@@ -38,9 +33,6 @@ public abstract class BaseMovePreset {
 		this.jumpHeight = 5.4f;
 		this.momentumGrowth = 2.4f;
 		this.minimumMomentumToStop = 0.3f;
-		this.knockbackAlignment = 0f;
-		this.knockbackMomentum = 0f;
-		this.gravityMomentum = 0f;
 		this.gravityAcceleration = -25f;
 		this.gravityMaxAccelerationTime = 1.6f;
 		this.maxRunningMomentum = 0.5f;
@@ -121,20 +113,22 @@ public abstract class BaseMovePreset {
 		return velocity + (knockbackForce * knockbackMomentum) + (gravityMomentum * Vector3.up);
 	}
 
-	public virtual float CalculateGravityAcceleration(bool isGrounded, float currentGravityMomentum){
-        if(isGrounded){
+	public virtual float CalculateGravityAcceleration(MovementFlags flags, float currentGravityMomentum){
+        if(flags.isGrounded){
             return -0.01f;
         }
 
         return Mathf.Max(currentGravityMomentum + (this.gravityAcceleration * Time.fixedDeltaTime) / this.gravityMaxAccelerationTime, this.gravityAcceleration);
 	}
 
-	public virtual float CalculateJump(bool isGrounded, bool isJumping, float gravityMomentum){
-        if(isGrounded && isJumping && this.gravityMomentum < this.jumpHeight)
+	public virtual float CalculateJump(MovementFlags flags, float gravityMomentum){
+        if(flags.isGrounded && flags.isJumping && gravityMomentum < this.jumpHeight)
             return this.jumpHeight;
 
         return gravityMomentum;
 	}
+
+    public virtual float ProcessKnockbackMomentum(float currentKnockbackMomentum){return currentKnockbackMomentum;}
 
 	public virtual float CalculateKnockbackMomentumDecay(float currentKnockbackMomentum){
         float newMomentum = 0f;

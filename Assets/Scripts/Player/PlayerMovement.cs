@@ -30,23 +30,33 @@ public class PlayerMovement : MonoBehaviour
     // Gravity
     public float gravityMomentum;
 
+    // Flags
+    public MovementFlags? flags;
+
 
     void OnDestroy(){
         this.controller = null;
     }
 
     void FixedUpdate(){
-        if(this.movementOrchestrator == null)
+        if(this.movementOrchestrator == null || this.flags == null)
             return;
 
-        this.gravityMomentum = this.movementOrchestrator.CalculateGravityAcceleration(this.controller.isGrounded, this.gravityMomentum);
-        this.gravityMomentum = this.movementOrchestrator.CalculateJump(this.controller.isGrounded, this.controls.jumping, this.gravityMomentum);
+        this.gravityMomentum = this.movementOrchestrator.CalculateGravityAcceleration((MovementFlags)this.flags, this.gravityMomentum);
+        this.gravityMomentum = this.movementOrchestrator.CalculateJump((MovementFlags)this.flags, this.gravityMomentum);
     }
 
     // Update is called once per frame
     void Update(){
         if(this.movementOrchestrator == null)
             return;
+
+        this.flags = new MovementFlags{
+            isGrounded = this.controller.isGrounded,
+            isJumping = this.controls.jumping,
+            isShifting = MainControllerManager.shifting,
+            isControlling = MainControllerManager.ctrl
+        };
 
         this.direction = this.movementOrchestrator.CalculateDirection(this.transform, this.controls.movementX, this.controls.movementZ);
         this.movementAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.direction, this.velocity);
@@ -66,20 +76,36 @@ public class PlayerMovement : MonoBehaviour
 
     public void Init(){
         this.playerSheetController = this.cl.playerSheetController;
-        this.movementOrchestrator = new NormalMovePreset(this.playerSheetController.GetSheet());
+        this.movementOrchestrator = new NormalMovePreset(this.cl.playerSheetController.GetSheet());
+    }
+
+    public void ChangeMoveset(Moveset moveSet){
+        CharacterSheet sheet = this.playerSheetController.GetSheet();
+
+        switch(moveSet){
+            case Moveset.NORMAL:
+                this.movementOrchestrator = new NormalMovePreset(sheet);
+                break;
+            case Moveset.FREECAM:
+                this.movementOrchestrator = new FreecamMovePreset(sheet);
+                break;
+            default:
+                this.movementOrchestrator = new NormalMovePreset(sheet);
+                break;
+        }
     }
 
     public void AddKnockback(Vector3 dir, float momentum){
         // If has no other knockback happening
         if(this.knockbackMomentum == 0f){
             this.knockbackAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, dir, this.velocity);
-            this.knockbackMomentum = momentum;
+            this.knockbackMomentum = this.movementOrchestrator.ProcessKnockbackMomentum(momentum);
             this.knockbackForce = dir.normalized;
         }
         // Handles multiple knockback at the same time
         else{
             this.knockbackForce = (this.knockbackForce * this.knockbackMomentum) + (dir * momentum);
-            this.knockbackMomentum = this.knockbackForce.magnitude;
+            this.knockbackMomentum = this.movementOrchestrator.ProcessKnockbackMomentum(this.knockbackForce.magnitude);
             this.knockbackForce = this.knockbackForce.normalized;
             this.knockbackAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.knockbackForce, this.velocity);
         }

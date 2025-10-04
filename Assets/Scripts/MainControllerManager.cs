@@ -109,7 +109,11 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleFreeCam(){
         freecam = !freecam;
-        this.playerMovement.AddKnockback(Vector3.back, 5f);
+
+        if(freecam)
+            this.playerMovement.ChangeMoveset(Moveset.FREECAM);
+        else
+            this.playerMovement.ChangeMoveset(Moveset.NORMAL);
     }
 
     public void OnShifting(){
