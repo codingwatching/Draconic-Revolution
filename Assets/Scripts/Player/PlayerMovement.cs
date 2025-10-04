@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Init(){
         this.playerSheetController = this.cl.playerSheetController;
-        this.movementOrchestrator = new NormalMovePreset(this.cl.playerSheetController.GetSheet());
+        this.movementOrchestrator = new SwimmingMovePreset(this.cl.playerSheetController.GetSheet());
     }
 
     public void ChangeMoveset(Moveset moveSet){
@@ -88,6 +88,9 @@ public class PlayerMovement : MonoBehaviour
                 break;
             case Moveset.FREECAM:
                 this.movementOrchestrator = new FreecamMovePreset(sheet);
+                break;
+            case Moveset.SWIM:
+                this.movementOrchestrator = new SwimmingMovePreset(sheet);
                 break;
             default:
                 this.movementOrchestrator = new NormalMovePreset(sheet);
