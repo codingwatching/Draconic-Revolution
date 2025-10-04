@@ -5,8 +5,8 @@ public abstract class BaseMovePreset {
 
     // Movement variables
     public float maxNaturalSpeed = 0f;
-    protected float drag = 5f;
-    protected float jumpHeight = 5f;
+    protected float drag = 3.5f;
+    protected float jumpHeight = 5.4f;
 
     // Growth
     protected float momentumGrowth = 2.4f;
@@ -22,17 +22,20 @@ public abstract class BaseMovePreset {
     protected float gravityMaxAccelerationTime = 1.6f;
 
     // Running
-    protected float maxRunningMomentum = 1f;
-    protected float runMomentumGrowth = 0.7f;
-    protected float runMomentumDecrease = 3f;
-    protected float runMomentumBoost = 0f;
+    protected float maxRunningMomentum = 0.5f;
+    protected float runMomentumGrowth = 0.6f;
+    protected float runMomentumDecrease = 2f;
     protected float povAdjustment = 15f;
+
+    // Impact
+    protected float maximumImpactAngleTolerance = -0.7f;
+    protected float maximumAllowedMomentumAfterImpact = 0.3f;
 
     public BaseMovePreset(CharacterSheet sheet){
     	this.playerSheet = sheet;
-    	this.maxNaturalSpeed = 2 + (sheet.GetSpeed().GetFinal())/3.3333f;
+    	this.maxNaturalSpeed = 2 + (sheet.GetSpeed().GetFinal())/5f;
 		this.drag = 3.5f;
-		this.jumpHeight = 5f;
+		this.jumpHeight = 5.4f;
 		this.momentumGrowth = 2.4f;
 		this.minimumMomentumToStop = 0.3f;
 		this.knockbackAlignment = 0f;
@@ -40,11 +43,12 @@ public abstract class BaseMovePreset {
 		this.gravityMomentum = 0f;
 		this.gravityAcceleration = -25f;
 		this.gravityMaxAccelerationTime = 1.6f;
-		this.maxRunningMomentum = 1f;
-		this.runMomentumGrowth = 0.7f;
-		this.runMomentumDecrease = 3f;
-		this.runMomentumBoost = 0f;
+		this.maxRunningMomentum = 0.5f;
+		this.runMomentumGrowth = 0.6f;
+		this.runMomentumDecrease = 2f;
 		this.povAdjustment = 15f;
+        this.maximumImpactAngleTolerance = -0.7f;
+        this.maximumAllowedMomentumAfterImpact = 0.3f;
     }
 	
 	public virtual Vector3 CalculateDirection(Transform player, float controllerX, float controllerZ){return (player.right * controllerX + player.forward * controllerZ).normalized;}
@@ -153,10 +157,22 @@ public abstract class BaseMovePreset {
         cam.fieldOfView = Configurations.fieldOfView + Mathf.Lerp(0, this.povAdjustment, currentRunMomentum/this.maxRunningMomentum);
     }
 
+    public virtual float CalculateImpact(Vector3 movement, float momentum, Vector3 impactNormal){
+        float dot = Vector3.Dot(movement.normalized, impactNormal.normalized);
+
+        if(dot >= this.maximumImpactAngleTolerance)
+            return momentum;
+
+        if(momentum >= this.maximumAllowedMomentumAfterImpact)
+            return this.maximumAllowedMomentumAfterImpact;
+
+        return momentum;
+    }
+
     protected bool CheckValidRunDirection(Transform t, Vector3 playerDirection){
         float alignment = Vector3.Dot(t.forward, playerDirection);
 
-        if(alignment >= 0.95f)
+        if(alignment >= 0.7f)
             return true;
         return false;
     }

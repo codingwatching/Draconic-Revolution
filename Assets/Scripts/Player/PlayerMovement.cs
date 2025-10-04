@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
 
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
 
-        Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} | {this.velocity.magnitude} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
+        Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
     }
 
     public void Init(){
@@ -97,13 +97,14 @@ public class PlayerMovement : MonoBehaviour
 
     // Headbumping Mechanics
     private void OnControllerColliderHit(ControllerColliderHit hit){
-        if(this.controller.isGrounded || controls.freecam)
-            return;
+        if((this.controller.collisionFlags & CollisionFlags.Sides) != 0){
+            this.momentum = this.movementOrchestrator.CalculateImpact(this.velocity, this.momentum, hit.normal);
+            this.knockbackMomentum = this.movementOrchestrator.CalculateImpact(this.knockbackForce, this.knockbackMomentum, hit.normal);
+            this.runMomentumBoost = this.movementOrchestrator.CalculateImpact(this.velocity, this.runMomentumBoost, hit.normal);
+        }
 
-        Vector3 impactPoint = hit.point;
-
-        if(this.velocity.y >= 0 && impactPoint.y > this.gameObject.transform.position.y){
-            this.velocity.y = -this.velocity.y;
+        if((this.controller.collisionFlags & CollisionFlags.Above) != 0){
+            this.gravityMomentum = Mathf.Min(this.gravityMomentum, 0f);
         }
     }
 }
