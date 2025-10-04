@@ -31,7 +31,7 @@ public abstract class BaseMovePreset {
     public BaseMovePreset(CharacterSheet sheet){
     	this.playerSheet = sheet;
     	this.maxNaturalSpeed = 2 + (sheet.GetSpeed().GetFinal())/3.3333f;
-		this.drag = 5f;
+		this.drag = 3.5f;
 		this.jumpHeight = 5f;
 		this.momentumGrowth = 2.4f;
 		this.minimumMomentumToStop = 0.3f;
@@ -51,19 +51,20 @@ public abstract class BaseMovePreset {
 
 	public virtual float CalculateMovementAlignment(Vector3 a, Vector3 b, Vector3 playerVelocity){
         float align = 0f;
+        float absolute = 0f;
 
-        if(playerVelocity.magnitude == 0){
-            align = 1f;
-        }
-        else{
-            align = Vector3.Dot(a.normalized, b.normalized);
-        }
+        if(a.magnitude == 0 || b.magnitude == 0 || playerVelocity.magnitude == 0)
+            return 1f;
+
+        align = Vector3.Dot(a.normalized, b.normalized);
+        absolute = Mathf.Abs(align);
 
         if(align >= 0.9995f){
             align = 1f;
         }
-        else if(align <= 0.05f){
-            align *= this.drag * 12;
+
+        else if(absolute > 0 && absolute <= 0.01f){
+            align = 0f;
         }
 
         return align;
@@ -71,7 +72,11 @@ public abstract class BaseMovePreset {
 
 	public virtual float CalculateMomentum(Vector3 playerDirection, float currentMomentum, float currentKnockbackMomentum, float movementAlignment){
         if(playerDirection != Vector3.zero){
-            return Mathf.Clamp(currentMomentum + (movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
+            if(movementAlignment > 0)
+                return Mathf.Clamp(currentMomentum + (movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
+            else{
+                return Mathf.Clamp(currentMomentum - (this.drag * Time.deltaTime), 0f, 1f);
+            }
         }
         else{
             if(currentMomentum + currentKnockbackMomentum <= this.minimumMomentumToStop){
@@ -87,15 +92,24 @@ public abstract class BaseMovePreset {
             return Mathf.Clamp(currentRunMomentum + (movementAlignment * this.runMomentumGrowth * Time.deltaTime), 0, this.maxRunningMomentum);
         }
         
-        return Mathf.Clamp(currentRunMomentum - (movementAlignment * this.runMomentumDecrease * Time.deltaTime), 0, this.maxRunningMomentum);
+        return Mathf.Clamp(currentRunMomentum - (Mathf.Abs(movementAlignment) * this.runMomentumDecrease * Time.deltaTime), 0, this.maxRunningMomentum);
 	}
 
-	public virtual Vector3 CalculateFinalVelocity(Vector3 playerDirection, Vector3 playerVelocity, float currentMomentum, float currentRunMomentum){
+	public virtual Vector3 CalculateFinalVelocity(Vector3 playerDirection, Vector3 playerVelocity, float currentMomentum, float currentRunMomentum, float alignment){
+        Vector3 sum;
+
         if(playerDirection == Vector3.zero){
             return playerVelocity.normalized * currentMomentum * this.maxNaturalSpeed;
         }
         else{
-            return playerDirection * (currentMomentum + currentRunMomentum) * this.maxNaturalSpeed;
+            if(alignment >= 0){
+                sum = playerVelocity + (playerDirection * (currentMomentum + currentRunMomentum) * this.maxNaturalSpeed);
+            }
+            else
+                sum = playerVelocity.normalized * (currentMomentum + currentRunMomentum) * this.maxNaturalSpeed;
+
+
+            return sum.normalized * this.maxNaturalSpeed * (currentMomentum + currentRunMomentum);
         }
 	}
 
@@ -142,7 +156,7 @@ public abstract class BaseMovePreset {
     protected bool CheckValidRunDirection(Transform t, Vector3 playerDirection){
         float alignment = Vector3.Dot(t.forward, playerDirection);
 
-        if(alignment >= 0.7f)
+        if(alignment >= 0.95f)
             return true;
         return false;
     }

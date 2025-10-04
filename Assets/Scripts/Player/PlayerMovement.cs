@@ -52,7 +52,7 @@ public class PlayerMovement : MonoBehaviour
         this.movementAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.direction, this.velocity);
         this.momentum = this.movementOrchestrator.CalculateMomentum(this.direction, this.momentum, this.knockbackMomentum, this.movementAlignment);
         this.runMomentumBoost = this.movementOrchestrator.CalculateRunMomentumBoost(this.transform, this.direction, this.runMomentumBoost, this.momentum, this.movementAlignment);
-        this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost);
+        this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost, this.movementAlignment);
         this.finalMovement = this.movementOrchestrator.CalculateFinalMovement(this.velocity, this.knockbackForce, this.knockbackMomentum, this.gravityMomentum);
 
         this.controller.Move(this.finalMovement * Time.deltaTime);
@@ -60,6 +60,8 @@ public class PlayerMovement : MonoBehaviour
         this.knockbackMomentum = this.movementOrchestrator.CalculateKnockbackMomentumDecay(this.knockbackMomentum);
 
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
+
+        Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} | {this.velocity.magnitude} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
     }
 
     public void Init(){
