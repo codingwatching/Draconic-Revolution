@@ -96,7 +96,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleGravity(){
         gravityHack = !gravityHack;
-        this.playerMovement.AddKnockback(Vector3.forward, 30f);
+        this.playerMovement.AddKnockback(Vector3.forward, 5f);
     }
 
     public void OnPrefabRead(){
@@ -109,7 +109,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleFreeCam(){
         freecam = !freecam;
-        this.playerMovement.AddKnockback(Vector3.back, 30f);
+        this.playerMovement.AddKnockback(Vector3.back, 5f);
     }
 
     public void OnShifting(){

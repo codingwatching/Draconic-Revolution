@@ -9,37 +9,26 @@ public class PlayerMovement : MonoBehaviour
     public ChunkLoader cl;
     public CharacterController controller;
     public MainControllerManager controls;
+    private PlayerSheetController playerSheetController;
+
+    // Movement Preset
+    private BaseMovePreset movementOrchestrator;
 
     // Movement variables
-    public float maxNaturalSpeed = 5f;
-    public float drag = 5f;
-    private float momentum = 0f;
+    private float momentum;
     private Vector3 velocity = Vector3.zero;
     private Vector3 direction;
     private Vector3 finalMovement;
-    private float movementAlignment = 0f;
-    public float jumpHeight = 5f;
-
-    // Growth
-    public float momentumGrowth = 2.4f;
-    public float minimumMomentumToStop = 0.3f;
+    private float movementAlignment;
+    private float runMomentumBoost;
 
     // Knockback
-    public float knockbackAlignment = 0f;
+    public float knockbackAlignment;
     public Vector3 knockbackForce = Vector3.zero;
-    public float knockbackMomentum = 0f;
+    public float knockbackMomentum;
 
     // Gravity
-    public float gravityMomentum = 0f;
-    private float gravityAcceleration = -25f;
-    private float gravityMaxAccelerationTime = 1.6f;
-
-    // Running
-    private float maxRunningMomentum = 1f;
-    private float runMomentumGrowth = 0.7f;
-    private float runMomentumDecrease = 3f;
-    private float runMomentumBoost = 0f;
-    private float povAdjustment = 15f;
+    public float gravityMomentum;
 
 
     void OnDestroy(){
@@ -47,30 +36,41 @@ public class PlayerMovement : MonoBehaviour
     }
 
     void FixedUpdate(){
-        this.gravityMomentum = CalculateGravityAcceleration();
-        JumpCheck();
+        if(this.movementOrchestrator == null)
+            return;
+
+        this.gravityMomentum = this.movementOrchestrator.CalculateGravityAcceleration(this.controller.isGrounded, this.gravityMomentum);
+        this.gravityMomentum = this.movementOrchestrator.CalculateJump(this.controller.isGrounded, this.controls.jumping, this.gravityMomentum);
     }
 
     // Update is called once per frame
     void Update(){
-        this.direction = CalculateDirection();
-        this.movementAlignment = CalculateMovementAlignment(this.velocity, this.direction);
-        this.momentum = CalculateMomentum();
-        this.runMomentumBoost = CalculateRunMomentumBoost();
-        this.velocity = CalculateFinalVelocity();
-        this.finalMovement = CalculateFinalMovement();
+        if(this.movementOrchestrator == null)
+            return;
+
+        this.direction = this.movementOrchestrator.CalculateDirection(this.transform, this.controls.movementX, this.controls.movementZ);
+        this.movementAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.direction, this.velocity);
+        this.momentum = this.movementOrchestrator.CalculateMomentum(this.direction, this.momentum, this.knockbackMomentum, this.movementAlignment);
+        this.runMomentumBoost = this.movementOrchestrator.CalculateRunMomentumBoost(this.transform, this.direction, this.runMomentumBoost, this.momentum, this.movementAlignment);
+        this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost);
+        this.finalMovement = this.movementOrchestrator.CalculateFinalMovement(this.velocity, this.knockbackForce, this.knockbackMomentum, this.gravityMomentum);
 
         this.controller.Move(this.finalMovement * Time.deltaTime);
 
-        this.knockbackMomentum = CalculateKnockbackMomentumDecay();
+        this.knockbackMomentum = this.movementOrchestrator.CalculateKnockbackMomentumDecay(this.knockbackMomentum);
 
-        UpdateFOV();
+        this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
+    }
+
+    public void Init(){
+        this.playerSheetController = this.cl.playerSheetController;
+        this.movementOrchestrator = new NormalMovePreset(this.playerSheetController.GetSheet());
     }
 
     public void AddKnockback(Vector3 dir, float momentum){
         // If has no other knockback happening
         if(this.knockbackMomentum == 0f){
-            this.knockbackAlignment = CalculateMovementAlignment(this.velocity, dir);
+            this.knockbackAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, dir, this.velocity);
             this.knockbackMomentum = momentum;
             this.knockbackForce = dir.normalized;
         }
@@ -79,7 +79,7 @@ public class PlayerMovement : MonoBehaviour
             this.knockbackForce = (this.knockbackForce * this.knockbackMomentum) + (dir * momentum);
             this.knockbackMomentum = this.knockbackForce.magnitude;
             this.knockbackForce = this.knockbackForce.normalized;
-            this.knockbackAlignment = CalculateMovementAlignment(this.velocity, this.knockbackForce);
+            this.knockbackAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.knockbackForce, this.velocity);
         }
 
         // Adjust gravity momentum
@@ -91,104 +91,6 @@ public class PlayerMovement : MonoBehaviour
         if(this.knockbackAlignment <= 0){
             this.momentum = Mathf.Max(this.momentum * (this.knockbackAlignment * momentum), 0f);
         }
-    }
-
-    private float CalculateRunMomentumBoost(){
-        if(this.momentum == 1 && MainControllerManager.shifting && CheckValidRunDirection()){
-            return Mathf.Clamp(this.runMomentumBoost + (this.movementAlignment * this.runMomentumGrowth * Time.deltaTime), 0, this.maxRunningMomentum);
-        }
-        
-        return Mathf.Clamp(this.runMomentumBoost - (this.movementAlignment * this.runMomentumDecrease * Time.deltaTime), 0, this.maxRunningMomentum);
-    }
-
-    private void JumpCheck(){
-        if(this.controller.isGrounded && this.controls.jumping)
-            this.gravityMomentum = this.jumpHeight;
-    }
-
-    private float CalculateGravityAcceleration(){
-        if(this.controller.isGrounded){
-            return -0.01f;
-        }
-
-        return Mathf.Max(this.gravityMomentum + (this.gravityAcceleration * Time.fixedDeltaTime) / this.gravityMaxAccelerationTime, this.gravityAcceleration);
-    }
-
-    private Vector3 CalculateDirection(){return (this.transform.right * this.controls.movementX + this.transform.forward * this.controls.movementZ).normalized;}
-
-    private float CalculateMovementAlignment(Vector3 dir1, Vector3 dir2){
-        float align = 0f;
-
-        if(this.velocity.magnitude == 0){
-            align = 1f;
-        }
-        else{
-            align = Vector3.Dot(dir1.normalized, dir2.normalized);
-        }
-
-        if(align >= 0.9995f){
-            align = 1f;
-        }
-        else if(align <= 0.05f){
-            align *= this.drag * 12;
-        }
-
-        return align;
-    }
-
-    private float CalculateMomentum(){
-        if(this.direction != Vector3.zero){
-            return Mathf.Clamp(this.momentum + (this.movementAlignment * this.momentumGrowth * Time.deltaTime), 0f, 1f);
-        }
-        else{
-            if(this.momentum + this.knockbackMomentum <= this.minimumMomentumToStop){
-                return 0f;
-            }
-
-            return Mathf.Clamp(this.momentum - (this.drag * Time.deltaTime), 0f, 1f);
-        }
-    }
-
-    private float CalculateKnockbackMomentumDecay(){
-        float newMomentum = 0f;
-
-        if(this.knockbackMomentum == 0f)
-            return 0f;
-
-        newMomentum = this.knockbackMomentum - (drag * 2 * Time.deltaTime);
-
-        if(newMomentum <= this.minimumMomentumToStop)
-            return 0f;
-
-        return newMomentum;
-    }
-
-    private Vector3 CalculateFinalVelocity(){
-        if(this.direction == Vector3.zero){
-            return this.velocity.normalized * this.momentum * this.maxNaturalSpeed;
-        }
-        else{
-            return this.direction * (this.momentum + this.runMomentumBoost) * this.maxNaturalSpeed;
-        }
-    }
-
-    private Vector3 CalculateFinalMovement(){
-        return this.velocity + (this.knockbackForce * this.knockbackMomentum) + (this.gravityMomentum * Vector3.up);
-    }
-
-    private bool CheckValidRunDirection(){
-        float alignment = Vector3.Dot(this.transform.forward, this.direction);
-
-        if(alignment >= 0.7f)
-            return true;
-        return false;
-    }
-
-    private void UpdateFOV(){
-        if(this.runMomentumBoost == 0 && this.cl.playerRaycast.playerCamera.fieldOfView == Configurations.fieldOfView)
-            return;
-
-        this.cl.playerRaycast.playerCamera.fieldOfView = Configurations.fieldOfView + Mathf.Lerp(0, this.povAdjustment, this.runMomentumBoost/this.maxRunningMomentum);
     }
 
     // Headbumping Mechanics

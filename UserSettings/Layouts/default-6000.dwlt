@@ -167,7 +167,7 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 1920
-    height: 690
+    height: 708
   m_MinSize: {x: 300, y: 50}
   m_MaxSize: {x: 24288, y: 8096}
   vertical: 0
@@ -191,7 +191,7 @@ MonoBehaviour:
     x: 0
     y: 0
     width: 309
-    height: 690
+    height: 708
   m_MinSize: {x: 201, y: 226}
   m_MaxSize: {x: 4001, y: 4026}
   m_ActualView: {fileID: 13}
@@ -217,7 +217,7 @@ MonoBehaviour:
     x: 309
     y: 0
     width: 1276
-    height: 690
+    height: 708
   m_MinSize: {x: 202, y: 226}
   m_MaxSize: {x: 4002, y: 4026}
   m_ActualView: {fileID: 15}
@@ -246,9 +246,9 @@ MonoBehaviour:
     x: 1585
     y: 0
     width: 335
-    height: 690
-  m_MinSize: {x: 276, y: 76}
-  m_MaxSize: {x: 4001, y: 4026}
+    height: 708
+  m_MinSize: {x: 275, y: 50}
+  m_MaxSize: {x: 4000, y: 4000}
   m_ActualView: {fileID: 17}
   m_Panes:
   - {fileID: 17}
@@ -270,9 +270,9 @@ MonoBehaviour:
   m_Position:
     serializedVersion: 2
     x: 0
-    y: 690
+    y: 708
     width: 1920
-    height: 243
+    height: 225
   m_MinSize: {x: 100, y: 126}
   m_MaxSize: {x: 4000, y: 4026}
   m_ActualView: {fileID: 19}
@@ -379,9 +379,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 24
+    y: 79
     width: 308
-    height: 664
+    height: 682
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -396,9 +396,9 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
-      m_SelectedIDs: 
+      m_SelectedIDs: ecce0000
       m_LastClickedID: 0
-      m_ExpandedIDs: 
+      m_ExpandedIDs: 74e6ffffecce0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1039,7 +1039,7 @@ MonoBehaviour:
   m_Rotation:
     m_Target: {x: -0.080511376, y: -0.51930356, z: 0.049212188, w: -0.84938383}
     speed: 2
-    m_Value: {x: 0.08051138, y: 0.51930356, z: -0.049212188, w: 0.8493839}
+    m_Value: {x: -0.08051005, y: -0.51929504, z: 0.04921138, w: -0.8493699}
   m_Size:
     m_Target: 1.9390529
     speed: 2
@@ -1096,10 +1096,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Game\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 310
-    y: 24
+    x: 309
+    y: 79
     width: 1274
-    height: 664
+    height: 682
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1154,22 +1154,22 @@ MonoBehaviour:
       x: 0
       y: 21
       width: 1274
-      height: 643
-    m_Scale: {x: 0.59537035, y: 0.59537035}
-    m_Translation: {x: 637, y: 321.5}
+      height: 661
+    m_Scale: {x: 0.61203706, y: 0.61203706}
+    m_Translation: {x: 637, y: 330.5}
     m_MarginLeft: 0
     m_MarginRight: 0
     m_MarginTop: 0
     m_MarginBottom: 0
     m_LastShownAreaInsideMargins:
       serializedVersion: 2
-      x: -1069.9222
+      x: -1040.7866
       y: -540
-      width: 2139.8445
+      width: 2081.5732
       height: 1080
     m_MinimalGUI: 1
-  m_defaultScale: 0.59537035
-  m_LastWindowPixelSize: {x: 1274, y: 664}
+  m_defaultScale: 0.61203706
+  m_LastWindowPixelSize: {x: 1274, y: 682}
   m_ClearInEditMode: 1
   m_NoCameraWarning: 1
   m_LowResolutionForAspectRatios: 01000000000000000000
@@ -1596,10 +1596,10 @@ MonoBehaviour:
     m_TextWithWhitespace: "Inspector\u200B"
   m_Pos:
     serializedVersion: 2
-    x: 1586
-    y: 24
+    x: 1585
+    y: 79
     width: 334
-    height: 664
+    height: 682
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -1691,7 +1691,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 537}
     m_SelectedIDs: e0b20000
     m_LastClickedID: 45792
-    m_ExpandedIDs: 000000001aaa00001caa00001eaa000020aa000022aa0000
+    m_ExpandedIDs: 0000000020aa000022aa000024aa000026aa000028aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1720,7 +1720,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000001aaa00001caa00001eaa000020aa000022aa0000
+    m_ExpandedIDs: 0000000020aa000022aa000024aa000026aa000028aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1801,9 +1801,9 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 0
-    y: 714
+    y: 787
     width: 1920
-    height: 217
+    height: 199
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
