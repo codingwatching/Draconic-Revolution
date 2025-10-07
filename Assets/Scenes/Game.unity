@@ -661,13 +661,10 @@ MonoBehaviour:
   cl: {fileID: 1192772367}
   controller: {fileID: 59614820}
   controls: {fileID: 1635249984}
-  maxNaturalSpeed: 5
-  drag: 5
-  momentumGrowth: 2.4
-  minimumMomentumToStop: 0.3
   knockbackAlignment: 0
   knockbackForce: {x: 0, y: 0, z: 0}
   knockbackMomentum: 0
+  gravityMomentum: 0
 --- !u!114 &59614824
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -708,6 +705,7 @@ MonoBehaviour:
   reverb: {fileID: 1912773813}
   voxelLightHandler: {fileID: 2085928825}
   playerSheetController: {fileID: 59614827}
+  playerMovement: {fileID: 59614823}
   audioManager: {fileID: 0}
   counter: -1
 --- !u!114 &59614826

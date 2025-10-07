@@ -79,6 +79,8 @@ public class PlayerMovement : MonoBehaviour
         this.movementOrchestrator = new NormalMovePreset(this.cl.playerSheetController.GetSheet());
     }
 
+    public bool IsGrounded(){return this.controller.isGrounded;}
+
     public void ChangeMoveset(Moveset moveSet){
         CharacterSheet sheet = this.playerSheetController.GetSheet();
 

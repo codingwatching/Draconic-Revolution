@@ -57,10 +57,10 @@ public abstract class VoxelBehaviour {
 	public virtual int2 GetRotationValue(ushort state){return new int2(0,0);}
 
 	// Player Interaction Events 
-	public virtual void OnPlayerStepEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
-	public virtual void OnPlayerStepExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
-	public virtual void OnPlayerBodyEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
-	public virtual void OnPlayerBodyExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
-	public virtual void OnPlayerHeadEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
-	public virtual void OnPlayerHeadExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerStepEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerStepExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerHeadEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
 }

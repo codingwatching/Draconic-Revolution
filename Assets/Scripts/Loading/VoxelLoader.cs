@@ -80,6 +80,7 @@ public class VoxelLoader : BaseLoader {
 
 	public static Blocks GetBlock(ushort code){return blockBook[code];}
 	public static BlocklikeObject GetObject(ushort code){return objectBook[ushort.MaxValue - code];}
+	public static bool IsBlock(ushort code){return code <= (ushort.MaxValue/2);}
 
 	public static string GetName(ushort code){
 		if(code <= ushort.MaxValue/2)

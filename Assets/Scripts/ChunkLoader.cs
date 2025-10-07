@@ -1040,12 +1040,15 @@ public class ChunkLoader : MonoBehaviour
     }
 
     // Returns block code of a castcoord
-    public ushort GetBlock(CastCoord c){
+    public ushort GetBlock(CastCoord c, bool errorZero = false){
         if(this.chunks.ContainsKey(c.GetChunkPos())){
             return this.chunks[c.GetChunkPos()].data.GetCell(c.blockX, c.blockY, c.blockZ);
         }
         else{
-            return (ushort)(ushort.MaxValue/2); // Error Code
+            if(errorZero)
+                return (ushort)0;
+            else
+                return (ushort)(ushort.MaxValue/2); // Error Code
         }
     }
 

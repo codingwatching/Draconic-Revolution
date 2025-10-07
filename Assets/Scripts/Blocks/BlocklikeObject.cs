@@ -256,40 +256,40 @@ public class BlocklikeObject
 		return this.rotationValue.GetRotationValue(state);
 	}
 
-	public virtual void OnPlayerStepEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerStepEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerStepEnter == null)
 			return;
-		this.onPlayerStepEnter.OnPlayerStepEnter(feet, body, head, sheet, cl);
+		this.onPlayerStepEnter.OnPlayerStepEnter(location, sheet, cl);
 	}
 
-	public virtual void OnPlayerStepExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerStepExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerStepExit == null)
 			return;
-		this.onPlayerStepExit.OnPlayerStepExit(feet, body, head, sheet, cl);
+		this.onPlayerStepExit.OnPlayerStepExit(location, sheet, cl);
 	}
 
-	public virtual void OnPlayerHeadEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerHeadEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerHeadEnter == null)
 			return;
-		this.onPlayerHeadEnter.OnPlayerHeadEnter(feet, body, head, sheet, cl);
+		this.onPlayerHeadEnter.OnPlayerHeadEnter(location, sheet, cl);
 	}
 
-	public virtual void OnPlayerHeadExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerHeadExit == null)
 			return;
-		this.onPlayerHeadExit.OnPlayerHeadExit(feet, body, head, sheet, cl);
+		this.onPlayerHeadExit.OnPlayerHeadExit(location, sheet, cl);
 	}
 
-	public virtual void OnPlayerBodyEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerBodyEnter == null)
 			return;
-		this.onPlayerBodyEnter.OnPlayerBodyEnter(feet, body, head, sheet, cl);
+		this.onPlayerBodyEnter.OnPlayerBodyEnter(location, sheet, cl);
 	}
 
-	public virtual void OnPlayerBodyExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+	public virtual void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
 		if(this.onPlayerBodyExit == null)
 			return;
-		this.onPlayerBodyExit.OnPlayerBodyExit(feet, body, head, sheet, cl);
+		this.onPlayerBodyExit.OnPlayerBodyExit(location, sheet, cl);
 	}
 
 	public void SetupAfterSerialize(bool isClient){
