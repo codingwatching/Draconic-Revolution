@@ -48,6 +48,12 @@ public class BlocklikeObject
 	private VoxelBehaviour placementRule;
 	private VoxelBehaviour offsetVector;
 	private VoxelBehaviour rotationValue;
+	private VoxelBehaviour onPlayerStepEnter;
+	private VoxelBehaviour onPlayerStepExit;
+	private VoxelBehaviour onPlayerBodyEnter;
+	private VoxelBehaviour onPlayerBodyExit;
+	private VoxelBehaviour onPlayerHeadEnter;
+	private VoxelBehaviour onPlayerHeadExit;
 
 
 	public MeshData GetMeshData(){return this.modelIdentity.GetMeshData();}
@@ -150,6 +156,24 @@ public class BlocklikeObject
     public VoxelBehaviour GetRotationValue() { return rotationValue; }
     public void SetRotationValue(VoxelBehaviour val) { rotationValue = val; }
 
+    public VoxelBehaviour GetOnPlayerStepEnter() { return onPlayerStepEnter; }
+    public void SetOnPlayerStepEnter(VoxelBehaviour val) { onPlayerStepEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerStepExit() { return onPlayerStepExit; }
+    public void SetOnPlayerStepExit(VoxelBehaviour val) { onPlayerStepExit = val; }
+
+    public VoxelBehaviour GetOnPlayerBodyEnter() { return onPlayerBodyEnter; }
+    public void SetOnPlayerBodyEnter(VoxelBehaviour val) { onPlayerBodyEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerBodyExit() { return onPlayerBodyExit; }
+    public void SetOnPlayerBodyExit(VoxelBehaviour val) { onPlayerBodyExit = val; }
+
+    public VoxelBehaviour GetOnPlayerHeadEnter() { return onPlayerHeadEnter; }
+    public void SetOnPlayerHeadEnter(VoxelBehaviour val) { onPlayerHeadEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerHeadExit() { return onPlayerHeadExit; }
+    public void SetOnPlayerHeadExit(VoxelBehaviour val) { onPlayerHeadExit = val; }
+
 	/*
 	VIRTUAL METHODS
 	*/
@@ -230,6 +254,42 @@ public class BlocklikeObject
 		if(this.rotationValue == null)
 			return new int2(0,0);
 		return this.rotationValue.GetRotationValue(state);
+	}
+
+	public virtual void OnPlayerStepEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerStepEnter == null)
+			return;
+		this.onPlayerStepEnter.OnPlayerStepEnter(feet, body, head, sheet, cl);
+	}
+
+	public virtual void OnPlayerStepExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerStepExit == null)
+			return;
+		this.onPlayerStepExit.OnPlayerStepExit(feet, body, head, sheet, cl);
+	}
+
+	public virtual void OnPlayerHeadEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerHeadEnter == null)
+			return;
+		this.onPlayerHeadEnter.OnPlayerHeadEnter(feet, body, head, sheet, cl);
+	}
+
+	public virtual void OnPlayerHeadExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerHeadExit == null)
+			return;
+		this.onPlayerHeadExit.OnPlayerHeadExit(feet, body, head, sheet, cl);
+	}
+
+	public virtual void OnPlayerBodyEnter(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerBodyEnter == null)
+			return;
+		this.onPlayerBodyEnter.OnPlayerBodyEnter(feet, body, head, sheet, cl);
+	}
+
+	public virtual void OnPlayerBodyExit(CastCoord feet, CastCoord body, CastCoord head, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerBodyExit == null)
+			return;
+		this.onPlayerBodyExit.OnPlayerBodyExit(feet, body, head, sheet, cl);
 	}
 
 	public void SetupAfterSerialize(bool isClient){
