@@ -3,6 +3,7 @@ using UnityEngine;
 public class FreecamMovePreset : BaseMovePreset {
 	
 	public FreecamMovePreset(CharacterSheet sheet) : base(sheet){
+		this.ignoreModifiers = true;
     	this.maxNaturalSpeed = 15;
 		this.drag = 100f;
 		this.jumpHeight = 5.4f;

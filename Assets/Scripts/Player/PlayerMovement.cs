@@ -76,7 +76,7 @@ public class PlayerMovement : MonoBehaviour
 
     public void Init(){
         this.playerSheetController = this.cl.playerSheetController;
-        this.movementOrchestrator = new SwimmingMovePreset(this.cl.playerSheetController.GetSheet());
+        this.movementOrchestrator = new NormalMovePreset(this.cl.playerSheetController.GetSheet());
     }
 
     public void ChangeMoveset(Moveset moveSet){
@@ -97,6 +97,9 @@ public class PlayerMovement : MonoBehaviour
                 break;
         }
     }
+
+    public void AddModifier(MovePresetProperty prop, MathOperation op){this.movementOrchestrator.AddModifier(prop, op);}
+    public void RemoveModifier(MovePresetProperty prop, MathOperation op){this.movementOrchestrator.RemoveModifier(prop, op);}
 
     public void AddKnockback(Vector3 dir, float momentum){
         // If has no other knockback happening
