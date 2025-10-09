@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Console
+  m_Title: Game
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 332}
   m_MaxSize: {x: 10000, y: 10000}
@@ -398,7 +398,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 
+      m_ExpandedIDs: baddffff3adeffff42deffff46deffff4adeffff72defffff8faffff34e800001eee0000
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -448,7 +448,7 @@ MonoBehaviour:
     x: 309
     y: 79
     width: 1274
-    height: 620
+    height: 677
   m_SerializedDataModeController:
     m_DataMode: 0
     m_PreferredDataMode: 0
@@ -824,7 +824,7 @@ MonoBehaviour:
       sizeOverridden: 0
     - dockPosition: 1
       containerId: overlay-container--right
-      displayed: 0
+      displayed: 1
       id: Scene View/Animation Rigging
       index: 12
       contents: '{"m_Layout":4,"m_Collapsed":false,"m_Floating":false,"m_FloatingSnapOffset":{"x":48.0,"y":48.0},"m_SnapOffsetDelta":{"x":0.0,"y":0.0},"m_FloatingSnapCorner":0,"m_Size":{"x":0.0,"y":0.0},"m_SizeOverridden":false}'
@@ -989,9 +989,9 @@ MonoBehaviour:
   m_AudioPlay: 0
   m_DebugDrawModesUseInteractiveLightBakingData: 0
   m_Position:
-    m_Target: {x: 47.92424, y: 854.20374, z: -14.224066}
+    m_Target: {x: 374.84143, y: 848.3592, z: 465.98825}
     speed: 2
-    m_Value: {x: 47.92424, y: 854.20374, z: -14.224066}
+    m_Value: {x: 374.84143, y: 848.3592, z: 465.98825}
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -1037,13 +1037,13 @@ MonoBehaviour:
     m_GridAxis: 1
     m_gridOpacity: 0.5
   m_Rotation:
-    m_Target: {x: -0.080511376, y: -0.51930356, z: 0.049212188, w: -0.84938383}
+    m_Target: {x: -0.04870771, y: -0.7464613, z: 0.054956466, w: -0.66138965}
     speed: 2
-    m_Value: {x: 0.08051138, y: 0.51930356, z: -0.049212188, w: 0.8493839}
+    m_Value: {x: 0.048707712, y: 0.74646133, z: -0.05495647, w: 0.66138965}
   m_Size:
-    m_Target: 1.9390529
+    m_Target: 1.5417571
     speed: 2
-    m_Value: 1.9390529
+    m_Value: 1.5417571
   m_Ortho:
     m_Target: 0
     speed: 2
@@ -1691,7 +1691,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 537}
     m_SelectedIDs: e0b20000
     m_LastClickedID: 45792
-    m_ExpandedIDs: 000000003aaa00003caa00003eaa000040aa000042aa0000
+    m_ExpandedIDs: 000000003eaa000040aa000042aa000044aa000046aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1720,7 +1720,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000003aaa00003caa00003eaa000040aa000042aa0000
+    m_ExpandedIDs: 000000003eaa000040aa000042aa000044aa000046aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

@@ -170,9 +170,9 @@ public class PlayerPositionHandler : MonoBehaviour
     private void ApplyBlockInteraction(PlayerVoxelLocation newLocation){
         if(this.playerVoxelLocation.feet != newLocation.feet){
             if(VoxelLoader.IsBlock(this.playerVoxelLocation.feet))
-                VoxelLoader.GetBlock(this.playerVoxelLocation.feet).OnPlayerStepExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetBlock(this.playerVoxelLocation.feet).OnPlayerStepExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
             else
-                VoxelLoader.GetObject(this.playerVoxelLocation.feet).OnPlayerStepExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetObject(this.playerVoxelLocation.feet).OnPlayerStepExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
 
             if(VoxelLoader.IsBlock(newLocation.feet))
                 VoxelLoader.GetBlock(newLocation.feet).OnPlayerStepEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
@@ -182,9 +182,9 @@ public class PlayerPositionHandler : MonoBehaviour
 
         if(this.playerVoxelLocation.head != newLocation.head){
             if(VoxelLoader.IsBlock(this.playerVoxelLocation.head))
-                VoxelLoader.GetBlock(this.playerVoxelLocation.head).OnPlayerHeadExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetBlock(this.playerVoxelLocation.head).OnPlayerHeadExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
             else
-                VoxelLoader.GetObject(this.playerVoxelLocation.head).OnPlayerHeadExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetObject(this.playerVoxelLocation.head).OnPlayerHeadExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
         
             if(VoxelLoader.IsBlock(newLocation.head))
                 VoxelLoader.GetBlock(newLocation.head).OnPlayerHeadEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
@@ -194,17 +194,15 @@ public class PlayerPositionHandler : MonoBehaviour
 
         if(this.playerVoxelLocation.body != newLocation.body){
             if(VoxelLoader.IsBlock(this.playerVoxelLocation.body))
-                VoxelLoader.GetBlock(this.playerVoxelLocation.body).OnPlayerBodyExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetBlock(this.playerVoxelLocation.body).OnPlayerBodyExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
             else
-                VoxelLoader.GetObject(this.playerVoxelLocation.body).OnPlayerBodyExit(this.playerVoxelLocation, this.playerSheetController.GetSheet(), this.cl);
+                VoxelLoader.GetObject(this.playerVoxelLocation.body).OnPlayerBodyExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
         
             if(VoxelLoader.IsBlock(newLocation.body))
                 VoxelLoader.GetBlock(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
             else
                 VoxelLoader.GetObject(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
         }
-
-        Debug.Log(this.playerVoxelLocation);
 
         this.playerVoxelLocation = newLocation;
     }

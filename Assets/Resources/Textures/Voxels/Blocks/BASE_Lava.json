@@ -22,10 +22,19 @@
 {
 	"onPlace": "LiquidBehaviour",
     "onBreak": "LiquidBehaviour",
-    "onBlockUpdate": "LiquidBehaviour"
+    "onBlockUpdate": "LiquidBehaviour",
+    "onPlayerBodyEnter": "LiquidBehaviour",
+    "onPlayerBodyExit": "LiquidBehaviour",
+    "onPlayerHeadEnter": "LiquidBehaviour",
+    "onPlayerHeadExit": "LiquidBehaviour",
 }
 --->LiquidBehaviour
 {
     "liquidName": "BASE_Lava",
-    "viscosityDelay": 60
+    "viscosityDelay": 60,
+    "onBodyMovementMultiplierDrag": 4.0,
+    "onBodyMovementMultiplierMaxSpeed": 0.4,
+    "onBodyMovementMultiplierGravityAcceleration": 0.6,
+    "onBodyMovementMultiplierMaxGravityTime": 1.2,
+    "onBodyMovementMultiplierJumpHeight": 1.2
 }

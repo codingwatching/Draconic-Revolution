@@ -22,10 +22,19 @@
 {
     "onPlace": "LiquidBehaviour",
     "onBreak": "LiquidBehaviour",
-    "onBlockUpdate": "LiquidBehaviour"
+    "onBlockUpdate": "LiquidBehaviour",
+    "onPlayerBodyEnter": "LiquidBehaviour",
+    "onPlayerBodyExit": "LiquidBehaviour",
+    "onPlayerHeadEnter": "LiquidBehaviour",
+    "onPlayerHeadExit": "LiquidBehaviour",
 }
 --->LiquidBehaviour
 {
     "liquidName": "BASE_Water",
-    "viscosityDelay": 12
+    "viscosityDelay": 12,
+    "onBodyMovementMultiplierDrag": 2.0,
+    "onBodyMovementMultiplierMaxSpeed": 0.6,
+    "onBodyMovementMultiplierGravityAcceleration": 0.5,
+    "onBodyMovementMultiplierMaxGravityTime": 2.0,
+    "onBodyMovementMultiplierJumpHeight": 1.0
 }

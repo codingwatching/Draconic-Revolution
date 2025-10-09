@@ -36,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnDestroy(){
         this.controller = null;
+        this.movementOrchestrator.Reset();
     }
 
     void FixedUpdate(){
@@ -55,7 +56,8 @@ public class PlayerMovement : MonoBehaviour
             isGrounded = this.controller.isGrounded,
             isJumping = this.controls.jumping,
             isShifting = MainControllerManager.shifting,
-            isControlling = MainControllerManager.ctrl
+            isControlling = MainControllerManager.ctrl,
+            collision = this.controller.collisionFlags
         };
 
         this.direction = this.movementOrchestrator.CalculateDirection(this.transform, this.controls.movementX, this.controls.movementZ);
@@ -72,6 +74,7 @@ public class PlayerMovement : MonoBehaviour
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
 
         Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
+        Debug.Log(this.movementOrchestrator.Length());
     }
 
     public void Init(){

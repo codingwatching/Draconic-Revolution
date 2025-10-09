@@ -54,6 +54,12 @@ public abstract class BaseMovePreset {
         }
     }
 
+    public void Reset(){
+        for(int i=0; i < Enum.GetNames(typeof(MovePresetProperty)).Length; i++){BaseMovePreset.modifier[i].Clear();}
+    }
+
+    public int Length(){return BaseMovePreset.modifier[(int)MovePresetProperty.DRAG].Count;}
+
     public bool CheckModifierExists(MovePresetProperty property, MathOperation op){
         for(int i=0; i < BaseMovePreset.modifier[(int)property].Count; i++){
             if(op.Equals(BaseMovePreset.modifier[(int)property][i])){

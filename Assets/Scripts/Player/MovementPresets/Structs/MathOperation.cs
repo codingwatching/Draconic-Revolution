@@ -12,7 +12,7 @@ public struct MathOperation {
 	}
 
 	public bool Equals(MathOperation other){
-		return this.code == other.code;
+		return this.code == other.code && this.operation == other.operation && this.number == other.number;
 	}
 
 	public override bool Equals(object obj){

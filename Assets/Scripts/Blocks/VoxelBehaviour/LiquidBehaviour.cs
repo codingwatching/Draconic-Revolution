@@ -35,8 +35,19 @@ LIQUID STATES:
 public class LiquidBehaviour : VoxelBehaviour{
 	public string liquidName;
 	public int viscosityDelay;
+	public float onBodyMovementMultiplierDrag;
+	public float onBodyMovementMultiplierMaxSpeed;
+	public float onBodyMovementMultiplierGravityAcceleration;
+	public float onBodyMovementMultiplierMaxGravityTime;
+	public float onBodyMovementMultiplierJumpHeight;
 
 	private ushort liquidCode; // Post Serialize Set
+	private MathOperation penaltyDrag;
+	private MathOperation penaltyMaxSpeed;
+	private MathOperation penaltyGravityAcceleration;
+	private MathOperation penaltyMaxGravityAccelerationTime;
+	private MathOperation penaltyJumpHeight;
+	private MathOperation penaltyPOV;
 
 	private static ushort[] aroundCodes = new ushort[8];
 	private static ushort[] mainAroundCodes = new ushort[8];
@@ -141,8 +152,76 @@ public class LiquidBehaviour : VoxelBehaviour{
 			cameFromState.Add(17, new HashSet<ushort>(){8,9,10,20,1});
 			cameFromState.Add(18, new HashSet<ushort>(){20,1,11,17});
 		}
+
+		this.penaltyDrag = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierDrag};
+		this.penaltyMaxSpeed = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierMaxSpeed};
+		this.penaltyGravityAcceleration = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierGravityAcceleration};
+		this.penaltyMaxGravityAccelerationTime = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierMaxGravityTime};
+		this.penaltyJumpHeight = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierJumpHeight};
+		this.penaltyPOV = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = 0f};
 	}
 
+	public override void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(location.head != this.liquidCode){
+			AddMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+		else{
+			RemoveMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.SWIM);
+		}
+	}
+
+	public override void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(location.head != this.liquidCode){
+			RemoveMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+		else{
+			AddMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+	}
+
+	public override void OnPlayerHeadEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(location.body != this.liquidCode){
+			AddMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+		else{
+			RemoveMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.SWIM);
+		}
+	}
+
+	public override void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(location.body != this.liquidCode){
+			RemoveMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+		else{
+			AddMods(cl);
+			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
+		}
+	}
+
+	private void AddMods(ChunkLoader cl){
+		cl.playerMovement.AddModifier(MovePresetProperty.DRAG, this.penaltyDrag);
+		cl.playerMovement.AddModifier(MovePresetProperty.MAX_NATURAL_SPEED, this.penaltyMaxSpeed);
+		cl.playerMovement.AddModifier(MovePresetProperty.GRAVITY_ACCELERATION, this.penaltyGravityAcceleration);
+		cl.playerMovement.AddModifier(MovePresetProperty.GRAVITY_MAX_ACCELERATION_TIME, this.penaltyMaxGravityAccelerationTime);
+		cl.playerMovement.AddModifier(MovePresetProperty.JUMP_HEIGHT, this.penaltyJumpHeight);
+		cl.playerMovement.AddModifier(MovePresetProperty.POV_ADJUSTMENT, this.penaltyPOV);
+	}
+
+	private void RemoveMods(ChunkLoader cl){
+		cl.playerMovement.RemoveModifier(MovePresetProperty.DRAG, this.penaltyDrag);
+		cl.playerMovement.RemoveModifier(MovePresetProperty.MAX_NATURAL_SPEED, this.penaltyMaxSpeed);
+		cl.playerMovement.RemoveModifier(MovePresetProperty.GRAVITY_ACCELERATION, this.penaltyGravityAcceleration);
+		cl.playerMovement.RemoveModifier(MovePresetProperty.GRAVITY_MAX_ACCELERATION_TIME, this.penaltyMaxGravityAccelerationTime);
+		cl.playerMovement.RemoveModifier(MovePresetProperty.JUMP_HEIGHT, this.penaltyJumpHeight);
+		cl.playerMovement.RemoveModifier(MovePresetProperty.POV_ADJUSTMENT, this.penaltyPOV);
+	}
 
 	// Custom Place operation with Raycasting class overwrite
 	public override int OnPlace(ChunkPos pos, int x, int y, int z, int facing, ChunkLoader_Server cl){
