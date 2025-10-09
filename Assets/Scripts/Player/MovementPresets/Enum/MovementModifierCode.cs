@@ -1,5 +1,6 @@
 using System;
 
 public enum MovementModifierCode : ushort {
-	LIQUID
+	LIQUID,
+	BASIC_MULTIPLIER
 }

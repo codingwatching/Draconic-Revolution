@@ -198,8 +198,9 @@ public class PlayerPositionHandler : MonoBehaviour
             else
                 VoxelLoader.GetObject(this.playerVoxelLocation.body).OnPlayerBodyExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
         
-            if(VoxelLoader.IsBlock(newLocation.body))
+            if(VoxelLoader.IsBlock(newLocation.body)){
                 VoxelLoader.GetBlock(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            }
             else
                 VoxelLoader.GetObject(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
         }

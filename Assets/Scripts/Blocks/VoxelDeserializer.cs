@@ -290,6 +290,10 @@ public static class VoxelDeserializer {
 				return JsonUtility.FromJson<ConfigurablePositionBehaviour>(jsonSerial);
 			case "ConfigurableRotationBehaviour":
 				return JsonUtility.FromJson<ConfigurableRotationBehaviour>(jsonSerial);
+			case "PlayerMovementEnterMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementEnterMultiplyBehaviour>(jsonSerial);
+			case "PlayerMovementExitMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementExitMultiplyBehaviour>(jsonSerial);
 			default:
 				Debug.Log("ERROR WHEN TRYING TO DE-SERIALIZE BEHAVIOUR: " + val);
 				return new LiquidBehaviour();

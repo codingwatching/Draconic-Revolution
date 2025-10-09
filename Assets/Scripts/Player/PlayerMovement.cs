@@ -74,7 +74,7 @@ public class PlayerMovement : MonoBehaviour
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
 
         Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
-        Debug.Log(this.movementOrchestrator.Length());
+        //Debug.Log(this.movementOrchestrator.Length());
     }
 
     public void Init(){
@@ -104,6 +104,7 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public void AddModifier(MovePresetProperty prop, MathOperation op){this.movementOrchestrator.AddModifier(prop, op);}
+    public bool CheckModifier(MovePresetProperty prop, MathOperation op){return this.movementOrchestrator.CheckModifierExists(prop, op);}
     public void RemoveModifier(MovePresetProperty prop, MathOperation op){this.movementOrchestrator.RemoveModifier(prop, op);}
 
     public void AddKnockback(Vector3 dir, float momentum){

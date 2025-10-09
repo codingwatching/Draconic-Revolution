@@ -22,4 +22,8 @@ public struct MathOperation {
 	public override int GetHashCode(){
 		return (int)code;
 	}
+
+	public override string ToString(){
+		return $"{this.operation} -- {this.number}";
+	}
 }

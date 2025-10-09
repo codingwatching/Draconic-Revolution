@@ -319,5 +319,17 @@ public class BlocklikeObject
 			offsetVector.PostDeserializationSetup(isClient);
 		if(this.rotationValue != null)
 			rotationValue.PostDeserializationSetup(isClient);
+		if(this.onPlayerBodyEnter != null)
+			onPlayerBodyEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerBodyExit != null)
+			onPlayerBodyExit.PostDeserializationSetup(isClient);
+		if(this.onPlayerHeadEnter != null)
+			onPlayerHeadEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerHeadExit != null)
+			onPlayerHeadExit.PostDeserializationSetup(isClient);
+		if(this.onPlayerStepEnter != null)
+			onPlayerStepEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerStepExit != null)
+			onPlayerStepExit.PostDeserializationSetup(isClient);
 	}
 }

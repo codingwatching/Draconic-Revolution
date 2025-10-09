@@ -24,7 +24,11 @@
 --->Behaviours
 {
     "onPlace": "PlaceSetStateBehaviour",
-    "onBlockUpdate": "UpdateDecaySecondaryBlockBehaviour"
+    "onBlockUpdate": "UpdateDecaySecondaryBlockBehaviour",
+    "onPlayerBodyEnter": "PlayerMovementEnterMultiplyBehaviour",
+    "onPlayerBodyExit": "PlayerMovementExitMultiplyBehaviour",
+    "onPlayerHeadEnter": "PlayerMovementEnterMultiplyBehaviour",
+    "onPlayerHeadExit": "PlayerMovementExitMultiplyBehaviour"
 }
 --->PlaceSetStateBehaviour
 {
@@ -36,4 +40,24 @@
     "decayDistance": 7,
     "assignedMainBlock": "BASE_Wood_Log",
     "thisBlock": "BASE_Leaves"
+}
+--->PlayerMovementEnterMultiplyBehaviour
+{
+    "voxelName": "BASE_Leaves",
+    "onlyApplyOnce": true,
+    "maxSpeed": 0.7,
+    "drag": 1.2,
+    "momentumGrowth": 0.8,
+    "gravityAcceleration": 0.85,
+    "maxRunningMomentum": 0.01
+}
+--->PlayerMovementExitMultiplyBehaviour
+{
+    "voxelName": "BASE_Leaves",
+    "onlyApplyOnce": true,
+    "maxSpeed": 0.7,
+    "drag": 1.2,
+    "momentumGrowth": 0.8,
+    "gravityAcceleration": 0.85,
+    "maxRunningMomentum": 0.01
 }
