@@ -21,7 +21,7 @@ public class SwimmingMovePreset : BaseMovePreset {
 	public override float CalculateJump(MovementFlags flags, float gravityMomentum){
         if(flags.isJumping && gravityMomentum < this.jumpHeight){
         	if((flags.collision & CollisionFlags.Sides) != 0)
-        		return this.jumpHeight + 1;
+        		return this.jumpHeight + 1.3f;
             return this.jumpHeight;
         }
 

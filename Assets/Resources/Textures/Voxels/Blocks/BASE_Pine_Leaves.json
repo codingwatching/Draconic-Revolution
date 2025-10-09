@@ -43,21 +43,18 @@
 }
 --->PlayerMovementEnterMultiplyBehaviour
 {
-    "voxelName": "BASE_Pine_Leaves",
     "onlyApplyOnce": true,
     "maxSpeed": 0.7,
     "drag": 1.2,
     "momentumGrowth": 0.8,
     "gravityAcceleration": 0.85,
-    "maxRunningMomentum": 0.0
+    "maxRunningMomentum": 0.01
 }
 --->PlayerMovementExitMultiplyBehaviour
 {
-    "voxelName": "BASE_Pine_Leaves",
-    "onlyApplyOnce": true,
     "maxSpeed": 0.7,
     "drag": 1.2,
     "momentumGrowth": 0.8,
     "gravityAcceleration": 0.85,
-    "maxRunningMomentum": 0.0
+    "maxRunningMomentum": 0.01
 }

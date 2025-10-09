@@ -7,7 +7,6 @@ using Unity.Mathematics;
 
 [Serializable]
 public class PlayerMovementEnterMultiplyBehaviour : VoxelBehaviour{
-	public string voxelName;
 	public float maxSpeed = 1f;
 	public float drag = 1f;
 	public float jumpHeight = 1f;
@@ -23,7 +22,6 @@ public class PlayerMovementEnterMultiplyBehaviour : VoxelBehaviour{
 	public float maximumAllowedMomentumAfterImpact = 1f;
 	public bool onlyApplyOnce = false;
 
-	private ushort voxelCode;
 	private MathOperation maxSpeedOperation;
 	private MathOperation dragOperation;
 	private MathOperation jumpHeightOperation;
@@ -39,8 +37,6 @@ public class PlayerMovementEnterMultiplyBehaviour : VoxelBehaviour{
 	private MathOperation maximumAllowedMomentumAfterImpactOperation;
 
 	public override void PostDeserializationSetup(bool isClient){
-		this.voxelCode = VoxelLoader.GetBlockID(voxelName);
-
 		this.maxSpeedOperation = new MathOperation{code = (ushort)MovementModifierCode.BASIC_MULTIPLIER, operation = '*', number = maxSpeed};
 		this.dragOperation = new MathOperation{code = (ushort)MovementModifierCode.BASIC_MULTIPLIER, operation = '*', number = drag};
 		this.jumpHeightOperation = new MathOperation{code = (ushort)MovementModifierCode.BASIC_MULTIPLIER, operation = '*', number = jumpHeight};

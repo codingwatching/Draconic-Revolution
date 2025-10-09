@@ -294,6 +294,8 @@ public static class VoxelDeserializer {
 				return JsonUtility.FromJson<PlayerMovementEnterMultiplyBehaviour>(jsonSerial);
 			case "PlayerMovementExitMultiplyBehaviour":
 				return JsonUtility.FromJson<PlayerMovementExitMultiplyBehaviour>(jsonSerial);
+			case "PlayerMovementStepMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementStepMultiplyBehaviour>(jsonSerial);
 			default:
 				Debug.Log("ERROR WHEN TRYING TO DE-SERIALIZE BEHAVIOUR: " + val);
 				return new LiquidBehaviour();

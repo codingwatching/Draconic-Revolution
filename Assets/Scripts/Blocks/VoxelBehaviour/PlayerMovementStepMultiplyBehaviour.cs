@@ -6,7 +6,7 @@ using Unity.Mathematics;
 
 
 [Serializable]
-public class PlayerMovementExitMultiplyBehaviour : VoxelBehaviour{
+public class PlayerMovementStepMultiplyBehaviour : VoxelBehaviour{
 	public float maxSpeed = 1f;
 	public float drag = 1f;
 	public float jumpHeight = 1f;
@@ -51,12 +51,24 @@ public class PlayerMovementExitMultiplyBehaviour : VoxelBehaviour{
 		this.maximumAllowedMomentumAfterImpactOperation = new MathOperation{code = (ushort)MovementModifierCode.BASIC_MULTIPLIER, operation = '*', number = maximumAllowedMomentumAfterImpact};
 	}
 
-	public override void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
-		RemoveMods(cl);
-	}
+	public override void OnPlayerStepEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){AddMods(cl);}
 
-	public override void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
-		RemoveMods(cl);
+	public override void OnPlayerStepExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){RemoveMods(cl);}
+
+	private void AddMods(ChunkLoader cl){
+		cl.playerMovement.AddModifier(MovePresetProperty.MAX_NATURAL_SPEED, this.maxSpeedOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.DRAG, this.dragOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.JUMP_HEIGHT, this.jumpHeightOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.MOMENTUM_GROWTH, this.momentumGrowthOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.MINIMUM_MOMENTUM_TO_STOP, this.minimumMomentumToStopOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.GRAVITY_ACCELERATION, this.gravityMaxAccelerationTimeOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.GRAVITY_MAX_ACCELERATION_TIME, this.gravityAccelerationOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.MAX_RUNNING_MOMENTUM, this.maxRunningMomentumOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.RUN_MOMENTUM_GROWTH, this.runMomentumGrowthOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.RUN_MOMENTUM_DECREASE, this.runMomentumDecreaseOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.POV_ADJUSTMENT, this.povAdjustmentOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.MAXIMUM_IMPACT_ANGLE_TOLERANCE, this.maximumImpactAngleToleranceOperation);
+		cl.playerMovement.AddModifier(MovePresetProperty.MAXIMUM_ALLOWED_MOMENTUM_AFTER_IMPACT, this.maximumAllowedMomentumAfterImpactOperation);
 	}
 
 	private void RemoveMods(ChunkLoader cl){

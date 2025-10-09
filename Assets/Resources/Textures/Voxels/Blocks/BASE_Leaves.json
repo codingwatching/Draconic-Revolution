@@ -43,7 +43,6 @@
 }
 --->PlayerMovementEnterMultiplyBehaviour
 {
-    "voxelName": "BASE_Leaves",
     "onlyApplyOnce": true,
     "maxSpeed": 0.7,
     "drag": 1.2,
@@ -53,8 +52,6 @@
 }
 --->PlayerMovementExitMultiplyBehaviour
 {
-    "voxelName": "BASE_Leaves",
-    "onlyApplyOnce": true,
     "maxSpeed": 0.7,
     "drag": 1.2,
     "momentumGrowth": 0.8,
