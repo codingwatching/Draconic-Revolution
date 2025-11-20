@@ -1,0 +1,44 @@
+{
+	"data": [
+		{
+			"state": "Attack 1",
+			"clip": "Punch1-Normal-Man"
+		},
+		{
+			"state": "Attack 2",
+			"clip": "Punch2-Normal-Man"
+		},
+		{
+			"state": "Attack 3",
+			"clip": "Punch3-Normal-Man"
+		},
+		{
+			"state": "Attack 4",
+			"clip": ""
+		},
+		{
+			"state": "Attack 5",
+			"clip": ""
+		},
+		{
+			"state": "Attack 6",
+			"clip": ""
+		},
+		{
+			"state": "Attack 7",
+			"clip": ""
+		},
+		{
+			"state": "Attack 8",
+			"clip": ""
+		},
+		{
+			"state": "Attack 9",
+			"clip": ""
+		},
+		{
+			"state": "Attack 10",
+			"clip": ""
+		}
+	]
+}

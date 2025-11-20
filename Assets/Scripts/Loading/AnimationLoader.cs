@@ -7,11 +7,13 @@ public class AnimationLoader : BaseLoader {
 	private static Dictionary<string, RuntimeAnimatorController> controllers = new Dictionary<string, RuntimeAnimatorController>();
 	private static Dictionary<string, AnimationStateMapping[]> stateMappings = new Dictionary<string, AnimationStateMapping[]>();
 	private static Dictionary<string, MultiAimData[]> rigs = new Dictionary<string, MultiAimData[]>();
+	private static Dictionary<string, ValuePair<string, string>[]> battleStyleOverrides = new Dictionary<string, ValuePair<string, string>[]>();
 	private static Dictionary<string, string> armatureName = new Dictionary<string, string>();
 	private static bool isClient;
 
 	private static readonly string CONTROLLERS_PATHS = "SerializedData/AnimatorControllers";
 	private static readonly string ANIMATION_RESFOLDER = "Animations/";
+	private static readonly string BATTLE_STYLE_RESFOLDER = "BattleStyles/";
 
 	
 	public AnimationLoader(bool isClient){AnimationLoader.isClient = isClient;}
@@ -22,6 +24,7 @@ public class AnimationLoader : BaseLoader {
 			LoadStateMappings();
 			LoadRigs();
 			LoadArmatureName();
+			LoadBattleStyleOverrides();
 		}
 
 		return true;
@@ -32,6 +35,7 @@ public class AnimationLoader : BaseLoader {
 	public static MultiAimData[] GetRig(string controller){return rigs[controller];}
 	public static bool ContainsRig(string controller){return rigs.ContainsKey(controller);}
 	public static string GetArmatureName(string controller){return armatureName[controller];}
+	public static ValuePair<string, string>[] GetBattleStyleOverrides(string styleName){return battleStyleOverrides[styleName];}
 
 	private void LoadArmatureName(){
 		string respath;
@@ -115,5 +119,15 @@ public class AnimationLoader : BaseLoader {
 
 			stateMappings.Add(controllerName, wrapper.data);
 		}
+	}
+
+	private void LoadBattleStyleOverrides(){
+		Wrapper<ValuePair<string, string>> wrapper;
+        TextAsset[] assets = Resources.LoadAll<TextAsset>(BATTLE_STYLE_RESFOLDER);
+
+        foreach(TextAsset asset in assets){
+        	wrapper = JsonUtility.FromJson<Wrapper<ValuePair<string, string>>>(asset.text);
+			battleStyleOverrides.Add(asset.name, wrapper.data);
+        }
 	}
 }
