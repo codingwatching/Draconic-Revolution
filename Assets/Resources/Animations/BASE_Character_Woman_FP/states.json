@@ -32,22 +32,71 @@
 			"isDefaultState": false
 		},
 		{
-			"name": "Punch 1",
+			"name": "Attack 1",
 			"clip": "Punch1-Normal-Woman-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
-			"name": "Punch 2",
+			"name": "Attack 2",
 			"clip": "Punch2-Normal-Woman-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
-			"name": "Punch 3",
+			"name": "Attack 3",
 			"clip": "Punch3-Normal-Woman-FP",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 4",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 5",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 6",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 7",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 8",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 9",
+			"clip": "",
+			"layer": "",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
+			"name": "Attack 10",
+			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false

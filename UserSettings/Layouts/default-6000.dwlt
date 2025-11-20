@@ -19,7 +19,7 @@ MonoBehaviour:
     width: 1920
     height: 989
   m_ShowMode: 4
-  m_Title: Game
+  m_Title: Console
   m_RootView: {fileID: 2}
   m_MinSize: {x: 875, y: 332}
   m_MaxSize: {x: 10000, y: 10000}
@@ -398,7 +398,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: b816e2fffcfaffff5ef30500
+      m_ExpandedIDs: 
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -1691,7 +1691,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 117}
     m_SelectedIDs: 2ed30100
     m_LastClickedID: 119598
-    m_ExpandedIDs: 000000004aaa00004caa00004eaa000050aa000052aa0000
+    m_ExpandedIDs: 000000004eaa000050aa000052aa000054aa000056aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -1720,7 +1720,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000004aaa00004caa00004eaa000050aa000052aa0000
+    m_ExpandedIDs: 000000004eaa000050aa000052aa000054aa000056aa0000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 

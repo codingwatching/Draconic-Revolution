@@ -73,7 +73,7 @@ public class PlayerMovement : MonoBehaviour
 
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
 
-        Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
+        //Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
         //Debug.Log(this.movementOrchestrator.Length());
     }
 
