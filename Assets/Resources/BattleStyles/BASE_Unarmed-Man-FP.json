@@ -1,6 +1,18 @@
 {
 	"data": [
 		{
+			"state": "IdleHand",
+			"clip": "ManArmt_IdleHand-Man-FP"
+		},
+		{
+			"state": "Moving Forward_A",
+			"clip": "ManArmt_WalkForward-Man-FP"
+		},
+		{
+			"state": "Moving Forward_B",
+			"clip": "ManArmt_RunForward-Man-FP"
+		},
+		{
 			"state": "Attack 1",
 			"clip": "ManArmt_Punch1-Normal-Man-FP"
 		},
