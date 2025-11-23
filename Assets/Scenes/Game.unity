@@ -547,6 +547,7 @@ GameObject:
   - component: {fileID: 59614824}
   - component: {fileID: 59614825}
   - component: {fileID: 59614826}
+  - component: {fileID: 59614828}
   m_Layer: 9
   m_Name: Character
   m_TagString: Player
@@ -736,6 +737,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a145b133212d62348a8fb36992215e9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &59614828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 59614818}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f77fc41f965fa7541bb2ff62a8b0c821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &65700857
@@ -20948,6 +20961,7 @@ MonoBehaviour:
   playerAudioListener: {fileID: 1912773810}
   playerPositionHandler: {fileID: 59614825}
   voxelLightHandler: {fileID: 2085928825}
+  playerActionController: {fileID: 59614828}
   playerCharacter: {fileID: 59614818}
   playerEvents: {fileID: 59614819}
   playerModelHandler: {fileID: 59614826}

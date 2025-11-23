@@ -86,6 +86,9 @@ public class AnimationHandler : MonoBehaviour {
 		this.rigControllerFP.AssignHeadTrackingSource(tracker);
 	}
 
+	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
+	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
+
 	private void SetFirstPersonRotation(CharacterBuilder builder){
 		builder.SetFirstPersonRotation(rigControllerFP);
 	}

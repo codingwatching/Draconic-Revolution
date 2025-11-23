@@ -1,22 +1,18 @@
 {
 	"data": [
 		{
-			"name": "<Empty>",
-			"clip": "Idle-Man",
+			"name": "Empty",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
 			"name": "Moving Forward",
-			"clip": "",
 			"layer": "",
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "Idle-Man",
 				"minThreshold": 0,
-				"clipB": "RunForward-Man-FP",
 				"maxThreshold": 1,
 				"blendParameter": {
 					"parameterName": "Run",
@@ -26,77 +22,66 @@
 		},
 		{
 			"name": "Idle Hand",
-			"clip": "IdleHand-Man-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 1",
-			"clip": "Punch1-Normal-Man-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 2",
-			"clip": "Punch2-Normal-Man-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 3",
-			"clip": "Punch3-Normal-Man-FP",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 4",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 5",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 6",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 7",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 8",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 9",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 10",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false

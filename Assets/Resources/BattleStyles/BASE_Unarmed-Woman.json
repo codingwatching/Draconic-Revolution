@@ -1,16 +1,16 @@
 {
-	"moveset": [
+	"data": [
 		{
 			"state": "Attack 1",
-			"clip": "Punch1-Normal-Woman"
+			"clip": "WomanArmt_Punch1-Normal-Woman"
 		},
 		{
 			"state": "Attack 2",
-			"clip": "Punch2-Normal-Woman"
+			"clip": "WomanArmt_Punch2-Normal-Woman"
 		},
 		{
 			"state": "Attack 3",
-			"clip": "Punch3-Normal-Woman"
+			"clip": "WomanArmt_Punch3-Normal-Woman"
 		},
 		{
 			"state": "Attack 4",

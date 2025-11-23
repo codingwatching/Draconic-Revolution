@@ -2,15 +2,15 @@
 	"data": [
 		{
 			"state": "Attack 1",
-			"clip": "Punch1-Normal-Man"
+			"clip": "ManArmt_Punch1-Normal-Man"
 		},
 		{
 			"state": "Attack 2",
-			"clip": "Punch2-Normal-Man"
+			"clip": "ManArmt_Punch2-Normal-Man"
 		},
 		{
 			"state": "Attack 3",
-			"clip": "Punch3-Normal-Man"
+			"clip": "ManArmt_Punch3-Normal-Man"
 		},
 		{
 			"state": "Attack 4",

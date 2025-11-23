@@ -138,6 +138,8 @@ public static class AnimationControlBuilder {
 		int[] lastPositionInLayer;
 		int layerNumber;
 
+		animations.Add("BASE_Default", new Dictionary<string, Motion>());
+
 		foreach(AnimationControllerSettings acs in controllerSettings.Values){
 			controllerName = acs.controllerName;
 			layerIndexes = CreateArrayOfZeroes(layers[controllerName].Count);
@@ -146,7 +148,7 @@ public static class AnimationControlBuilder {
 			// Create all states for the layers
 			for(int i=0; i < stateSettings[controllerName].Length; i++){
 				AnimationStateSettings ass = stateSettings[controllerName][i];
-				AnimatorState state = ass.Build(controllers[controllerName], animations[controllerName]);
+				AnimatorState state = ass.Build(controllers[controllerName], animations["BASE_Default"], ANIMATION_CLIPS_PATH);
 				layerNumber = layers[controllerName][ass.layer];
 
 				graphPosition = AssignGraphPosition(layerIndexes[layerNumber], lastPositionInLayer[layerNumber]);

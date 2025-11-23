@@ -2,98 +2,83 @@
 	"data": [
 		{
 			"name": "T-Pose",
-			"clip": "0TPose-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Bottom",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Right Arm",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Left Arm",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Head",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Pre-Cinematic Add",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Cinematic Override",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
-			"name": "<Empty>",
-			"clip": "",
+			"name": "Empty",
 			"layer": "Post-Cinematic Add",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
 			"name": "Idle",
-			"clip": "Idle-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": true
 		},
 		{
 			"name": "Jump Start",
-			"clip": "Jump Start-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "On Air",
-			"clip": "",
 			"layer": "",
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "Falling-Woman",
 				"minThreshold": -1,
-				"clipB": "Going Up-Woman",
 				"maxThreshold": 1,
 				"blendParameter": {
 					"parameterName": "Y_Velocity",
@@ -103,21 +88,17 @@
 		},
 		{
 			"name": "Jump End",
-			"clip": "Jump End-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Moving Forward",
-			"clip": "",
 			"layer": "",
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "WalkForward-Woman",
 				"minThreshold": 0,
-				"clipB": "RunForward-Woman",
 				"maxThreshold": 1,
 				"blendParameter": {
 					"parameterName": "Run",
@@ -127,14 +108,11 @@
 		},
 		{
 			"name": "Moving Forward",
-			"clip": "",
 			"layer": "Bottom",
 			"isDefaultState": false,
 			"isBlendTree": true,
 			"blendTree": {
-				"clipA": "WalkForward-Woman",
 				"minThreshold": 0,
-				"clipB": "RunForward-Woman",
 				"maxThreshold": 1,
 				"blendParameter": {
 					"parameterName": "Run",
@@ -144,189 +122,162 @@
 		},
 		{
 			"name": "Walk Backward",
-			"clip": "WalkBackward-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Walk Left",
-			"clip": "WalkLeft-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Walk Right",
-			"clip": "WalkRight-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Walk Backward",
-			"clip": "WalkBackward-Woman",
 			"layer": "Bottom",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Walk Left",
-			"clip": "WalkLeft-Woman",
 			"layer": "Bottom",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Walk Right",
-			"clip": "WalkRight-Woman",
 			"layer": "Bottom",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Idle Hand",
-			"clip": "IdleHand-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 1",
-			"clip": "Punch1-Normal-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 2",
-			"clip": "Punch2-Normal-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 3",
-			"clip": "Punch3-Normal-Woman",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 4",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 5",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 6",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 7",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 8",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 9",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 10",
-			"clip": "",
 			"layer": "",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 1",
-			"clip": "Punch1-Normal-Woman",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 2",
-			"clip": "Punch2-Normal-Woman",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 3",
-			"clip": "Punch3-Normal-Woman",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 4",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 5",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 6",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 7",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 8",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 9",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},
 		{
 			"name": "Attack 10",
-			"clip": "",
 			"layer": "Full Torso",
 			"isBlendTree": false,
 			"isDefaultState": false
