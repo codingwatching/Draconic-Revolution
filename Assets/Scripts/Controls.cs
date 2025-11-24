@@ -73,6 +73,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""initialStateCheck"": false
                 },
                 {
+                    ""name"": ""Sheathe"",
+                    ""type"": ""Button"",
+                    ""id"": ""6a6461b6-ca9f-4aba-9ed6-8d98b29e21e1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
                     ""name"": ""Mouse Look"",
                     ""type"": ""Value"",
                     ""id"": ""6f61dff5-6a91-4041-b888-22ef7d85d4b0"",
@@ -623,6 +632,17 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""DebugKey2"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cfc9f709-5e17-48d6-b3cb-d2fb2697d21d"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""Keyboard and Mouse"",
+                    ""action"": ""Sheathe"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -653,6 +673,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Player_PrimaryAction = m_Player.FindAction("Primary Action", throwIfNotFound: true);
         m_Player_SecondaryAction = m_Player.FindAction("Secondary Action", throwIfNotFound: true);
         m_Player_Interact = m_Player.FindAction("Interact", throwIfNotFound: true);
+        m_Player_Sheathe = m_Player.FindAction("Sheathe", throwIfNotFound: true);
         m_Player_MouseLook = m_Player.FindAction("Mouse Look", throwIfNotFound: true);
         m_Player_ToggleGravity = m_Player.FindAction("Toggle Gravity", throwIfNotFound: true);
         m_Player_PrefabRead = m_Player.FindAction("PrefabRead", throwIfNotFound: true);
@@ -746,6 +767,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_PrimaryAction;
     private readonly InputAction m_Player_SecondaryAction;
     private readonly InputAction m_Player_Interact;
+    private readonly InputAction m_Player_Sheathe;
     private readonly InputAction m_Player_MouseLook;
     private readonly InputAction m_Player_ToggleGravity;
     private readonly InputAction m_Player_PrefabRead;
@@ -777,6 +799,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @PrimaryAction => m_Wrapper.m_Player_PrimaryAction;
         public InputAction @SecondaryAction => m_Wrapper.m_Player_SecondaryAction;
         public InputAction @Interact => m_Wrapper.m_Player_Interact;
+        public InputAction @Sheathe => m_Wrapper.m_Player_Sheathe;
         public InputAction @MouseLook => m_Wrapper.m_Player_MouseLook;
         public InputAction @ToggleGravity => m_Wrapper.m_Player_ToggleGravity;
         public InputAction @PrefabRead => m_Wrapper.m_Player_PrefabRead;
@@ -823,6 +846,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Interact.started += instance.OnInteract;
             @Interact.performed += instance.OnInteract;
             @Interact.canceled += instance.OnInteract;
+            @Sheathe.started += instance.OnSheathe;
+            @Sheathe.performed += instance.OnSheathe;
+            @Sheathe.canceled += instance.OnSheathe;
             @MouseLook.started += instance.OnMouseLook;
             @MouseLook.performed += instance.OnMouseLook;
             @MouseLook.canceled += instance.OnMouseLook;
@@ -908,6 +934,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Interact.started -= instance.OnInteract;
             @Interact.performed -= instance.OnInteract;
             @Interact.canceled -= instance.OnInteract;
+            @Sheathe.started -= instance.OnSheathe;
+            @Sheathe.performed -= instance.OnSheathe;
+            @Sheathe.canceled -= instance.OnSheathe;
             @MouseLook.started -= instance.OnMouseLook;
             @MouseLook.performed -= instance.OnMouseLook;
             @MouseLook.canceled -= instance.OnMouseLook;
@@ -1007,6 +1036,7 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnPrimaryAction(InputAction.CallbackContext context);
         void OnSecondaryAction(InputAction.CallbackContext context);
         void OnInteract(InputAction.CallbackContext context);
+        void OnSheathe(InputAction.CallbackContext context);
         void OnMouseLook(InputAction.CallbackContext context);
         void OnToggleGravity(InputAction.CallbackContext context);
         void OnPrefabRead(InputAction.CallbackContext context);

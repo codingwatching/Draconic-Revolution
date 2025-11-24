@@ -7,7 +7,7 @@ public class AnimationLoader : BaseLoader {
 	private static Dictionary<string, RuntimeAnimatorController> controllers = new Dictionary<string, RuntimeAnimatorController>();
 	private static Dictionary<string, AnimationStateMapping[]> stateMappings = new Dictionary<string, AnimationStateMapping[]>();
 	private static Dictionary<string, MultiAimData[]> rigs = new Dictionary<string, MultiAimData[]>();
-	private static Dictionary<string, StateClipPair<string, string>[]> battleStyleOverrides = new Dictionary<string, StateClipPair<string, string>[]>();
+	private static Dictionary<string, BattleStyleData> battleStyles = new Dictionary<string, BattleStyleData>();
 	private static Dictionary<string, string> armatureName = new Dictionary<string, string>();
 	private static bool isClient;
 
@@ -25,7 +25,7 @@ public class AnimationLoader : BaseLoader {
 			LoadStateMappings();
 			LoadRigs();
 			LoadArmatureName();
-			LoadBattleStyleOverrides();
+			LoadBattleStyles();
 		}
 
 		return true;
@@ -36,7 +36,7 @@ public class AnimationLoader : BaseLoader {
 	public static MultiAimData[] GetRig(string controller){return rigs[controller];}
 	public static bool ContainsRig(string controller){return rigs.ContainsKey(controller);}
 	public static string GetArmatureName(string controller){return armatureName[controller];}
-	public static StateClipPair<string, string>[] GetBattleStyleOverrides(string styleName){return battleStyleOverrides[styleName];}
+	public static BattleStyleData GetBattleStyle(string styleName){return battleStyles[styleName];}
 
 	private void LoadArmatureName(){
 		string respath;
@@ -122,13 +122,14 @@ public class AnimationLoader : BaseLoader {
 		}
 	}
 
-	private void LoadBattleStyleOverrides(){
-		Wrapper<StateClipPair<string, string>> wrapper;
+	private void LoadBattleStyles(){
+		BattleStyleData bsd;
         TextAsset[] assets = Resources.LoadAll<TextAsset>(BATTLE_STYLE_RESFOLDER);
 
         foreach(TextAsset asset in assets){
-        	wrapper = JsonUtility.FromJson<Wrapper<StateClipPair<string, string>>>(asset.text);
-			battleStyleOverrides.Add(asset.name, wrapper.data);
+        	bsd = JsonUtility.FromJson<BattleStyleData>(asset.text);
+        	bsd.PostDeserializationSetup();
+			battleStyles.Add(asset.name, bsd);
         }
 	}
 }

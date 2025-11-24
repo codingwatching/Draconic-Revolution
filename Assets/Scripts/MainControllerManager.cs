@@ -35,7 +35,9 @@ public class MainControllerManager : MonoBehaviour
     public PlayerRaycast raycast;
     public Transform playerCamera;
     public ChunkLoader cl;
-    public PlayerMovement playerMovement; // TEST
+    public PlayerMovement playerMovement;
+    public PlayerActionController playerActionController;
+
 
     // Locks
     private bool LOCK_MOUSE1 = false;
@@ -84,6 +86,12 @@ public class MainControllerManager : MonoBehaviour
     	if(!MainControllerManager.InUI && !LOCK_MOUSE2){
             raycast.UseItem();
             LOCK_MOUSE2 = true;
+        }
+    }
+
+    public void OnSheathe(){
+        if(!MainControllerManager.InUI){
+            this.playerActionController.Sheathe();
         }
     }
 

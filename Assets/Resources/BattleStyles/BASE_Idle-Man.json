@@ -1,8 +1,11 @@
 {
-	"data": [
-		{
-			"state": "Idle",
-			"clip": "ManArmt_Idle-Man"
-		}
-	]
+	"combo_hits": 0,
+	"overrides": {
+		"data": [
+			{
+				"state": "Idle",
+				"clip": "ManArmt_Idle-Man"
+			}
+		]
+	}
 }

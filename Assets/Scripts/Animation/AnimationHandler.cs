@@ -68,8 +68,12 @@ public class AnimationHandler : MonoBehaviour {
 		}
 
 		if(this.isPlayer){
-			if(this.fpAnimator.HasState(this.tpAnimator.GetLayerIndex(request.layer), stateHash))
+			if(this.fpAnimator.HasState(this.tpAnimator.GetLayerIndex(request.layer), stateHash)){
 				this.fpAnimator.CrossFade(request.name, 0.1f);
+			}
+			else{
+				this.fpAnimator.CrossFade("Empty", 0.1f);
+			}
 		}
 	}
 

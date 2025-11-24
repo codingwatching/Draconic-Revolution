@@ -17,7 +17,9 @@ public class PlayerActionController : MonoBehaviour {
 	private RuntimeAnimatorController originalControllerFP;
 
 	// Battle Style
-	private string currentStyle;
+	private string currentStyleName;
+	private BattleStyleData currentStyle;
+	private bool weaponSheathed = true;
 
 
 	public void Init(){
@@ -36,14 +38,16 @@ public class PlayerActionController : MonoBehaviour {
 		if(!this.INIT)
 			Init();
 
-		if(this.currentStyle == styleName)
+		if(this.currentStyleName == styleName)
 			return;
+
+		this.currentStyle = AnimationLoader.GetBattleStyle(styleName);
 
 		AnimatorOverrideController animationOverrideController = new AnimatorOverrideController(this.originalController);
 		AnimatorOverrideController animationOverrideControllerFP = new AnimatorOverrideController(this.originalControllerFP);
 
-		animationOverrideController = ApplyOverrides(animationOverrideController, AnimationLoader.GetBattleStyleOverrides(styleName));
-		animationOverrideControllerFP = ApplyOverrides(animationOverrideControllerFP, AnimationLoader.GetBattleStyleOverrides($"{styleName}-FP"));
+		animationOverrideController = ApplyOverrides(animationOverrideController, this.currentStyle.GetOverrides());
+		animationOverrideControllerFP = ApplyOverrides(animationOverrideControllerFP, AnimationLoader.GetBattleStyle($"{styleName}-FP").GetOverrides());
 
 		this.animator.runtimeAnimatorController = animationOverrideController;
 		this.animatorFP.runtimeAnimatorController = animationOverrideControllerFP;
@@ -54,6 +58,15 @@ public class PlayerActionController : MonoBehaviour {
 		this.animatorFP.runtimeAnimatorController = this.originalControllerFP;
 	}
 
+	public void Sheathe(){
+		this.weaponSheathed = !this.weaponSheathed;
+
+		if(this.weaponSheathed)
+			this.animationHandler.Play(new BoneAnimationRequest("Idle Hand", ""));
+		else
+			this.animationHandler.Play(new BoneAnimationRequest("Idle", ""));
+	}
+
 	// Used only in Menu
 	public static void UseStyle(Animator animator, string styleName, bool isMale){
 		if(isMale)
@@ -62,12 +75,12 @@ public class PlayerActionController : MonoBehaviour {
 			styleName = $"{styleName}-Woman";
 
 		AnimatorOverrideController animationOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
-		animationOverrideController = ApplyOverrides(animationOverrideController, AnimationLoader.GetBattleStyleOverrides(styleName));
+		animationOverrideController = ApplyOverrides(animationOverrideController, AnimationLoader.GetBattleStyle(styleName).GetOverrides());
 		animator.runtimeAnimatorController = animationOverrideController;
 	}
 
-	private static AnimatorOverrideController ApplyOverrides(AnimatorOverrideController controller, StateClipPair<string, string>[] overrides){
-		foreach(StateClipPair<string, string> over in overrides){
+	private static AnimatorOverrideController ApplyOverrides(AnimatorOverrideController controller, StateClipPair[] overrides){
+		foreach(StateClipPair over in overrides){
 			controller[Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.state}")] = Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.clip}");
 		}
 

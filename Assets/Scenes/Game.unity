@@ -29045,6 +29045,7 @@ MonoBehaviour:
   playerCamera: {fileID: 1912773808}
   cl: {fileID: 1192772367}
   playerMovement: {fileID: 59614823}
+  playerActionController: {fileID: 59614828}
 --- !u!4 &1635249985
 Transform:
   m_ObjectHideFlags: 0

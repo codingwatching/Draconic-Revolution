@@ -1,8 +1,11 @@
 {
-	"data": [
-		{
-			"state": "Idle",
-			"clip": "WomanArmt_Idle-Woman"
-		}
-	]
+	"combo_hits": 0,
+	"overrides": {
+		"data": [
+			{
+				"state": "Idle",
+				"clip": "WomanArmt_Idle-Woman"
+			}
+		]
+	}
 }
