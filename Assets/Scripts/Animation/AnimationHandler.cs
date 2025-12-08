@@ -58,7 +58,6 @@ public class AnimationHandler : MonoBehaviour {
 					break;
 				}
 			}
-
 			if(!found){
 				this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
 			}
@@ -83,6 +82,29 @@ public class AnimationHandler : MonoBehaviour {
 			return;
 
 		this.shapeKeyAnimator.Play(shapeKey, settings);
+	}
+
+	// Looks for every Layer to find if the current playing State is StateName and return the normalizedTime
+	// Return -1 if no state like that is found
+	public float GetAnimationTime(string stateName){
+		AnimatorStateInfo stateInfo;
+
+		for(int i=0; i < this.tpAnimator.layerCount; i++){
+			stateInfo = this.tpAnimator.GetCurrentAnimatorStateInfo(i);
+
+			if(stateInfo.IsName(stateName)){
+				return stateInfo.normalizedTime;
+			}
+
+			stateInfo = this.tpAnimator.GetNextAnimatorStateInfo(i);
+
+			if(stateInfo.IsName(stateName)){
+				return stateInfo.normalizedTime;
+			}
+		}
+
+		return -1f;
+
 	}
 
 	public void AssignAimTracker(Transform tracker){

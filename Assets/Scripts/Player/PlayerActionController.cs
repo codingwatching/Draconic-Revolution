@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -12,7 +13,7 @@ public class PlayerActionController : MonoBehaviour {
 	// Flags
 	private bool INIT = false;
 
-	// Cache
+	// Original Animators
 	private RuntimeAnimatorController originalController;
 	private RuntimeAnimatorController originalControllerFP;
 
@@ -20,6 +21,46 @@ public class PlayerActionController : MonoBehaviour {
 	private string currentStyleName;
 	private BattleStyleData currentStyle;
 	private bool weaponSheathed = true;
+	private int comboHit = 0;
+
+	// Default Config
+	private float hitWindowStart = .48f;
+	private float attackExitTime = .8f;
+	private HashSet<PlayerActionType> registeredAction;
+
+	// Cache
+	private float cachedTime;
+
+	void Update(){
+		if(!this.INIT)
+			return;
+
+		ResetCombo();
+
+		if(this.registeredAction.Contains(PlayerActionType.PRIMARY_ACTION)){
+			if(this.comboHit >= 1){
+				this.cachedTime = this.animationHandler.GetAnimationTime($"Attack {this.comboHit}");
+
+				if(this.cachedTime != -1f){
+					if(this.cachedTime >= this.hitWindowStart && this.cachedTime < this.attackExitTime && this.comboHit < this.currentStyle.GetComboHits()){
+						this.comboHit++;
+						Debug.Log(this.comboHit);
+						this.animator.SetInteger("Attack_Combo", this.comboHit);
+						this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
+						this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+					}
+				}
+			}
+			else if(this.comboHit == 0){
+				this.comboHit++;
+				Debug.Log(this.comboHit);
+				this.animator.SetInteger("Attack_Combo", this.comboHit);
+				this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
+				this.animationHandler.Play(new BoneAnimationRequest($"Attack {this.comboHit}", ""));
+				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+			}
+		}
+	}
 
 
 	public void Init(){
@@ -32,6 +73,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.animatorFP = this.animationHandler.GetFirstPersonAnimator();
 		this.originalController = this.animator.runtimeAnimatorController;
 		this.originalControllerFP = this.animatorFP.runtimeAnimatorController;
+		this.registeredAction = new HashSet<PlayerActionType>();
 	}
 
 	public void UseStyle(string styleName){
@@ -61,11 +103,16 @@ public class PlayerActionController : MonoBehaviour {
 	public void Sheathe(){
 		this.weaponSheathed = !this.weaponSheathed;
 
-		if(this.weaponSheathed)
+		if(this.weaponSheathed){
 			this.animationHandler.Play(new BoneAnimationRequest("Idle Hand", ""));
+			this.comboHit = 0;
+		}
 		else
 			this.animationHandler.Play(new BoneAnimationRequest("Idle", ""));
 	}
+
+	// Registers a primary action
+	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
 
 	// Used only in Menu
 	public static void UseStyle(Animator animator, string styleName, bool isMale){
@@ -85,5 +132,16 @@ public class PlayerActionController : MonoBehaviour {
 		}
 
 		return controller;
+	}
+
+	private void ResetCombo(){
+		if(this.comboHit >= 1){
+			this.cachedTime = this.animationHandler.GetAnimationTime($"Attack {this.comboHit}");
+
+			if(this.cachedTime == -1){
+				this.comboHit = 0;
+				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+			}
+		}
 	}
 }

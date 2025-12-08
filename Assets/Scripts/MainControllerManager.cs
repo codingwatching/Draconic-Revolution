@@ -77,6 +77,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnPrimaryAction(){
     	if(!MainControllerManager.InUI && !LOCK_MOUSE1){
+            playerActionController.RegisterPrimaryAction();
             raycast.BreakBlock();
             LOCK_MOUSE1 = true;
         }
