@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public CharacterController controller;
     public MainControllerManager controls;
     private PlayerSheetController playerSheetController;
+    private PlayerActionController playerActionController;
 
     // Movement Preset
     private BaseMovePreset movementOrchestrator;
@@ -73,12 +74,15 @@ public class PlayerMovement : MonoBehaviour
 
         this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
 
+        this.playerActionController.VerifyMovement(this.transform.forward, this.direction, this.momentum, (MovementFlags)this.flags);
+
         //Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
         //Debug.Log(this.movementOrchestrator.Length());
     }
 
     public void Init(){
         this.playerSheetController = this.cl.playerSheetController;
+        this.playerActionController = this.cl.playerActionController;
         this.movementOrchestrator = new NormalMovePreset(this.cl.playerSheetController.GetSheet());
     }
 

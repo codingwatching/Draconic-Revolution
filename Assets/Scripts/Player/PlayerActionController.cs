@@ -44,7 +44,6 @@ public class PlayerActionController : MonoBehaviour {
 				if(this.cachedTime != -1f){
 					if(this.cachedTime >= this.hitWindowStart && this.cachedTime < this.attackExitTime && this.comboHit < this.currentStyle.GetComboHits()){
 						this.comboHit++;
-						Debug.Log(this.comboHit);
 						this.animator.SetInteger("Attack_Combo", this.comboHit);
 						this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
 						this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
@@ -53,7 +52,6 @@ public class PlayerActionController : MonoBehaviour {
 			}
 			else if(this.comboHit == 0){
 				this.comboHit++;
-				Debug.Log(this.comboHit);
 				this.animator.SetInteger("Attack_Combo", this.comboHit);
 				this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
 				this.animationHandler.Play(new BoneAnimationRequest($"Attack {this.comboHit}", ""));
@@ -104,15 +102,45 @@ public class PlayerActionController : MonoBehaviour {
 		this.weaponSheathed = !this.weaponSheathed;
 
 		if(this.weaponSheathed){
-			this.animationHandler.Play(new BoneAnimationRequest("Idle Hand", ""));
+			this.animationHandler.Play(new BoneAnimationRequest("Idle", ""));
 			this.comboHit = 0;
 		}
 		else
-			this.animationHandler.Play(new BoneAnimationRequest("Idle", ""));
+			this.animationHandler.Play(new BoneAnimationRequest("Idle Hand", ""));
 	}
 
 	// Registers a primary action
 	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
+
+	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float momentum, MovementFlags flags){
+		int direction = 0;
+		float angle;
+
+		if(movementDirection.magnitude == 0){
+			this.animator.SetBool("Stop_Movement", true);
+		}
+		else{
+			this.animator.SetBool("Stop_Movement", false);
+		}
+
+		this.animator.SetBool("Is_Grounded", flags.isGrounded);
+		this.animator.SetBool("Is_Sheathed", this.weaponSheathed);
+
+		angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
+		
+		if(movementDirection.magnitude == 0)
+			direction = 0;
+		else if(Mathf.Abs(angle) >= 180)
+			direction = 2;
+		else if(Mathf.Abs(angle) <= 50)
+			direction = 1;
+		else if(angle > 0)
+			direction = 3;
+		else
+			direction = 4;
+
+		this.animator.SetInteger("Direction", direction);
+	}
 
 	// Used only in Menu
 	public static void UseStyle(Animator animator, string styleName, bool isMale){
@@ -132,6 +160,9 @@ public class PlayerActionController : MonoBehaviour {
 		}
 
 		return controller;
+	}
+
+	private void ResetMovement(){
 	}
 
 	private void ResetCombo(){

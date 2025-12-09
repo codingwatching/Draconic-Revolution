@@ -76,6 +76,8 @@ public class AnimationHandler : MonoBehaviour {
 		}
 	}
 
+	public void Play(string name, string layer){Play(new BoneAnimationRequest(name, layer));}
+
 	// Plays/Stops/Registers ShapeKey Animations based on the settings inputted
 	public void Play(string shapeKey, ShapeKeyAnimationSettings settings){
 		if(!this.INIT)

@@ -22,6 +22,76 @@
 			"playState": "Idle Hand"
 		},
 		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Moving Forward",
+			"currentLayer": "",
+			"playState": "Idle"
+		},
+		{
+			"type": "play_on",
+			"targetLayer": "Bottom",
+			"playState": "Walk Backward",
+			"currentState": "Idle Hand",
+			"currentLayer": ""
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Backward",
+			"currentLayer": "",
+			"playState": "Idle Hand"
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Backward",
+			"currentLayer": "",
+			"playState": "Idle"
+		},
+		{
+			"type": "play_on",
+			"targetLayer": "Bottom",
+			"playState": "Walk Left",
+			"currentState": "Idle Hand",
+			"currentLayer": ""
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Left",
+			"currentLayer": "",
+			"playState": "Idle Hand"
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Left",
+			"currentLayer": "",
+			"playState": "Idle"
+		},
+		{
+			"type": "play_on",
+			"targetLayer": "Bottom",
+			"playState": "Walk Right",
+			"currentState": "Idle Hand",
+			"currentLayer": ""
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Right",
+			"currentLayer": "",
+			"playState": "Idle Hand"
+		},
+		{
+			"type": "continue_current_on",
+			"targetLayer": "Bottom",
+			"currentState": "Walk Right",
+			"currentLayer": "",
+			"playState": "Idle"
+		},
+		{
 			"type": "stop_layers",
 			"playState": "Jump End",
 			"targetLayer": "",

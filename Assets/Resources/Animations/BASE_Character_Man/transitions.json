@@ -13,6 +13,670 @@
 		},
 		{
 			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Is_Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Walk Backward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 2,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Walk Right",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 3,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Walk Left",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 4,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 1,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Walk Right",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 3,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Walk Left",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 4,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 1,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Walk Backward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 2,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Walk Left",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 4,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 1,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Walk Backward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 2,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Walk Right",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 3,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Idle",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 1,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Idle",
+			"destinationState": "Walk Backward",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 2,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Idle",
+			"destinationState": "Walk Right",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 3,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Idle",
+			"destinationState": "Walk Left",
+			"hasExitTime": false,
+			"duration": 0.2,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Stop_Movement",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Is_Grounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "equals",
+			        "threshold": 4,
+			        "parameter": "Direction",
+			        "parameterType": "int"
+			    }
+			]
+		},
+		{
+			"layer": "",
 			"sourceState": "Attack 1",
 			"destinationState": "Attack 2",
 			"hasExitTime": false,
