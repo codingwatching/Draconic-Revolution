@@ -707,10 +707,9 @@ public class Client
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
 		ushort nameSize = NetDecoder.ReadUshort(data, 9);
 		string stateName = NetDecoder.ReadString(data, 11, nameSize);
-		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
-
+		
 		if(playerCode != Configurations.accountID)
-			this.entityHandler.AnimateBone(playerCode, stateName, layer);
+			this.entityHandler.AnimateBone(playerCode, stateName);
 	}
 
 	/* ================================================================================ */

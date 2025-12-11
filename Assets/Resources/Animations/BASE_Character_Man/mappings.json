@@ -1,101 +1,109 @@
 {
 	"data": [
 		{
-			"type": "play_on",
-			"targetLayer": "Full Torso",
-			"playState": "Punch 1",
-			"currentState": "On Air",
-			"currentLayer": ""
+			"state": "T-Pose",
+			"layers": [""],
+			"priority": 999
 		},
 		{
-			"type": "play_on",
-			"targetLayer": "Bottom",
-			"playState": "Moving Forward",
-			"currentState": "Idle Hand",
-			"currentLayer": ""
+			"state": "Empty",
+			"layers": ["Bottom", "Full Torso", "Right Arm", "Left Arm", "Head", "Pre-Cinematic Add", "Cinematic Override", "Post-Cinematic Add"],
+			"priority": 1000
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Moving Forward",
-			"currentLayer": "",
-			"playState": "Idle Hand"
+			"state": "Idle",
+			"layers": [""],
+			"priority": 900
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Moving Forward",
-			"currentLayer": "",
-			"playState": "Idle"
+			"state": "Jump Start",
+			"layers": ["", "Bottom"],
+			"priority": 10
 		},
 		{
-			"type": "play_on",
-			"targetLayer": "Bottom",
-			"playState": "Walk Backward",
-			"currentState": "Idle Hand",
-			"currentLayer": ""
+			"state": "On Air",
+			"layers": ["", "Bottom"],
+			"priority": 5
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Backward",
-			"currentLayer": "",
-			"playState": "Idle Hand"
+			"state": "Jump End",
+			"layers": ["Cinematic Override"],
+			"priority": 5
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Backward",
-			"currentLayer": "",
-			"playState": "Idle"
+			"state": "Moving Forward",
+			"layers": ["", "Bottom"],
+			"priority": 100
 		},
 		{
-			"type": "play_on",
-			"targetLayer": "Bottom",
-			"playState": "Walk Left",
-			"currentState": "Idle Hand",
-			"currentLayer": ""
+			"state": "Walk Backward",
+			"layers": ["", "Bottom"],
+			"priority": 100
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Left",
-			"currentLayer": "",
-			"playState": "Idle Hand"
+			"state": "Walk Left",
+			"layers": ["", "Bottom"],
+			"priority": 100
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Left",
-			"currentLayer": "",
-			"playState": "Idle"
+			"state": "Walk Right",
+			"layers": ["", "Bottom"],
+			"priority": 100
 		},
 		{
-			"type": "play_on",
-			"targetLayer": "Bottom",
-			"playState": "Walk Right",
-			"currentState": "Idle Hand",
-			"currentLayer": ""
+			"state": "Idle Hand",
+			"layers": [""],
+			"priority": 50	
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Right",
-			"currentLayer": "",
-			"playState": "Idle Hand"
+			"state": "Attack 1",
+			"layers": ["", "Full Torso"],
+			"priority": 1
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Walk Right",
-			"currentLayer": "",
-			"playState": "Idle"
+			"state": "Attack 2",
+			"layers": ["", "Full Torso"],
+			"priority": 1
 		},
 		{
-			"type": "stop_layers",
-			"playState": "Jump End",
-			"targetLayer": "",
-			"stop_layers": ["Bottom", "Full Torso", "Head"]
+			"state": "Attack 3",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 4",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 5",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 6",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 7",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 8",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 9",
+			"layers": ["", "Full Torso"],
+			"priority": 1
+		},
+		{
+			"state": "Attack 10",
+			"layers": ["", "Full Torso"],
+			"priority": 1
 		}
 	]
 }

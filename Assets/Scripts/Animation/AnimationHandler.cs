@@ -14,7 +14,10 @@ public class AnimationHandler : MonoBehaviour {
 	private ShapeKeyAnimator shapeKeyAnimator;
 	private ProceduralAnimationRigController rigControllerTP;
 	private ProceduralAnimationRigController rigControllerFP;
-	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
+	private float animationCrossfadeTime = 0.06f;
+
+	private static Dictionary<string, AnimationStateMapping> stateMappings;
+	private static Dictionary<int, string> hashToName; 
 
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
@@ -44,39 +47,59 @@ public class AnimationHandler : MonoBehaviour {
 
 
 	// Plays bone animation
-	public void Play(BoneAnimationRequest request){
+	public void Play(string stateName, bool overrideState=false){
 		if(!this.INIT)
 			return;
 
-		bool found = false;
-		int stateHash = Animator.StringToHash(request.name);
+		AnimationStateMapping givenMap, currentMap;
+		givenMap = AnimationHandler.stateMappings[stateName];
 
-		if(this.stateMappings.ContainsKey(request)){
-			for(int i=0; i < this.stateMappings[request].Count; i++){
-				if(HandleBoneRequest(this.stateMappings[request][i])){
-					found = true;
-					break;
+		if(!overrideState){
+			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[0])).shortNameHash]];
+			
+			if(givenMap.state == currentMap.state)
+				return;
+		}
+		else
+			currentMap = givenMap;
+
+		if(VerifyLayerStates(givenMap.layers[0], currentMap.priority)){
+			return;
+		}
+
+		if(overrideState){
+			this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[0]));
+			if(this.isPlayer){
+				if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
+					this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
+				}
+				else{
+					this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime);
 				}
 			}
-			if(!found){
-				this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
-			}
-		}
-		else{
-			this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
+
+			return;
 		}
 
-		if(this.isPlayer){
-			if(this.fpAnimator.HasState(this.tpAnimator.GetLayerIndex(request.layer), stateHash)){
-				this.fpAnimator.CrossFade(request.name, 0.1f);
-			}
-			else{
-				this.fpAnimator.CrossFade("Empty", 0.1f);
+		for(int i=0; i < givenMap.layers.Length; i++){
+			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[i])).shortNameHash]];
+
+			if(givenMap.priority <= currentMap.priority){
+				this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
+
+				if(this.isPlayer){
+					if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
+						this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
+					}
+					else{
+						this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime);
+					}
+				}
+
+				return;
 			}
 		}
 	}
-
-	public void Play(string name, string layer){Play(new BoneAnimationRequest(name, layer));}
 
 	// Plays/Stops/Registers ShapeKey Animations based on the settings inputted
 	public void Play(string shapeKey, ShapeKeyAnimationSettings settings){
@@ -84,6 +107,16 @@ public class AnimationHandler : MonoBehaviour {
 			return;
 
 		this.shapeKeyAnimator.Play(shapeKey, settings);
+	}
+
+	public void StopLayer(int layer){
+		if(layer != 0){
+			this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layer);
+		}
+		else{
+			this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
+			this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
+		}
 	}
 
 	// Looks for every Layer to find if the current playing State is StateName and return the normalizedTime
@@ -106,7 +139,18 @@ public class AnimationHandler : MonoBehaviour {
 		}
 
 		return -1f;
+	}
 
+	private AnimatorStateInfo GetState(int layer){
+		AnimatorStateInfo stateInfo;
+
+		stateInfo = this.tpAnimator.GetNextAnimatorStateInfo(layer);
+
+		if(stateInfo.shortNameHash == 0){
+			return this.tpAnimator.GetCurrentAnimatorStateInfo(layer);
+		}
+
+		return stateInfo;
 	}
 
 	public void AssignAimTracker(Transform tracker){
@@ -117,68 +161,41 @@ public class AnimationHandler : MonoBehaviour {
 	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
 	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
 
-	private void SetFirstPersonRotation(CharacterBuilder builder){
-		builder.SetFirstPersonRotation(rigControllerFP);
-	}
+	private bool VerifyLayerStates(string layerName, int priority){
+		string state;
 
-	// Returns true if boneRequest plays the animation
-	private bool HandleBoneRequest(AnimationStateMapping mapping){
-		AnimatorStateInfo currentState = this.tpAnimator.GetCurrentAnimatorStateInfo(this.tpAnimator.GetLayerIndex(mapping.currentLayer));
+		if(layerName == "")
+			layerName = "Base Layer";
 
-		switch(mapping.GetMapType()){
-			case AnimationStateMappingType.PLAY_ON:
-				return PlayOn(currentState, mapping);
-			case AnimationStateMappingType.CONTINUE_CURRENT_ON:
-				return ContinueCurrentOn(currentState, mapping);
-			case AnimationStateMappingType.STOP_LAYERS:
-				return StopLayers(mapping);
-			default:
-				return false;
-		}
-	}
+		for(int i=this.tpAnimator.GetLayerIndex(layerName)+1; i < this.tpAnimator.layerCount; i++){
+			state = AnimationHandler.hashToName[GetState(i).shortNameHash];
 
-	private bool PlayOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
-		if(currentState.IsName(mapping.currentState)){
-			this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
-			return true;
+			if(ArrayContains(layerName, AnimationHandler.stateMappings[state].layers)){
+				if(priority > AnimationHandler.stateMappings[state].priority){
+					StopLayer(i);
+					this.tpAnimator.CrossFade(state, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(layerName));
+					return true;
+				} 
+			}
 		}
 
 		return false;
 	}
 
-	private bool ContinueCurrentOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
-		if(currentState.IsName(mapping.currentState)){
-			this.tpAnimator.Play(mapping.currentState, this.tpAnimator.GetLayerIndex(mapping.targetLayer), normalizedTime:currentState.normalizedTime);
-			this.tpAnimator.Play(mapping.playState, this.tpAnimator.GetLayerIndex(mapping.currentLayer));
-			return true;
-		}
-
-		return false;
-	}
-
-	private bool StopLayers(AnimationStateMapping mapping){
-		string[] layers = mapping.stop_layers;
-
-		for(int i=0; i < layers.Length; i++){
-			// Plays the default layer state
-			this.tpAnimator.CrossFade(0, 0.1f, layer:this.tpAnimator.GetLayerIndex(layers[i]));
-		}
-
-		this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
-		return true;
-	}
+	private void SetFirstPersonRotation(CharacterBuilder builder){builder.SetFirstPersonRotation(rigControllerFP);}
 
 	private void LoadMapping(string controllerName){
-		BoneAnimationRequest request;
+		if(AnimationHandler.stateMappings != null)
+			return;
+
+		AnimationHandler.stateMappings = new Dictionary<string, AnimationStateMapping>();
+		AnimationHandler.hashToName = new Dictionary<int, string>();
 
 		foreach(AnimationStateMapping map in AnimationLoader.GetAnimationMapping(controllerName)){
-			request = new BoneAnimationRequest(map.playState, map.currentLayer);
-
-			if(!this.stateMappings.ContainsKey(request)){
-				this.stateMappings.Add(request, new List<AnimationStateMapping>());
-			}
-
-			this.stateMappings[request].Add(map);
+			AnimationHandler.stateMappings.Add(map.state, map);
+			AnimationHandler.hashToName.Add(Animator.StringToHash(map.state), map.state);
 		}
 	}
+
+	private bool ArrayContains(string element, string[] arr){return Array.IndexOf(arr, element) >= 0;}
 }

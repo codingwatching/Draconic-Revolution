@@ -73,6 +73,12 @@
 			"isDefaultState": false
 		},
 		{
+			"name": "Jump Start",
+			"layer": "Bottom",
+			"isBlendTree": false,
+			"isDefaultState": false
+		},
+		{
 			"name": "On Air",
 			"layer": "",
 			"isDefaultState": false,
@@ -87,8 +93,22 @@
 			}
 		},
 		{
+			"name": "On Air",
+			"layer": "Bottom",
+			"isDefaultState": false,
+			"isBlendTree": true,
+			"blendTree": {
+				"minThreshold": -1,
+				"maxThreshold": 1,
+				"blendParameter": {
+					"parameterName": "Y_Velocity",
+					"parameterType": "float"
+				}
+			}
+		},
+		{
 			"name": "Jump End",
-			"layer": "",
+			"layer": "Cinematic Override",
 			"isBlendTree": false,
 			"isDefaultState": false
 		},

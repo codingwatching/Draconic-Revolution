@@ -30,6 +30,7 @@ public class PlayerActionController : MonoBehaviour {
 
 	// Cache
 	private float cachedTime;
+	private PlayerMovementType lastMove;
 
 	void Update(){
 		if(!this.INIT)
@@ -54,7 +55,7 @@ public class PlayerActionController : MonoBehaviour {
 				this.comboHit++;
 				this.animator.SetInteger("Attack_Combo", this.comboHit);
 				this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
-				this.animationHandler.Play(new BoneAnimationRequest($"Attack {this.comboHit}", ""));
+				this.animationHandler.Play($"Attack {this.comboHit}");
 				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
 			}
 		}
@@ -102,44 +103,39 @@ public class PlayerActionController : MonoBehaviour {
 		this.weaponSheathed = !this.weaponSheathed;
 
 		if(this.weaponSheathed){
-			this.animationHandler.Play(new BoneAnimationRequest("Idle", ""));
+			this.animationHandler.Play("Idle", overrideState:true);
 			this.comboHit = 0;
 		}
 		else
-			this.animationHandler.Play(new BoneAnimationRequest("Idle Hand", ""));
+			this.animationHandler.Play("Idle Hand");
 	}
 
 	// Registers a primary action
 	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
 
 	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float momentum, MovementFlags flags){
-		int direction = 0;
-		float angle;
+		float angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
+		PlayerMovementType pmt;
 
-		if(movementDirection.magnitude == 0){
-			this.animator.SetBool("Stop_Movement", true);
-		}
-		else{
-			this.animator.SetBool("Stop_Movement", false);
-		}
-
-		this.animator.SetBool("Is_Grounded", flags.isGrounded);
-		this.animator.SetBool("Is_Sheathed", this.weaponSheathed);
-
-		angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
-		
-		if(movementDirection.magnitude == 0)
-			direction = 0;
+		if(!flags.isGrounded)
+			pmt = PlayerMovementType.AIR;
+		else if(movementDirection.magnitude == 0 && this.weaponSheathed)
+			pmt = PlayerMovementType.STILL;
+		else if(movementDirection.magnitude == 0 && !this.weaponSheathed)
+			pmt = PlayerMovementType.STILL_AGGRO;
 		else if(Mathf.Abs(angle) >= 180)
-			direction = 2;
+			pmt = PlayerMovementType.BACKWARD;
 		else if(Mathf.Abs(angle) <= 50)
-			direction = 1;
+			pmt = PlayerMovementType.FORWARD;
 		else if(angle > 0)
-			direction = 3;
+			pmt = PlayerMovementType.RIGHT;
 		else
-			direction = 4;
+			pmt = PlayerMovementType.LEFT;
 
-		this.animator.SetInteger("Direction", direction);
+		if(pmt != this.lastMove)
+			ProcessMovement(pmt);
+
+		this.lastMove = pmt;
 	}
 
 	// Used only in Menu
@@ -162,7 +158,34 @@ public class PlayerActionController : MonoBehaviour {
 		return controller;
 	}
 
-	private void ResetMovement(){
+	private void ProcessMovement(PlayerMovementType pmt){
+		switch(pmt){
+			case PlayerMovementType.STILL:
+				this.animationHandler.Play("Idle", overrideState:true);
+				this.animationHandler.StopLayer(1);
+				break;
+			case PlayerMovementType.STILL_AGGRO:
+				this.animationHandler.Play("Idle Hand");
+				this.animationHandler.StopLayer(1);
+				break;
+			case PlayerMovementType.FORWARD:
+				this.animationHandler.Play("Moving Forward");
+				break;
+			case PlayerMovementType.BACKWARD:
+				this.animationHandler.Play("Walk Backward");
+				break;
+			case PlayerMovementType.LEFT:
+				this.animationHandler.Play("Walk Left");
+				break;
+			case PlayerMovementType.RIGHT:
+				this.animationHandler.Play("Walk Right");
+				break;
+			case PlayerMovementType.AIR:
+				this.animationHandler.Play("On Air");
+				break;
+			default:
+				break;		
+		}
 	}
 
 	private void ResetCombo(){

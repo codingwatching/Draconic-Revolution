@@ -114,11 +114,9 @@ public class EntityHandler
 		RunSingleActivation(EntityType.DROP, code, pos);
 	}
 
-	public void AnimateBone(ulong code, string stateName, string layerName){
-		BoneAnimationRequest request = new BoneAnimationRequest(stateName, layerName);
-
+	public void AnimateBone(ulong code, string stateName){
 		if(this.playerAnimations.ContainsKey(code)){
-			this.playerAnimations[code].Play(request);
+			this.playerAnimations[code].Play(stateName);
 		}
 	}
 

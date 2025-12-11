@@ -1377,14 +1377,13 @@ public class Server
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
 		ushort nameSize = NetDecoder.ReadUshort(data, 9);
 		string stateName = NetDecoder.ReadString(data, 11, nameSize);
-		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
 
 		if(id != playerCode)
 			return;
 
 		NetMessage message;
 		message = new NetMessage(NetCode.SENDANIMATIONLAYER);
-		message.SendAnimationLayer(playerCode, stateName, layer);
+		message.SendAnimationLayer(playerCode, stateName);
 
 		this.SendToClientsExcept(id, message);
 	}
