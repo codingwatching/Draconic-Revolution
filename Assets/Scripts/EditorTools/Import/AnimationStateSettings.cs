@@ -38,13 +38,17 @@ public class AnimationStateSettings {
 				AssetDatabase.CreateAsset(clipB, $"{animationsClipPath}{state.name}_B.anim");
 			}
 
-			BlendTree blendTree = this.blendTree.Build(this.name, animations);
-			state.motion = blendTree;
+			BlendTree bt = this.blendTree.Build(this.name, animations);
+			state.motion = bt;
+
 			AnimatorControllerParameter acp = this.blendTree.blendParameter.Build();
 
 			if(!CheckControllerHasParameter(acp.name, animatorController)){
 				animatorController.AddParameter(acp);
 			}
+
+			//AssetDatabase.CreateAsset(bt, $"{animationsClipPath}{state.name}.asset");
+			AssetDatabase.AddObjectToAsset(bt, animatorController);
 		}
 		else{
 			if(!animations.ContainsKey(state.name)){
