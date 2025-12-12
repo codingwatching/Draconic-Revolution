@@ -221,6 +221,7 @@ public abstract class BaseMovePreset {
         return false;
     }
 
+    public float GetMaxRunningMomentum(){return ProcessModifiers(MovePresetProperty.MAX_RUNNING_MOMENTUM, this.maxRunningMomentum);}
     protected float GetMaxNaturalSpeed(){return ProcessModifiers(MovePresetProperty.MAX_NATURAL_SPEED, this.maxNaturalSpeed);}
     protected float GetDrag(){return ProcessModifiers(MovePresetProperty.DRAG, this.drag);}
     protected float GetJumpHeight(){return ProcessModifiers(MovePresetProperty.JUMP_HEIGHT, this.jumpHeight);}
@@ -228,7 +229,6 @@ public abstract class BaseMovePreset {
     protected float GetMinimumMomentumToStop(){return ProcessModifiers(MovePresetProperty.MINIMUM_MOMENTUM_TO_STOP, this.minimumMomentumToStop);}
     protected float GetGravityAcceleration(){return ProcessModifiers(MovePresetProperty.GRAVITY_ACCELERATION, this.gravityAcceleration);}
     protected float GetGravityMaxAccelerationTime(){return ProcessModifiers(MovePresetProperty.GRAVITY_MAX_ACCELERATION_TIME, this.gravityMaxAccelerationTime);}
-    protected float GetMaxRunningMomentum(){return ProcessModifiers(MovePresetProperty.MAX_RUNNING_MOMENTUM, this.maxRunningMomentum);}
     protected float GetRunMomentumGrowth(){return ProcessModifiers(MovePresetProperty.RUN_MOMENTUM_GROWTH, this.runMomentumGrowth);}
     protected float GetRunMomentumDecrease(){return ProcessModifiers(MovePresetProperty.RUN_MOMENTUM_DECREASE, this.runMomentumDecrease);}
     protected float GetPovAdjustment(){return ProcessModifiers(MovePresetProperty.POV_ADJUSTMENT, this.povAdjustment);}

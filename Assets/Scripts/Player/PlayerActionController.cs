@@ -113,9 +113,12 @@ public class PlayerActionController : MonoBehaviour {
 	// Registers a primary action
 	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
 
-	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float momentum, MovementFlags flags){
+	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float runMomentum, MovementFlags flags){
 		float angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
 		PlayerMovementType pmt;
+
+		this.animator.SetFloat("Run", runMomentum);
+		this.animatorFP.SetFloat("Run", runMomentum);		
 
 		if(!flags.isGrounded)
 			pmt = PlayerMovementType.AIR;
