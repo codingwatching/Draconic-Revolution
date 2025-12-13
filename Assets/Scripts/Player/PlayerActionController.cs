@@ -27,6 +27,8 @@ public class PlayerActionController : MonoBehaviour {
 	private float hitWindowStart = .48f;
 	private float attackExitTime = .8f;
 	private HashSet<PlayerActionType> registeredAction;
+	private List<string> playlist;
+	private List<bool> overrideState;
 
 	// Cache
 	private float cachedTime;
@@ -55,12 +57,20 @@ public class PlayerActionController : MonoBehaviour {
 				this.comboHit++;
 				this.animator.SetInteger("Attack_Combo", this.comboHit);
 				this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
-				this.animationHandler.Play($"Attack {this.comboHit}");
+				AddToPlaylist($"Attack {this.comboHit}");
 				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
 			}
 		}
 	}
 
+	void LateUpdate(){
+		for(int i=0; i < this.playlist.Count; i++){
+			this.animationHandler.Play(this.playlist[i], overrideState:this.overrideState[i]);
+		}
+
+		this.playlist.Clear();
+		this.overrideState.Clear();
+	}
 
 	public void Init(){
 		if(this.INIT)
@@ -73,6 +83,8 @@ public class PlayerActionController : MonoBehaviour {
 		this.originalController = this.animator.runtimeAnimatorController;
 		this.originalControllerFP = this.animatorFP.runtimeAnimatorController;
 		this.registeredAction = new HashSet<PlayerActionType>();
+		this.playlist = new List<string>();
+		this.overrideState = new List<bool>();
 	}
 
 	public void UseStyle(string styleName){
@@ -103,11 +115,11 @@ public class PlayerActionController : MonoBehaviour {
 		this.weaponSheathed = !this.weaponSheathed;
 
 		if(this.weaponSheathed){
-			this.animationHandler.Play("Idle", overrideState:true);
+			AddToPlaylist("Idle", over:true);
 			this.comboHit = 0;
 		}
 		else
-			this.animationHandler.Play("Idle Hand");
+			AddToPlaylist("Idle Hand");
 	}
 
 	// Registers a primary action
@@ -118,7 +130,13 @@ public class PlayerActionController : MonoBehaviour {
 		PlayerMovementType pmt;
 
 		this.animator.SetFloat("Run", runMomentum);
-		this.animatorFP.SetFloat("Run", runMomentum);		
+		this.animatorFP.SetFloat("Run", runMomentum);
+
+		this.animator.SetBool("IsGrounded", flags.isGrounded);
+		this.animator.SetBool("Sheathed", this.weaponSheathed);
+		this.animator.SetBool("ShouldMove", movementDirection.magnitude != 0);
+
+		//this.animationHandler.Test();
 
 		if(!flags.isGrounded)
 			pmt = PlayerMovementType.AIR;
@@ -161,30 +179,33 @@ public class PlayerActionController : MonoBehaviour {
 		return controller;
 	}
 
+	private void AddToPlaylist(string state, bool over=false){
+		this.playlist.Add(state);
+		this.overrideState.Add(over);
+	}
+
 	private void ProcessMovement(PlayerMovementType pmt){
 		switch(pmt){
 			case PlayerMovementType.STILL:
-				this.animationHandler.Play("Idle", overrideState:true);
-				this.animationHandler.StopLayer(1);
+				AddToPlaylist("Idle");
 				break;
 			case PlayerMovementType.STILL_AGGRO:
-				this.animationHandler.Play("Idle Hand");
-				this.animationHandler.StopLayer(1);
+				AddToPlaylist("Idle Hand");
 				break;
 			case PlayerMovementType.FORWARD:
-				this.animationHandler.Play("Moving Forward");
+				AddToPlaylist("Moving Forward");
 				break;
 			case PlayerMovementType.BACKWARD:
-				this.animationHandler.Play("Walk Backward");
+				AddToPlaylist("Walk Backward");
 				break;
 			case PlayerMovementType.LEFT:
-				this.animationHandler.Play("Walk Left");
+				AddToPlaylist("Walk Left");
 				break;
 			case PlayerMovementType.RIGHT:
-				this.animationHandler.Play("Walk Right");
+				AddToPlaylist("Walk Right");
 				break;
 			case PlayerMovementType.AIR:
-				this.animationHandler.Play("On Air");
+				AddToPlaylist("On Air");
 				break;
 			default:
 				break;		

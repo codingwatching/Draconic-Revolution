@@ -6,6 +6,7 @@ public class AnimationStateMapping {
 	public string state;
 	public string[] layers;
 	public int priority;
+	public string[] stopLayer;
 
 	public void PostDeserializationSetup(){
 		for(int i=0; i < this.layers.Length; i++){

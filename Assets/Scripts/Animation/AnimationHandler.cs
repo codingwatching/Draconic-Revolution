@@ -19,6 +19,15 @@ public class AnimationHandler : MonoBehaviour {
 	private static Dictionary<string, AnimationStateMapping> stateMappings;
 	private static Dictionary<int, string> hashToName; 
 
+	public void Test(){
+		AnimatorStateInfo bas, bottom;
+
+		bas = GetState(0);
+		bottom = GetState(1);
+
+		Debug.Log($"{hashToName[bas.shortNameHash]} -- {hashToName[bottom.shortNameHash]}");
+	}
+
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
 		Transform tpAnimObj = tpParent.Find("Animator");
@@ -57,8 +66,10 @@ public class AnimationHandler : MonoBehaviour {
 		if(!overrideState){
 			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[0])).shortNameHash]];
 			
-			if(givenMap.state == currentMap.state)
+			if(givenMap.state == currentMap.state){
+				StopLayer(givenMap.stopLayer);
 				return;
+			}
 		}
 		else
 			currentMap = givenMap;
@@ -68,7 +79,9 @@ public class AnimationHandler : MonoBehaviour {
 		}
 
 		if(overrideState){
+			StopLayer(givenMap.stopLayer);
 			this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[0]));
+
 			if(this.isPlayer){
 				if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
 					this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
@@ -85,6 +98,7 @@ public class AnimationHandler : MonoBehaviour {
 			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[i])).shortNameHash]];
 
 			if(givenMap.priority <= currentMap.priority){
+				StopLayer(givenMap.stopLayer);
 				this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
 
 				if(this.isPlayer){
@@ -109,15 +123,6 @@ public class AnimationHandler : MonoBehaviour {
 		this.shapeKeyAnimator.Play(shapeKey, settings);
 	}
 
-	public void StopLayer(int layer){
-		if(layer != 0){
-			this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layer);
-		}
-		else{
-			this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
-			this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
-		}
-	}
 
 	// Looks for every Layer to find if the current playing State is StateName and return the normalizedTime
 	// Return -1 if no state like that is found
@@ -151,6 +156,35 @@ public class AnimationHandler : MonoBehaviour {
 		}
 
 		return stateInfo;
+	}
+
+	private void StopLayer(int layer){
+		if(layer != 0){
+			this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layer);
+		}
+		else{
+			this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
+			this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
+		}
+	}
+
+	private void StopLayer(string[] layers){
+		if(layers == null)
+			return;
+
+		int layerIndex;
+
+		for(int i=0; i < layers.Length; i++){
+			layerIndex = this.tpAnimator.GetLayerIndex(layers[i]);
+
+			if(layerIndex != 0){
+				this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layerIndex);
+			}
+			else{
+				this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
+				this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
+			}
+		}
 	}
 
 	public void AssignAimTracker(Transform tracker){

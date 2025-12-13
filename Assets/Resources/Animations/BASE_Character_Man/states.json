@@ -67,18 +67,6 @@
 			"isDefaultState": true
 		},
 		{
-			"name": "Jump Start",
-			"layer": "",
-			"isBlendTree": false,
-			"isDefaultState": false
-		},
-		{
-			"name": "Jump Start",
-			"layer": "Bottom",
-			"isBlendTree": false,
-			"isDefaultState": false
-		},
-		{
 			"name": "On Air",
 			"layer": "",
 			"isDefaultState": false,
@@ -105,12 +93,6 @@
 					"parameterType": "float"
 				}
 			}
-		},
-		{
-			"name": "Jump End",
-			"layer": "Cinematic Override",
-			"isBlendTree": false,
-			"isDefaultState": false
 		},
 		{
 			"name": "Moving Forward",

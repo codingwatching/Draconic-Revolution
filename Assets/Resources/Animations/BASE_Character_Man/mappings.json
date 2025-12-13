@@ -7,28 +7,20 @@
 		},
 		{
 			"state": "Empty",
-			"layers": ["Bottom", "Full Torso", "Right Arm", "Left Arm", "Head", "Pre-Cinematic Add", "Cinematic Override", "Post-Cinematic Add"],
+			"layers": ["", "Bottom", "Full Torso", "Right Arm", "Left Arm", "Head", "Pre-Cinematic Add", "Cinematic Override", "Post-Cinematic Add"],
 			"priority": 1000
 		},
 		{
 			"state": "Idle",
 			"layers": [""],
-			"priority": 900
-		},
-		{
-			"state": "Jump Start",
-			"layers": ["", "Bottom"],
-			"priority": 10
+			"priority": 900,
+			"stopLayer": ["Bottom"]
 		},
 		{
 			"state": "On Air",
-			"layers": ["", "Bottom"],
-			"priority": 5
-		},
-		{
-			"state": "Jump End",
-			"layers": ["Cinematic Override"],
-			"priority": 5
+			"layers": [""],
+			"priority": 5,
+			"stoplayer": ["Bottom"]
 		},
 		{
 			"state": "Moving Forward",
@@ -53,7 +45,8 @@
 		{
 			"state": "Idle Hand",
 			"layers": [""],
-			"priority": 50	
+			"priority": 50,
+			"stopLayer": ["Bottom"]
 		},
 		{
 			"state": "Attack 1",
