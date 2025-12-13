@@ -47,7 +47,6 @@ public class AnimationStateSettings {
 				animatorController.AddParameter(acp);
 			}
 
-			//AssetDatabase.CreateAsset(bt, $"{animationsClipPath}{state.name}.asset");
 			AssetDatabase.AddObjectToAsset(bt, animatorController);
 		}
 		else{

@@ -75,7 +75,7 @@
 				"minThreshold": -1,
 				"maxThreshold": 1,
 				"blendParameter": {
-					"parameterName": "Y_Velocity",
+					"parameterName": "Gravity",
 					"parameterType": "float"
 				}
 			}
@@ -89,7 +89,7 @@
 				"minThreshold": -1,
 				"maxThreshold": 1,
 				"blendParameter": {
-					"parameterName": "Y_Velocity",
+					"parameterName": "Gravity",
 					"parameterType": "float"
 				}
 			}

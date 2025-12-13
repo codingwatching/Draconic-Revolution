@@ -125,12 +125,13 @@ public class PlayerActionController : MonoBehaviour {
 	// Registers a primary action
 	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
 
-	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float runMomentum, MovementFlags flags){
+	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float runMomentum, float gravity, MovementFlags flags){
 		float angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
 		PlayerMovementType pmt;
 
 		this.animator.SetFloat("Run", runMomentum);
 		this.animatorFP.SetFloat("Run", runMomentum);
+		this.animator.SetFloat("Gravity", gravity);
 
 		this.animator.SetBool("IsGrounded", flags.isGrounded);
 		this.animator.SetBool("Sheathed", this.weaponSheathed);

@@ -16,11 +16,11 @@
 			},
 			{
 				"state": "On Air_A",
-				"clip": "ManArmt_Going Up-Man"
+				"clip": "ManArmt_Falling-Man"
 			},
 			{
 				"state": "On Air_B",
-				"clip": "ManArmt_Falling-Man"
+				"clip": "ManArmt_Going Up-Man"
 			},
 			{
 				"state": "Moving Forward_A",
