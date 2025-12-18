@@ -56,9 +56,11 @@ public class AnimationHandler : MonoBehaviour {
 
 
 	// Plays bone animation
-	public void Play(string stateName, bool overrideState=false){
+	public void Play(string stateName, bool overrideState=false, bool ignoreFP=false){
 		if(!this.INIT)
 			return;
+
+		Debug.Log($"Ignore: {ignoreFP}");
 
 		AnimationStateMapping givenMap, currentMap;
 		givenMap = AnimationHandler.stateMappings[stateName];
@@ -82,7 +84,7 @@ public class AnimationHandler : MonoBehaviour {
 			StopLayer(givenMap.stopLayer);
 			this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[0]));
 
-			if(this.isPlayer){
+			if(this.isPlayer && !ignoreFP){
 				if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
 					this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
 				}
@@ -101,7 +103,7 @@ public class AnimationHandler : MonoBehaviour {
 				StopLayer(givenMap.stopLayer);
 				this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
 
-				if(this.isPlayer){
+				if(this.isPlayer && !ignoreFP){
 					if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
 						this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
 					}

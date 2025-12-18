@@ -29,6 +29,7 @@ public class PlayerActionController : MonoBehaviour {
 	private HashSet<PlayerActionType> registeredAction;
 	private List<string> playlist;
 	private List<bool> overrideState;
+	private List<bool> ignoreFP;
 
 	// Cache
 	private float cachedTime;
@@ -65,11 +66,12 @@ public class PlayerActionController : MonoBehaviour {
 
 	void LateUpdate(){
 		for(int i=0; i < this.playlist.Count; i++){
-			this.animationHandler.Play(this.playlist[i], overrideState:this.overrideState[i]);
+			this.animationHandler.Play(this.playlist[i], overrideState:this.overrideState[i], ignoreFP:this.ignoreFP[i]);
 		}
 
 		this.playlist.Clear();
 		this.overrideState.Clear();
+		this.ignoreFP.Clear();
 	}
 
 	public void Init(){
@@ -85,6 +87,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.registeredAction = new HashSet<PlayerActionType>();
 		this.playlist = new List<string>();
 		this.overrideState = new List<bool>();
+		this.ignoreFP = new List<bool>();
 	}
 
 	public void UseStyle(string styleName){
@@ -135,7 +138,9 @@ public class PlayerActionController : MonoBehaviour {
 
 		this.animator.SetBool("IsGrounded", flags.isGrounded);
 		this.animator.SetBool("Sheathed", this.weaponSheathed);
+		this.animatorFP.SetBool("Sheathed", this.weaponSheathed);
 		this.animator.SetBool("ShouldMove", movementDirection.magnitude != 0);
+		this.animatorFP.SetBool("ShouldMove", movementDirection.magnitude != 0);
 
 		//this.animationHandler.Test();
 
@@ -155,7 +160,7 @@ public class PlayerActionController : MonoBehaviour {
 			pmt = PlayerMovementType.LEFT;
 
 		if(pmt != this.lastMove)
-			ProcessMovement(pmt);
+			ProcessMovement(pmt, runMomentum > 0f);
 
 		this.lastMove = pmt;
 	}
@@ -180,12 +185,15 @@ public class PlayerActionController : MonoBehaviour {
 		return controller;
 	}
 
-	private void AddToPlaylist(string state, bool over=false){
+	private void AddToPlaylist(string state, bool over=false, bool igFP=false){
 		this.playlist.Add(state);
 		this.overrideState.Add(over);
+		this.ignoreFP.Add(igFP);
 	}
 
-	private void ProcessMovement(PlayerMovementType pmt){
+	private void ProcessMovement(PlayerMovementType pmt, bool isRunning){
+		Debug.Log($"isRunning: {isRunning}");
+
 		switch(pmt){
 			case PlayerMovementType.STILL:
 				AddToPlaylist("Idle");
@@ -194,16 +202,16 @@ public class PlayerActionController : MonoBehaviour {
 				AddToPlaylist("Idle Hand");
 				break;
 			case PlayerMovementType.FORWARD:
-				AddToPlaylist("Moving Forward");
+				AddToPlaylist("Moving Forward", igFP:!isRunning);
 				break;
 			case PlayerMovementType.BACKWARD:
-				AddToPlaylist("Walk Backward");
+				AddToPlaylist("Walk Backward", igFP:!isRunning);
 				break;
 			case PlayerMovementType.LEFT:
-				AddToPlaylist("Walk Left");
+				AddToPlaylist("Walk Left", igFP:!isRunning);
 				break;
 			case PlayerMovementType.RIGHT:
-				AddToPlaylist("Walk Right");
+				AddToPlaylist("Walk Right", igFP:!isRunning);
 				break;
 			case PlayerMovementType.AIR:
 				AddToPlaylist("On Air");

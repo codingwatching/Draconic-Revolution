@@ -7,11 +7,7 @@
 				"clip": "ManArmt_IdleHand-Man-FP"
 			},
 			{
-				"state": "Moving Forward_A",
-				"clip": "ManArmt_WalkForward-Man-FP"
-			},
-			{
-				"state": "Moving Forward_B",
+				"state": "Moving Forward",
 				"clip": "ManArmt_RunForward-Man-FP"
 			},
 			{

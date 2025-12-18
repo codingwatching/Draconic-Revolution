@@ -10,15 +10,7 @@
 			"name": "Moving Forward",
 			"layer": "",
 			"isDefaultState": false,
-			"isBlendTree": true,
-			"blendTree": {
-				"minThreshold": 0,
-				"maxThreshold": 1,
-				"blendParameter": {
-					"parameterName": "Run",
-					"parameterType": "float"
-				}
-			}
+			"isBlendTree": false,
 		},
 		{
 			"name": "Idle Hand",

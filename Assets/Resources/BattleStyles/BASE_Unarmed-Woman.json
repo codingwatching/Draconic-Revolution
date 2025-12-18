@@ -16,11 +16,11 @@
 			},
 			{
 				"state": "On Air_A",
-				"clip": "WomanArmt_Going Up-Woman"
+				"clip": "WomanArmt_Falling-Woman"				
 			},
 			{
 				"state": "On Air_B",
-				"clip": "WomanArmt_Falling-Woman"
+				"clip": "WomanArmt_Going Up-Woman"
 			},
 			{
 				"state": "Moving Forward_A",

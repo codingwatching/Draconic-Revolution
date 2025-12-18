@@ -111,6 +111,7 @@ public static class AnimationControlBuilder {
 
 			for(int i=0; i < transitionSettings[controllerName].Length; i++){
 				AnimationTransitionSettings ats = transitionSettings[controllerName][i];
+				Debug.Log($"Controller: {controllerName} -- State: {ats.destinationState}");
 				AnimatorState destinationState = states[new StateLayerKey(controllerName, ats.layer, ats.destinationState)];
 				AnimatorStateTransition finalTransition;
 
@@ -261,11 +262,9 @@ public static class AnimationControlBuilder {
 						newClip.name = clipFilename;
 						AssetDatabase.CreateAsset(newClip, $"{ANIMATION_CLIPS_PATH}{clipFilename}.anim");
 		        		animations[acs.controllerName].Add(SelectAfterUnderscore(newClip.name), newClip);
-		        		Debug.Log($"Added key: {SelectAfterUnderscore(newClip.name)}");
 		        	}
 		        	else{
 		        		animations[acs.controllerName].Add(SelectAfterUnderscore(auxClip.name), auxClip);
-		        		Debug.Log($"======= Added clip: {SelectAfterUnderscore(auxClip.name)}");
 		        	}
 	        	}
 	        }

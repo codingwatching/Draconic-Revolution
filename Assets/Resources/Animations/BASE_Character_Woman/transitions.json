@@ -2,14 +2,233 @@
 	"data": [
 		{
 			"layer": "",
-			"sourceState": "Jump Start",
-			"destinationState": "On Air",
-			"hasExitTime": true,
-			"exitTime": 1,
-			"duration": 0,
+			"sourceState": "On Air",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
 			"offset": 0,
-			"interruptionSource": "none",
-			"canTransitionToSelf": false
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "IsGrounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "Sheathed",
+			    	"parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "On Air",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "IsGrounded",
+			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if not",
+			    	"parameter": "Sheathed",
+			    	"parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Backward",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Right",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Idle",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Walk Left",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
 		},
 		{
 			"layer": "",

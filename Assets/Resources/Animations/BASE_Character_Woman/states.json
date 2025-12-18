@@ -67,12 +67,6 @@
 			"isDefaultState": true
 		},
 		{
-			"name": "Jump Start",
-			"layer": "",
-			"isBlendTree": false,
-			"isDefaultState": false
-		},
-		{
 			"name": "On Air",
 			"layer": "",
 			"isDefaultState": false,
@@ -81,16 +75,24 @@
 				"minThreshold": -1,
 				"maxThreshold": 1,
 				"blendParameter": {
-					"parameterName": "Y_Velocity",
+					"parameterName": "Gravity",
 					"parameterType": "float"
 				}
 			}
 		},
 		{
-			"name": "Jump End",
-			"layer": "",
-			"isBlendTree": false,
-			"isDefaultState": false
+			"name": "On Air",
+			"layer": "Bottom",
+			"isDefaultState": false,
+			"isBlendTree": true,
+			"blendTree": {
+				"minThreshold": -1,
+				"maxThreshold": 1,
+				"blendParameter": {
+					"parameterName": "Gravity",
+					"parameterType": "float"
+				}
+			}
 		},
 		{
 			"name": "Moving Forward",

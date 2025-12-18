@@ -2,6 +2,29 @@
 	"data": [
 		{
 			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "ShouldMove",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
 			"sourceState": "Attack 1",
 			"destinationState": "Attack 2",
 			"hasExitTime": false,
