@@ -133,14 +133,13 @@ public class PlayerActionController : MonoBehaviour {
 		PlayerMovementType pmt;
 
 		this.animator.SetFloat("Run", runMomentum);
-		this.animatorFP.SetFloat("Run", runMomentum);
+		this.animatorFP.SetBool("Run", runMomentum > 0);
 		this.animator.SetFloat("Gravity", gravity);
 
 		this.animator.SetBool("IsGrounded", flags.isGrounded);
 		this.animator.SetBool("Sheathed", this.weaponSheathed);
 		this.animatorFP.SetBool("Sheathed", this.weaponSheathed);
 		this.animator.SetBool("ShouldMove", movementDirection.magnitude != 0);
-		this.animatorFP.SetBool("ShouldMove", movementDirection.magnitude != 0);
 
 		//this.animationHandler.Test();
 
@@ -192,8 +191,6 @@ public class PlayerActionController : MonoBehaviour {
 	}
 
 	private void ProcessMovement(PlayerMovementType pmt, bool isRunning){
-		Debug.Log($"isRunning: {isRunning}");
-
 		switch(pmt){
 			case PlayerMovementType.STILL:
 				AddToPlaylist("Idle");

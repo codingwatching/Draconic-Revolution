@@ -60,8 +60,6 @@ public class AnimationHandler : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
-		Debug.Log($"Ignore: {ignoreFP}");
-
 		AnimationStateMapping givenMap, currentMap;
 		givenMap = AnimationHandler.stateMappings[stateName];
 

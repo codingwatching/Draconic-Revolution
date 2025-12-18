@@ -9,8 +9,8 @@
 		{
 			"name": "Moving Forward",
 			"layer": "",
-			"isDefaultState": false,
 			"isBlendTree": false,
+			"isDefaultState": false
 		},
 		{
 			"name": "Idle Hand",
