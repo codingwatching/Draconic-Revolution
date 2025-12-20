@@ -60,25 +60,27 @@ public class AnimationHandler : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
-		AnimationStateMapping givenMap, currentMap;
+		bool skipThirdPerson = false;
+		AnimationStateMapping givenMap, currentMap, currentMapFP;
+
 		givenMap = AnimationHandler.stateMappings[stateName];
 
 		if(!overrideState){
 			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[0])).shortNameHash]];
-			
+			currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
+
 			if(givenMap.state == currentMap.state){
 				StopLayer(givenMap.stopLayer);
-				return;
+				skipThirdPerson = true;
 			}
 		}
-		else
+		else{
 			currentMap = givenMap;
-
-		if(VerifyLayerStates(givenMap.layers[0], currentMap.priority)){
-			return;
 		}
 
-		if(overrideState){
+		if(skipThirdPerson){}
+		else if(VerifyLayerStates(givenMap.layers[0], currentMap.priority)){}
+		else if(overrideState){
 			StopLayer(givenMap.stopLayer);
 			this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[0]));
 
@@ -90,29 +92,37 @@ public class AnimationHandler : MonoBehaviour {
 					this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime);
 				}
 			}
-
-			return;
 		}
+		else{
+			for(int i=0; i < givenMap.layers.Length; i++){
+				currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[i])).shortNameHash]];
 
-		for(int i=0; i < givenMap.layers.Length; i++){
-			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[i])).shortNameHash]];
+				if(givenMap.priority <= currentMap.priority){
+					StopLayer(givenMap.stopLayer);
+					this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
 
-			if(givenMap.priority <= currentMap.priority){
-				StopLayer(givenMap.stopLayer);
-				this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
 
-				if(this.isPlayer && !ignoreFP){
-					if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
-						this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
-					}
-					else{
-						this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime);
-					}
+
+					break;
 				}
-
-				return;
 			}
 		}
+
+		// Handling First Person
+		if(this.isPlayer && !ignoreFP){
+			currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
+
+			if(!this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
+				givenMap = AnimationHandler.stateMappings["Empty"];
+			}
+
+			Debug.Log($"{givenMap.state} -- {currentMapFP.state}");
+
+			if(givenMap.state != currentMapFP.state){
+				this.fpAnimator.CrossFade(givenMap.state, this.animationCrossfadeTime);
+			}
+		}
+
 	}
 
 	// Plays/Stops/Registers ShapeKey Animations based on the settings inputted
@@ -153,6 +163,18 @@ public class AnimationHandler : MonoBehaviour {
 
 		if(stateInfo.shortNameHash == 0){
 			return this.tpAnimator.GetCurrentAnimatorStateInfo(layer);
+		}
+
+		return stateInfo;
+	}
+
+	private AnimatorStateInfo GetStateFP(int layer){
+		AnimatorStateInfo stateInfo;
+
+		stateInfo = this.fpAnimator.GetNextAnimatorStateInfo(layer);
+
+		if(stateInfo.shortNameHash == 0){
+			return this.fpAnimator.GetCurrentAnimatorStateInfo(layer);
 		}
 
 		return stateInfo;

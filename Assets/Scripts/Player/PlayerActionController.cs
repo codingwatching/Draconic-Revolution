@@ -137,6 +137,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.animator.SetFloat("Gravity", gravity);
 
 		this.animator.SetBool("IsGrounded", flags.isGrounded);
+		this.animatorFP.SetBool("IsGrounded", flags.isGrounded);
 		this.animator.SetBool("Sheathed", this.weaponSheathed);
 		this.animatorFP.SetBool("Sheathed", this.weaponSheathed);
 		this.animator.SetBool("ShouldMove", movementDirection.magnitude != 0);
@@ -184,7 +185,7 @@ public class PlayerActionController : MonoBehaviour {
 		return controller;
 	}
 
-	private void AddToPlaylist(string state, bool over=false, bool igFP=false){
+	private void AddToPlaylist(string state, bool over=false, bool igFP=false){		
 		this.playlist.Add(state);
 		this.overrideState.Add(over);
 		this.ignoreFP.Add(igFP);
@@ -214,7 +215,7 @@ public class PlayerActionController : MonoBehaviour {
 				AddToPlaylist("On Air");
 				break;
 			default:
-				break;		
+				break;
 		}
 	}
 
