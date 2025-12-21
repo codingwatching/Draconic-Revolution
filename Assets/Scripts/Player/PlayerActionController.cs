@@ -27,6 +27,7 @@ public class PlayerActionController : MonoBehaviour {
 	private float hitWindowStart = .48f;
 	private float attackExitTime = .8f;
 	private HashSet<PlayerActionType> registeredAction;
+	private HashSet<PlayerActionRestriction> restrictions;
 	private List<string> playlist;
 	private List<bool> overrideState;
 	private List<bool> ignoreFP;
@@ -88,6 +89,8 @@ public class PlayerActionController : MonoBehaviour {
 		this.playlist = new List<string>();
 		this.overrideState = new List<bool>();
 		this.ignoreFP = new List<bool>();
+		this.restrictions = new HashSet<PlayerActionRestriction>();
+		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
 	}
 
 	public void UseStyle(string styleName){
@@ -120,13 +123,29 @@ public class PlayerActionController : MonoBehaviour {
 		if(this.weaponSheathed){
 			AddToPlaylist("Idle", over:true);
 			this.comboHit = 0;
+			this.restrictions.Add(PlayerActionRestriction.PRIMARY);
 		}
-		else
+		else{
 			AddToPlaylist("Idle Hand");
+			this.restrictions.Remove(PlayerActionRestriction.PRIMARY);
+		}
+	}
+
+	public void RegisterRestriction(PlayerActionRestriction rest, float timeout){
+		this.restrictions.Add(rest);
+
+		if(timeout > 0)
+			StartCoroutine(RestrictionRoutine(rest, timeout));
 	}
 
 	// Registers a primary action
-	public void RegisterPrimaryAction(){this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);}
+	public void RegisterPrimaryAction(){
+		// Temporary check until Weapon Itemtypes are introduced into the game
+		if(this.restrictions.Contains(PlayerActionRestriction.PRIMARY) || this.restrictions.Contains(PlayerActionRestriction.STUNNED) || this.restrictions.Contains(PlayerActionRestriction.SYSTEM))
+			return;
+
+		this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);
+	}
 
 	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float runMomentum, float gravity, MovementFlags flags){
 		float angle = Vector3.SignedAngle(facingDirection, movementDirection, Vector3.up);
@@ -176,6 +195,13 @@ public class PlayerActionController : MonoBehaviour {
 		animationOverrideController = ApplyOverrides(animationOverrideController, AnimationLoader.GetBattleStyle(styleName).GetOverrides());
 		animator.runtimeAnimatorController = animationOverrideController;
 	}
+
+    private IEnumerator RestrictionRoutine(PlayerActionRestriction rest, float timeout)
+    {
+        yield return new WaitForSeconds(timeout);
+        this.restrictions.Remove(rest);
+    }
+
 
 	private static AnimatorOverrideController ApplyOverrides(AnimatorOverrideController controller, StateClipPair[] overrides){
 		foreach(StateClipPair over in overrides){

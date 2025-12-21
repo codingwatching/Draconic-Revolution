@@ -116,8 +116,6 @@ public class AnimationHandler : MonoBehaviour {
 				givenMap = AnimationHandler.stateMappings["Empty"];
 			}
 
-			Debug.Log($"{givenMap.state} -- {currentMapFP.state}");
-
 			if(givenMap.state != currentMapFP.state){
 				this.fpAnimator.CrossFade(givenMap.state, this.animationCrossfadeTime);
 			}
