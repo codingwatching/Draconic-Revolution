@@ -28,6 +28,7 @@ public class PlayerActionController : MonoBehaviour {
 	private float attackExitTime = .8f;
 	private HashSet<PlayerActionType> registeredAction;
 	private HashSet<PlayerActionRestriction> restrictions;
+	private HashSet<string> currentlyQueuedState;
 	private List<string> playlist;
 	private List<bool> overrideState;
 	private List<bool> ignoreFP;
@@ -40,8 +41,6 @@ public class PlayerActionController : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
-		ResetCombo();
-
 		if(this.registeredAction.Contains(PlayerActionType.PRIMARY_ACTION)){
 			if(this.comboHit >= 1){
 				this.cachedTime = this.animationHandler.GetAnimationTime($"Attack {this.comboHit}");
@@ -49,6 +48,7 @@ public class PlayerActionController : MonoBehaviour {
 				if(this.cachedTime != -1f){
 					if(this.cachedTime >= this.hitWindowStart && this.cachedTime < this.attackExitTime && this.comboHit < this.currentStyle.GetComboHits()){
 						this.comboHit++;
+						this.restrictions.Add(PlayerActionRestriction.MOVEMENT);
 						this.animator.SetInteger("Attack_Combo", this.comboHit);
 						this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
 						this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
@@ -61,18 +61,17 @@ public class PlayerActionController : MonoBehaviour {
 				this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
 				AddToPlaylist($"Attack {this.comboHit}");
 				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+				this.restrictions.Add(PlayerActionRestriction.MOVEMENT);
 			}
 		}
 	}
 
 	void LateUpdate(){
-		for(int i=0; i < this.playlist.Count; i++){
-			this.animationHandler.Play(this.playlist[i], overrideState:this.overrideState[i], ignoreFP:this.ignoreFP[i]);
-		}
+		if(!this.INIT)
+			return;
 
-		this.playlist.Clear();
-		this.overrideState.Clear();
-		this.ignoreFP.Clear();
+		RunPlaylist();
+		ResetCombo();
 	}
 
 	public void Init(){
@@ -90,6 +89,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.overrideState = new List<bool>();
 		this.ignoreFP = new List<bool>();
 		this.restrictions = new HashSet<PlayerActionRestriction>();
+		this.currentlyQueuedState = new HashSet<string>();
 		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
 	}
 
@@ -123,11 +123,11 @@ public class PlayerActionController : MonoBehaviour {
 		if(this.weaponSheathed){
 			AddToPlaylist("Idle", over:true);
 			this.comboHit = 0;
-			this.restrictions.Add(PlayerActionRestriction.PRIMARY);
+			RegisterRestriction(PlayerActionRestriction.PRIMARY, 0);
 		}
 		else{
 			AddToPlaylist("Idle Hand");
-			this.restrictions.Remove(PlayerActionRestriction.PRIMARY);
+			RemoveRestriction(PlayerActionRestriction.PRIMARY);
 		}
 	}
 
@@ -137,6 +137,9 @@ public class PlayerActionController : MonoBehaviour {
 		if(timeout > 0)
 			StartCoroutine(RestrictionRoutine(rest, timeout));
 	}
+
+	public void RemoveRestriction(PlayerActionRestriction rest){this.restrictions.Remove(rest);}
+	public bool HasRestriction(PlayerActionRestriction rest){return this.restrictions.Contains(rest);}
 
 	// Registers a primary action
 	public void RegisterPrimaryAction(){
@@ -196,10 +199,20 @@ public class PlayerActionController : MonoBehaviour {
 		animator.runtimeAnimatorController = animationOverrideController;
 	}
 
-    private IEnumerator RestrictionRoutine(PlayerActionRestriction rest, float timeout)
-    {
-        yield return new WaitForSeconds(timeout);
-        this.restrictions.Remove(rest);
+	private void RunPlaylist(){
+		for(int i=0; i < this.playlist.Count; i++){
+			this.animationHandler.Play(this.playlist[i], overrideState:this.overrideState[i], ignoreFP:this.ignoreFP[i]);
+			this.currentlyQueuedState.Add(this.playlist[i]);
+		}
+
+		this.playlist.Clear();
+		this.overrideState.Clear();
+		this.ignoreFP.Clear();
+	}
+
+    private IEnumerator RestrictionRoutine(PlayerActionRestriction rest, float timeout){
+		yield return new WaitForSeconds(timeout);
+		RemoveRestriction(rest);
     }
 
 
@@ -249,10 +262,14 @@ public class PlayerActionController : MonoBehaviour {
 		if(this.comboHit >= 1){
 			this.cachedTime = this.animationHandler.GetAnimationTime($"Attack {this.comboHit}");
 
-			if(this.cachedTime == -1){
+			if(this.cachedTime == -1 && !this.currentlyQueuedState.Contains($"Attack {this.comboHit}")){
 				this.comboHit = 0;
 				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+				RemoveRestriction(PlayerActionRestriction.MOVEMENT);
+				this.animator.SetInteger("Attack_Combo", this.comboHit);
 			}
 		}
+
+		this.currentlyQueuedState.Clear();
 	}
 }

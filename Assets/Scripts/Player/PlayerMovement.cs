@@ -55,7 +55,7 @@ public class PlayerMovement : MonoBehaviour
 
         this.flags = new MovementFlags{
             isGrounded = this.controller.isGrounded,
-            isJumping = this.controls.jumping,
+            isJumping = this.controls.jumping && !this.playerActionController.HasRestriction(PlayerActionRestriction.MOVEMENT),
             isShifting = MainControllerManager.shifting,
             isControlling = MainControllerManager.ctrl,
             collision = this.controller.collisionFlags
@@ -63,18 +63,38 @@ public class PlayerMovement : MonoBehaviour
 
         this.direction = this.movementOrchestrator.CalculateDirection(this.transform, this.controls.movementX, this.controls.movementZ);
         this.movementAlignment = this.movementOrchestrator.CalculateMovementAlignment(this.velocity, this.direction, this.velocity);
-        this.momentum = this.movementOrchestrator.CalculateMomentum(this.direction, this.momentum, this.knockbackMomentum, this.movementAlignment);
-        this.runMomentumBoost = this.movementOrchestrator.CalculateRunMomentumBoost(this.transform, this.direction, this.runMomentumBoost, this.momentum, this.movementAlignment);
-        this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost, this.movementAlignment);
-        this.finalMovement = this.movementOrchestrator.CalculateFinalMovement(this.velocity, this.knockbackForce, this.knockbackMomentum, this.gravityMomentum);
 
-        this.controller.Move(this.finalMovement * Time.deltaTime);
+        // Update movement values only if no restriction is applied to player
+        if(!(this.playerActionController.HasRestriction(PlayerActionRestriction.MOVEMENT) ||
+           this.playerActionController.HasRestriction(PlayerActionRestriction.STUNNED) ||
+           this.playerActionController.HasRestriction(PlayerActionRestriction.SYSTEM))){
 
-        this.knockbackMomentum = this.movementOrchestrator.CalculateKnockbackMomentumDecay(this.knockbackMomentum);
+            this.momentum = this.movementOrchestrator.CalculateMomentum(this.direction, this.momentum, this.knockbackMomentum, this.movementAlignment);
+            this.runMomentumBoost = this.movementOrchestrator.CalculateRunMomentumBoost(this.transform, this.direction, this.runMomentumBoost, this.momentum, this.movementAlignment);
+            this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost, this.movementAlignment);
+            this.finalMovement = this.movementOrchestrator.CalculateFinalMovement(this.velocity, this.knockbackForce, this.knockbackMomentum, this.gravityMomentum);
 
-        this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
+            this.controller.Move(this.finalMovement * Time.deltaTime);
 
-        this.playerActionController.VerifyMovement(this.transform.forward, this.direction, this.runMomentumBoost/this.movementOrchestrator.GetMaxRunningMomentum(), Mathf.Clamp(this.gravityMomentum/15f, -1f, 1f), (MovementFlags)this.flags);
+            this.knockbackMomentum = this.movementOrchestrator.CalculateKnockbackMomentumDecay(this.knockbackMomentum);
+
+            this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
+
+            this.playerActionController.VerifyMovement(this.transform.forward, this.direction, this.runMomentumBoost/this.movementOrchestrator.GetMaxRunningMomentum(), Mathf.Clamp(this.gravityMomentum/15f, -1f, 1f), (MovementFlags)this.flags);
+        }
+        else{
+            this.direction = Vector3.zero;
+            this.runMomentumBoost = 0f;
+            this.momentum = this.movementOrchestrator.CalculateMomentum(this.direction, this.momentum, this.knockbackMomentum, this.movementAlignment);
+            this.movementOrchestrator.UpdateFOV(this.cl.playerRaycast.playerCamera, this.runMomentumBoost);
+            this.velocity = this.movementOrchestrator.CalculateFinalVelocity(this.direction, this.velocity, this.momentum, this.runMomentumBoost, this.movementAlignment);
+            this.finalMovement = this.movementOrchestrator.CalculateFinalMovement(this.velocity, this.knockbackForce, this.knockbackMomentum, this.gravityMomentum);
+
+            this.controller.Move(this.finalMovement * Time.deltaTime);
+
+            this.knockbackMomentum = this.movementOrchestrator.CalculateKnockbackMomentumDecay(this.knockbackMomentum);
+        }
+
 
         //Debug.Log($"Dir: {this.direction} -- Velocity: {this.velocity} -- Alignment: {this.movementAlignment} -- Momentum: {this.momentum} -- RunBoost: {this.runMomentumBoost}");
         //Debug.Log(this.movementOrchestrator.Length());

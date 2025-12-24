@@ -166,6 +166,10 @@ public class AnimationHandler : MonoBehaviour {
 		return stateInfo;
 	}
 
+	public string TestName(){
+		return AnimationHandler.hashToName[GetStateFP(0).shortNameHash];
+	}
+
 	private AnimatorStateInfo GetStateFP(int layer){
 		AnimatorStateInfo stateInfo;
 
