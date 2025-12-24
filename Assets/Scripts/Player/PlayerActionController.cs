@@ -7,6 +7,7 @@ public class PlayerActionController : MonoBehaviour {
 	
 	// Unity Reference
 	private AnimationHandler animationHandler;
+	private PlayerMovement playerMovement;
 	private Animator animator;
 	private Animator animatorFP;
 
@@ -52,6 +53,7 @@ public class PlayerActionController : MonoBehaviour {
 						this.animator.SetInteger("Attack_Combo", this.comboHit);
 						this.animatorFP.SetInteger("Attack_Combo", this.comboHit);
 						this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
+						OperateForce($"Attack {this.comboHit}");
 					}
 				}
 			}
@@ -62,6 +64,7 @@ public class PlayerActionController : MonoBehaviour {
 				AddToPlaylist($"Attack {this.comboHit}");
 				this.registeredAction.Remove(PlayerActionType.PRIMARY_ACTION);
 				this.restrictions.Add(PlayerActionRestriction.MOVEMENT);
+				OperateForce($"Attack {this.comboHit}");
 			}
 		}
 	}
@@ -80,6 +83,7 @@ public class PlayerActionController : MonoBehaviour {
 
 		this.INIT = true;
 		this.animationHandler = this.gameObject.GetComponent<AnimationHandler>();
+		this.playerMovement = this.gameObject.GetComponent<PlayerMovement>();
 		this.animator = this.animationHandler.GetThirdPersonAnimator();
 		this.animatorFP = this.animationHandler.GetFirstPersonAnimator();
 		this.originalController = this.animator.runtimeAnimatorController;
@@ -255,6 +259,17 @@ public class PlayerActionController : MonoBehaviour {
 				break;
 			default:
 				break;
+		}
+	}
+
+	private void OperateForce(string state){
+		StateClipPair data = this.currentStyle.GetStateStyleData(state);
+
+		if(data.direction == null)
+			return;
+
+		if(data.direction == "forward"){
+			this.playerMovement.AddKnockback(this.playerMovement.GetForwardDirection(), data.momentum);
 		}
 	}
 

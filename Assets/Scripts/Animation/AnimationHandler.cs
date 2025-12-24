@@ -19,15 +19,6 @@ public class AnimationHandler : MonoBehaviour {
 	private static Dictionary<string, AnimationStateMapping> stateMappings;
 	private static Dictionary<int, string> hashToName; 
 
-	public void Test(){
-		AnimatorStateInfo bas, bottom;
-
-		bas = GetState(0);
-		bottom = GetState(1);
-
-		Debug.Log($"{hashToName[bas.shortNameHash]} -- {hashToName[bottom.shortNameHash]}");
-	}
-
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
 		Transform tpAnimObj = tpParent.Find("Animator");

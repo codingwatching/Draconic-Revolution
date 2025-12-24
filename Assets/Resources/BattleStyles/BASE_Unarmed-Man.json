@@ -52,15 +52,21 @@
 			},
 			{
 				"state": "Attack 1",
-				"clip": "ManArmt_Punch1-Normal-Man"
+				"clip": "ManArmt_Punch1-Normal-Man",
+				"direction": "forward",
+				"momentum": 3
 			},
 			{
 				"state": "Attack 2",
-				"clip": "ManArmt_Punch2-Normal-Man"
+				"clip": "ManArmt_Punch2-Normal-Man",
+				"direction": "forward",
+				"momentum": 3
 			},
 			{
 				"state": "Attack 3",
-				"clip": "ManArmt_Punch3-Normal-Man"
+				"clip": "ManArmt_Punch3-Normal-Man",
+				"direction": "forward",
+				"momentum": 4
 			},
 			{
 				"state": "Attack 4",
