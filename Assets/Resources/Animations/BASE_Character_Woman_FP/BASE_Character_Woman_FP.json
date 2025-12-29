@@ -1,6 +1,6 @@
 {
 	"controllerName": "BASE_Character_Woman_FP",
-	"armatureName": "ManArmt",
+	"armatureName": "WomanArmt",
 	"fbxFile": "Assets/Resources/CharacterModels/characters.fbx",
 	"layersFile": "Animations/BASE_Character_Woman_FP/layers",
 	"statesFile": "Animations/BASE_Character_Woman_FP/states",

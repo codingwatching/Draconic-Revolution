@@ -2,6 +2,52 @@
 	"data": [
 		{
 			"layer": "",
+			"sourceState": "Empty",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.3,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Run",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Empty",
+			"destinationState": "Idle Hand",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "IsGrounded",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
 			"sourceState": "Moving Forward",
 			"destinationState": "Idle Hand",
 			"hasExitTime": false,
@@ -13,7 +59,53 @@
 		    "conditions": [
 			    {
 			        "mode": "if not",
-			        "parameter": "ShouldMove",
+			        "parameter": "Run",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if not",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Moving Forward",
+			"destinationState": "Empty",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if not",
+			        "parameter": "Run",
+			        "parameterType": "bool"
+			    },
+			    {
+			        "mode": "if",
+			        "parameter": "Sheathed",
+			        "parameterType": "bool"
+			    }
+			]
+		},
+		{
+			"layer": "",
+			"sourceState": "Idle Hand",
+			"destinationState": "Moving Forward",
+			"hasExitTime": false,
+			"exitTime": 0.5,
+			"duration": 0.1,
+			"offset": 0,
+			"canTransitionToSelf": false,
+			"interruptionSource": "source",
+		    "conditions": [
+			    {
+			        "mode": "if",
+			        "parameter": "Run",
 			        "parameterType": "bool"
 			    },
 			    {

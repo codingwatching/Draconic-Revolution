@@ -7,11 +7,7 @@
 				"clip": "WomanArmt_IdleHand-Woman-FP"
 			},
 			{
-				"state": "Moving Forward_A",
-				"clip": "WomanArmt_WalkForward-Woman-FP"
-			},
-			{
-				"state": "Moving Forward_B",
+				"state": "Moving Forward",
 				"clip": "WomanArmt_RunForward-Woman-FP"
 			},
 			{

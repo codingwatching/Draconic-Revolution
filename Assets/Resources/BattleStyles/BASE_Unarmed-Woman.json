@@ -52,15 +52,21 @@
 			},
 			{
 				"state": "Attack 1",
-				"clip": "WomanArmt_Punch1-Normal-Woman"
+				"clip": "WomanArmt_Punch1-Normal-Woman",
+				"direction": "forward",
+				"momentum": 3
 			},
 			{
 				"state": "Attack 2",
-				"clip": "WomanArmt_Punch2-Normal-Woman"
+				"clip": "WomanArmt_Punch2-Normal-Woman",
+				"direction": "forward",
+				"momentum": 3
 			},
 			{
 				"state": "Attack 3",
-				"clip": "WomanArmt_Punch3-Normal-Woman"
+				"clip": "WomanArmt_Punch3-Normal-Woman",
+				"direction": "forward",
+				"momentum": 3
 			},
 			{
 				"state": "Attack 4",
