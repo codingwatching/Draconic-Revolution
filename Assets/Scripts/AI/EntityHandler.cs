@@ -16,10 +16,14 @@ public class EntityHandler
 	private Dictionary<ulong, DeltaMove> playerCurrentPositions;
 	private Dictionary<ulong, ItemEntity> dropObject;
 	private Dictionary<ulong, DeltaMove> dropCurrentPositions;
+	private Dictionary<ulong, int> playerBattleStyle;
 	private GameObject droppedItemBase = GameObject.Find("----- PrefabModels -----/DroppedItemBase");
 
 	private int currentTogglingCounter;
+
 	private static readonly int MAX_COUNTER_VALUE = 4;
+	private static RuntimeAnimatorController BASE_MALE_CONTROLLER;
+	private static RuntimeAnimatorController BASE_FEMALE_CONTROLLER;
 
 
 	public EntityHandler(ChunkLoader cl){
@@ -30,8 +34,11 @@ public class EntityHandler
 		this.dropObject = new Dictionary<ulong, ItemEntity>();
 		this.dropCurrentPositions = new Dictionary<ulong, DeltaMove>();
 		this.playerAnimations = new Dictionary<ulong, AnimationHandler>();
+		this.playerBattleStyle = new Dictionary<ulong, int>();
 		this.cl = cl;
 		this.playerModelHandler = cl.playerModelHandler;
+		BASE_MALE_CONTROLLER = AnimationLoader.GetController("BASE_Character_Man");
+		BASE_FEMALE_CONTROLLER = AnimationLoader.GetController("BASE_Character_Woman");
 	}
 
 	/*
@@ -81,6 +88,7 @@ public class EntityHandler
 		this.playerItem.Add(code, 0);
 		this.playerCurrentPositions.Add(code, new DeltaMove(pos, dir));
 		this.playerAnimations.Add(code, null);
+		this.playerBattleStyle.Add(code, -1);
 		RunSingleActivation(EntityType.PLAYER, code, pos);
 	}
 
@@ -100,9 +108,34 @@ public class EntityHandler
 			this.playerObject[code] = this.playerModelHandler.BuildModel(this.playerObject[code], app, isMale);
 			this.playerAnimations[code] = this.playerObject[code].GetComponent<AnimationHandler>();
 
+			if(code != Configurations.accountID){
+				SetPlayerBattleStyle(code, this.playerSheet[code].GetBattleStyleCode());
+			}
+
 			return true;
 		}
 		return false;
+	}
+
+	public void SetPlayerBattleStyle(ulong code, int style){
+		if(this.playerBattleStyle[code] == style)
+			return;
+
+		bool isMale = this.playerSheet[code].GetGender();
+		this.playerBattleStyle[code] = style;
+
+		BattleStyleData bsd = AnimationLoader.GetBattleStyle(style);
+		AnimatorOverrideController animationOverrideController;
+
+		if(isMale)
+			animationOverrideController = new AnimatorOverrideController(BASE_MALE_CONTROLLER);
+		else
+			animationOverrideController = new AnimatorOverrideController(BASE_FEMALE_CONTROLLER);
+
+		animationOverrideController = ApplyOverrides(animationOverrideController, bsd.GetOverrides());
+
+		this.playerAnimations[code].GetThirdPersonAnimator().runtimeAnimatorController = animationOverrideController;
+		this.playerSheet[code].SetBattleStyleCode(style);
 	}
 
 	public void AddItem(ulong code, float3 pos, float3 dir, ItemStack its){
@@ -165,6 +198,7 @@ public class EntityHandler
 			this.playerCurrentPositions.Remove(code);
 			this.playerSheet.Remove(code);
 			this.playerAnimations.Remove(code);
+			this.playerBattleStyle.Remove(code);
 			this.cl.sfx.RemoveEntitySFX(new EntityID(type, code));
 		}
 		else if(type == EntityType.DROP){
@@ -251,5 +285,13 @@ public class EntityHandler
 		this.playerItem[playerCode] = item;
 		ItemLoader.GetItem(item).OnHoldClient(this.cl, new ItemStack(item, quantity), playerCode);
 
+	}
+
+	private AnimatorOverrideController ApplyOverrides(AnimatorOverrideController controller, StateClipPair[] overrides){
+		foreach(StateClipPair over in overrides){
+			controller[Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.state}")] = Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.clip}");
+		}
+
+		return controller;
 	}
 }

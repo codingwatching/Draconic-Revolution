@@ -415,6 +415,9 @@ public class Server
 			case NetCode.SENDANIMATIONLAYER:
 				SendAnimationLayer(data, id);
 				break;
+			case NetCode.SENDBATTLESTYLE:
+				SendBattleStyle(data, id);
+				break;
 			case NetCode.DISCONNECTINFO:
 				DisconnectInfo(id);
 				break;
@@ -1385,6 +1388,19 @@ public class Server
 		message = new NetMessage(NetCode.SENDANIMATIONLAYER);
 		message.SendAnimationLayer(playerCode, stateName);
 
+		this.SendToClientsExcept(id, message);
+	}
+
+	// Receives a BattleStyle change request from client
+	public void SendBattleStyle(byte[] data, ulong id){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		int style = NetDecoder.ReadInt(data, 9);
+
+		this.entityHandler.ChangeBattleStyle(playerCode, style);
+
+		NetMessage message;
+		message = new NetMessage(NetCode.SENDBATTLESTYLE);
+		message.SendBattleStyle(playerCode, style);
 		this.SendToClientsExcept(id, message);
 	}
 

@@ -400,7 +400,7 @@ public struct NetMessage
 		NetDecoder.WriteLong(charCode, NetMessage.buffer, 1);
 		NetDecoder.WriteCharacterSheet(sheet, NetMessage.buffer, 9);
 
-		this.size = 1230; 
+		this.size = 1234; 
 	}
 
 	// Client sends character hotbar position to Server
@@ -425,6 +425,13 @@ public struct NetMessage
 		NetDecoder.WriteUshort((ushort)stateName.Length, NetMessage.buffer, 9);
 		lenName = NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
 		this.size = 11 + lenName;
+	}
+
+	// Client or Server sends battle style name of a particular player (Should expand into all entities later)
+	public void SendBattleStyle(ulong playerCode, int code){
+		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
+		NetDecoder.WriteInt(code, NetMessage.buffer, 9);
+		this.size = 13;
 	}
 }
 
@@ -466,6 +473,7 @@ public enum NetCode{
 	SENDHOTBARPOSITION,
 	SENDITEMINHAND,
 	SENDANIMATIONLAYER,
+	SENDBATTLESTYLE,
 	DISCONNECTINFO, // No call
 	DISCONNECT  // No call
 }

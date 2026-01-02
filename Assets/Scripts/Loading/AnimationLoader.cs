@@ -7,7 +7,8 @@ public class AnimationLoader : BaseLoader {
 	private static Dictionary<string, RuntimeAnimatorController> controllers = new Dictionary<string, RuntimeAnimatorController>();
 	private static Dictionary<string, AnimationStateMapping[]> stateMappings = new Dictionary<string, AnimationStateMapping[]>();
 	private static Dictionary<string, MultiAimData[]> rigs = new Dictionary<string, MultiAimData[]>();
-	private static Dictionary<string, BattleStyleData> battleStyles = new Dictionary<string, BattleStyleData>();
+	private static Dictionary<int, BattleStyleData> battleStyles = new Dictionary<int, BattleStyleData>();
+	private static Dictionary<string, BattleStyleData> nameToBattleStyle = new Dictionary<string, BattleStyleData>();
 	private static Dictionary<string, string> armatureName = new Dictionary<string, string>();
 	private static bool isClient;
 
@@ -36,7 +37,8 @@ public class AnimationLoader : BaseLoader {
 	public static MultiAimData[] GetRig(string controller){return rigs[controller];}
 	public static bool ContainsRig(string controller){return rigs.ContainsKey(controller);}
 	public static string GetArmatureName(string controller){return armatureName[controller];}
-	public static BattleStyleData GetBattleStyle(string styleName){return battleStyles[styleName];}
+	public static BattleStyleData GetBattleStyle(int style){return battleStyles[style];}
+	public static BattleStyleData GetBattleStyle(string style){return nameToBattleStyle[style];}
 
 	private void LoadArmatureName(){
 		string respath;
@@ -125,11 +127,15 @@ public class AnimationLoader : BaseLoader {
 	private void LoadBattleStyles(){
 		BattleStyleData bsd;
         TextAsset[] assets = Resources.LoadAll<TextAsset>(BATTLE_STYLE_RESFOLDER);
+        int styleCode = 0;
 
         foreach(TextAsset asset in assets){
         	bsd = JsonUtility.FromJson<BattleStyleData>(asset.text);
-        	bsd.PostDeserializationSetup();
-			battleStyles.Add(asset.name, bsd);
+        	bsd.PostDeserializationSetup(asset.name, styleCode);
+			battleStyles.Add(styleCode, bsd);
+			nameToBattleStyle.Add(bsd.GetName(), bsd);
+
+			styleCode++;
         }
 	}
 }

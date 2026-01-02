@@ -138,6 +138,11 @@ public class EntityHandler_Server
         }
     }
 
+    // Change character's BattleStyle
+    public void ChangeBattleStyle(ulong code, int style){
+        this.playerSheet[code].SetBattleStyleCode(style);
+    }
+
     // Issued command from Server class
     public ulong AddItem(float3 pos, float3 rot, float3 move, ushort itemCode, byte amount, ulong playerCode, ChunkLoader_Server cl){
         CastCoord coord = new CastCoord(pos);

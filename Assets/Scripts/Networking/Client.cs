@@ -251,6 +251,9 @@ public class Client
 			case NetCode.SENDANIMATIONLAYER:
 				SendAnimationLayer(data);
 				break;
+			case NetCode.SENDBATTLESTYLE:
+				SendBattleStyle(data);
+				break;
 			default:
 				Debug.Log("UNKNOWN NETMESSAGE RECEIVED: " + (NetCode)data[0]);
 				break;
@@ -710,6 +713,15 @@ public class Client
 		
 		if(playerCode != Configurations.accountID)
 			this.entityHandler.AnimateBone(playerCode, stateName);
+	}
+
+	// Receives from server a single BattleStyle name for a player
+	private void SendBattleStyle(byte[] data){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		int styleCode = NetDecoder.ReadInt(data, 9);
+		
+		if(playerCode != Configurations.accountID)
+			this.entityHandler.SetPlayerBattleStyle(playerCode, styleCode);
 	}
 
 	/* ================================================================================ */

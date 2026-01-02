@@ -371,6 +371,12 @@ public static class CharacterCreationData {
 		sheet.SetAlignment((Alignment)alignment);
 		sheet.SetRace((Race)race);
 		sheet.SetCronology(0);
+
+		if(isMale)
+			sheet.SetBattleStyleCode(AnimationLoader.GetBattleStyle("BASE_Unarmed-Man").GetCode());
+		else
+			sheet.SetBattleStyleCode(AnimationLoader.GetBattleStyle("BASE_Unarmed-Woman").GetCode());
+
 		sheet.SetGender(isMale);
 		sheet.SetSpecialEffectHandler(new SpecialEffectHandler());
 		sheet.SetCharacterAppearance(new CharacterAppearance((Race)race, skin, hatsInfo, clothesInfo, legsInfo, bootsInfo, faceInfo, hairInfo));

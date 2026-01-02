@@ -19,7 +19,7 @@ public class PlayerActionController : MonoBehaviour {
 	private RuntimeAnimatorController originalControllerFP;
 
 	// Battle Style
-	private string currentStyleName;
+	private int currentStyleCode;
 	private BattleStyleData currentStyle;
 	private bool weaponSheathed = true;
 	private int comboHit = 0;
@@ -97,24 +97,25 @@ public class PlayerActionController : MonoBehaviour {
 		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
 	}
 
-	public void UseStyle(string styleName){
+	public void UseStyle(int style){
 		if(!this.INIT)
 			Init();
 
-		if(this.currentStyleName == styleName)
+		if(this.currentStyleCode == style)
 			return;
 
-		this.currentStyle = AnimationLoader.GetBattleStyle(styleName);
+		this.currentStyle = AnimationLoader.GetBattleStyle(style);
 
 		AnimatorOverrideController animationOverrideController = new AnimatorOverrideController(this.originalController);
 		AnimatorOverrideController animationOverrideControllerFP = new AnimatorOverrideController(this.originalControllerFP);
 
 		animationOverrideController = ApplyOverrides(animationOverrideController, this.currentStyle.GetOverrides());
-		animationOverrideControllerFP = ApplyOverrides(animationOverrideControllerFP, AnimationLoader.GetBattleStyle($"{styleName}-FP").GetOverrides());
+		animationOverrideControllerFP = ApplyOverrides(animationOverrideControllerFP, AnimationLoader.GetBattleStyle($"{this.currentStyle.GetName()}-FP").GetOverrides());
 
 		this.animator.runtimeAnimatorController = animationOverrideController;
 		this.animatorFP.runtimeAnimatorController = animationOverrideControllerFP;
 	}
+	public void UseStyle(string style){UseStyle(AnimationLoader.GetBattleStyle(style).GetCode());}
 
 	public void RemoveAllStyles(){
 		this.animator.runtimeAnimatorController = this.originalController;

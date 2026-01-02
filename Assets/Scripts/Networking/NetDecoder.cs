@@ -147,6 +147,8 @@ public static class NetDecoder
 		pos++;
 		cs.SetCronology(NetDecoder.ReadByte(data, pos));
 		pos++;
+		cs.SetBattleStyleCode(NetDecoder.ReadInt(data, pos));
+		pos += 4;
 		cs.SetStrength(NetDecoder.ReadAttribute(data, pos));
 		pos += 6;
 		cs.SetPrecision(NetDecoder.ReadAttribute(data, pos));
@@ -486,6 +488,8 @@ public static class NetDecoder
 		pos++;
 		NetDecoder.WriteByte(sheet.GetCronology(), data, pos);
 		pos++;
+		NetDecoder.WriteInt(sheet.GetBattleStyleCode(), data, pos);
+		pos += 4;
 		NetDecoder.WriteAttribute(sheet.GetStrength(), data, pos);
 		pos += 6;
 		NetDecoder.WriteAttribute(sheet.GetPrecision(), data, pos);

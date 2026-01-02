@@ -145,6 +145,14 @@ public class AnimationHandler : MonoBehaviour {
 		return -1f;
 	}
 
+	public void AssignAimTracker(Transform tracker){
+		this.rigControllerTP.AssignHeadTrackingSource(tracker);
+		this.rigControllerFP.AssignHeadTrackingSource(tracker);
+	}
+
+	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
+	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
+
 	private AnimatorStateInfo GetState(int layer){
 		AnimatorStateInfo stateInfo;
 
@@ -155,10 +163,6 @@ public class AnimationHandler : MonoBehaviour {
 		}
 
 		return stateInfo;
-	}
-
-	public string TestName(){
-		return AnimationHandler.hashToName[GetStateFP(0).shortNameHash];
 	}
 
 	private AnimatorStateInfo GetStateFP(int layer){
@@ -201,14 +205,6 @@ public class AnimationHandler : MonoBehaviour {
 			}
 		}
 	}
-
-	public void AssignAimTracker(Transform tracker){
-		this.rigControllerTP.AssignHeadTrackingSource(tracker);
-		this.rigControllerFP.AssignHeadTrackingSource(tracker);
-	}
-
-	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
-	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
 
 	private bool VerifyLayerStates(string layerName, int priority){
 		string state;

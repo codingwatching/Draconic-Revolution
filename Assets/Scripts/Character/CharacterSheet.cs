@@ -14,6 +14,7 @@ public class CharacterSheet{
 	private Religion religion;
 	private bool isMale;
 	private byte cronology;
+	private int battleStyleCode;
 
 	// Handler
 	private SpecialEffectHandler specialEffectHandler;
@@ -135,6 +136,7 @@ public class CharacterSheet{
 	public Religion GetReligion() {return this.religion;}
 	public bool GetGender() {return this.isMale;}
 	public byte GetCronology() {return this.cronology;}
+	public int GetBattleStyleCode() {return this.battleStyleCode;}
 	public SpecialEffectHandler GetSpecialEffectHandler() {return this.specialEffectHandler;}
 	public CharacterAppearance GetCharacterAppearance() {return this.characterAppearance;}
 	public DepletableAttribute GetHealth() {return this.health;}
@@ -187,6 +189,7 @@ public class CharacterSheet{
 	public void SetReligion(Religion r) {this.religion = r;}
 	public void SetGender(bool isMale) {this.isMale = isMale;}
 	public void SetCronology(byte c) {this.cronology = c;}
+	public void SetBattleStyleCode(int code) {this.battleStyleCode = code;}
 	public void SetSpecialEffectHandler(SpecialEffectHandler s) {this.specialEffectHandler = s;}
 	public void SetCharacterAppearance(CharacterAppearance c) {this.characterAppearance = c;}
 	public void SetHealth(DepletableAttribute h) {this.health = h;}
