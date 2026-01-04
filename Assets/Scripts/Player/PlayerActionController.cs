@@ -6,6 +6,7 @@ using UnityEngine;
 public class PlayerActionController : MonoBehaviour {
 	
 	// Unity Reference
+	public ChunkLoader cl;
 	private AnimationHandler animationHandler;
 	private PlayerMovement playerMovement;
 	private Animator animator;
@@ -33,6 +34,10 @@ public class PlayerActionController : MonoBehaviour {
 	private List<string> playlist;
 	private List<bool> overrideState;
 	private List<bool> ignoreFP;
+
+	// NetCode
+	private static List<string> statesPlayed;
+	private NetMessage message;
 
 	// Cache
 	private float cachedTime;
@@ -67,6 +72,9 @@ public class PlayerActionController : MonoBehaviour {
 				OperateForce($"Attack {this.comboHit}");
 			}
 		}
+
+		this.animator.SetBool("ISPLAYER", true);
+		RunNetcodeList();
 	}
 
 	void LateUpdate(){
@@ -95,6 +103,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.restrictions = new HashSet<PlayerActionRestriction>();
 		this.currentlyQueuedState = new HashSet<string>();
 		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
+		statesPlayed = new List<string>();
 	}
 
 	public void UseStyle(int style){
@@ -114,6 +123,7 @@ public class PlayerActionController : MonoBehaviour {
 
 		this.animator.runtimeAnimatorController = animationOverrideController;
 		this.animatorFP.runtimeAnimatorController = animationOverrideControllerFP;
+		this.animator.SetBool("ISPLAYER", true);
 	}
 	public void UseStyle(string style){UseStyle(AnimationLoader.GetBattleStyle(style).GetCode());}
 
@@ -192,6 +202,8 @@ public class PlayerActionController : MonoBehaviour {
 		this.lastMove = pmt;
 	}
 
+	public static void RegisterClientMessage(string stateName){PlayerActionController.statesPlayed.Insert(0, stateName);}
+
 	// Used only in Menu
 	public static void UseStyle(Animator animator, string styleName, bool isMale){
 		if(isMale)
@@ -202,6 +214,14 @@ public class PlayerActionController : MonoBehaviour {
 		AnimatorOverrideController animationOverrideController = new AnimatorOverrideController(animator.runtimeAnimatorController);
 		animationOverrideController = ApplyOverrides(animationOverrideController, AnimationLoader.GetBattleStyle(styleName).GetOverrides());
 		animator.runtimeAnimatorController = animationOverrideController;
+	}
+
+	private void RunNetcodeList(){
+		for(int i = statesPlayed.Count - 1; i >= 0; i--){
+			this.message = new NetMessage();
+			this.message.SendAnimationLayer(Configurations.accountID, statesPlayed[i]);
+			statesPlayed.RemoveAt(i);
+		} 
 	}
 
 	private void RunPlaylist(){

@@ -150,6 +150,8 @@ public class AnimationHandler : MonoBehaviour {
 		this.rigControllerFP.AssignHeadTrackingSource(tracker);
 	}
 
+	public static string GetStateName(AnimatorStateInfo stateInfo){return hashToName[stateInfo.shortNameHash];}
+
 	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
 	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
 

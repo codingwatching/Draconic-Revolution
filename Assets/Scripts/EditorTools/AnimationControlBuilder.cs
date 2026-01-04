@@ -25,6 +25,11 @@ public static class AnimationControlBuilder {
 	private static Dictionary<string, AnimatorController> controllers = new Dictionary<string, AnimatorController>();
 	private static Dictionary<StateLayerKey, AnimatorState> states = new Dictionary<StateLayerKey, AnimatorState>();
 
+	private static AnimatorControllerParameter PLAYER_PARAMETER = new AnimatorControllerParameter{
+		name = "ISPLAYER",
+		type = AnimatorControllerParameterType.Bool
+	};
+
 	private static readonly string ANIMATION_FOLDER = "Resources/Animations/";
 	private static readonly string ANIMATION_RESFOLDER = "Animations/";
 	private static readonly string SERIALIZED_CONTROLLERS_PATH = "/Resources/SerializedData/AnimatorControllers.json";
@@ -55,34 +60,42 @@ public static class AnimationControlBuilder {
 		BuildLayers();
 		BuildStates();
 		BuildTransitions();
+		BuildStateMachineBehaviours();
 
 		SaveControllerPath();
-        AssetDatabase.SaveAssets();
-        AssetDatabase.Refresh();
 
-        Cleanup();
-        Debug.Log("Created Controllers");
+		/*
+		foreach(AnimatorController control in controllers.Values){
+			EditorUtility.SetDirty(control);
+		}
+		*/
+
+		AssetDatabase.SaveAssets();
+		AssetDatabase.Refresh();
+
+		Cleanup();
+		Debug.Log("Created Controllers");
 	}
 
 	private static void Cleanup(){
-	        controllerSettings.Clear();
-	        controllerPath.Clear();
-	        layerSettings.Clear();
-	        stateSettings.Clear();
-	        transitionSettings.Clear();
-	        controllers.Clear();
-	        states.Clear();
+			controllerSettings.Clear();
+			controllerPath.Clear();
+			layerSettings.Clear();
+			stateSettings.Clear();
+			transitionSettings.Clear();
+			controllers.Clear();
+			states.Clear();
 
-	        foreach(Dictionary<string, Motion> anim in animations.Values){anim.Clear();}
-	        animations.Clear();
-	        foreach(Dictionary<string, int> lay in layers.Values){lay.Clear();}
-	        layers.Clear();
+			foreach(Dictionary<string, Motion> anim in animations.Values){anim.Clear();}
+			animations.Clear();
+			foreach(Dictionary<string, int> lay in layers.Values){lay.Clear();}
+			layers.Clear();
 	}
 
 	private static void DeleteClips(){
-        AssetDatabase.DeleteAsset("Assets/Resources/AnimationClips");
-        AssetDatabase.CreateFolder("Assets/Resources", "AnimationClips");
-        AssetDatabase.Refresh();
+		AssetDatabase.DeleteAsset("Assets/Resources/AnimationClips");
+		AssetDatabase.CreateFolder("Assets/Resources", "AnimationClips");
+		AssetDatabase.Refresh();
 	}
 
 	private static void SaveControllerPath(){
@@ -171,6 +184,19 @@ public static class AnimationControlBuilder {
 				controllers[controllerName].layers[i].stateMachine.anyStatePosition = LAYER_GRAPH_ANY_NODE_POS;
 				controllers[controllerName].layers[i].stateMachine.exitPosition = LAYER_GRAPH_EXIT_NODE_POS;
 			}
+
+		}
+	}
+
+	private static void BuildStateMachineBehaviours(){
+		foreach(AnimatorController control in controllers.Values){
+			foreach(AnimatorControllerLayer layer in control.layers){
+				foreach(ChildAnimatorState cState in layer.stateMachine.states){
+					cState.state.AddStateMachineBehaviour<AnimatorStateMessageCallback>();
+				}
+			}
+
+			EditorUtility.SetDirty(control);
 		}
 	}
 
@@ -229,6 +255,7 @@ public static class AnimationControlBuilder {
 				controller = AnimatorController.CreateAnimatorControllerAtPath($"{path}.controller");
 			}
 			
+			controller.AddParameter(PLAYER_PARAMETER);
 			controllers.Add(acs.controllerName, controller);
 			controllerPath.Add(acs.controllerName, $"{SAVED_CHARACTER_CONTROLLER_RESPATH}{acs.controllerName}");
 
@@ -243,11 +270,11 @@ public static class AnimationControlBuilder {
 
 		AnimationClip clip, auxClip;
 
-	    foreach(Object asset in allAssets){
-	        if(asset is AnimationClip){
-	        	clip = (AnimationClip)asset;
-	        	
-	        	if(acs.Contains(clip.name)){
+		foreach(Object asset in allAssets){
+			if(asset is AnimationClip){
+				clip = (AnimationClip)asset;
+				
+				if(acs.Contains(clip.name)){
 					AnimationClip newClip = new AnimationClip();
 					EditorUtility.CopySerialized(clip, newClip);
 					AnimationClipSettings settings = AnimationUtility.GetAnimationClipSettings(newClip);
@@ -261,30 +288,30 @@ public static class AnimationControlBuilder {
 					if(auxClip == null){
 						newClip.name = clipFilename;
 						AssetDatabase.CreateAsset(newClip, $"{ANIMATION_CLIPS_PATH}{clipFilename}.anim");
-		        		animations[acs.controllerName].Add(SelectAfterUnderscore(newClip.name), newClip);
-		        	}
-		        	else{
-		        		animations[acs.controllerName].Add(SelectAfterUnderscore(auxClip.name), auxClip);
-		        	}
-	        	}
-	        }
-	    }
+						animations[acs.controllerName].Add(SelectAfterUnderscore(newClip.name), newClip);
+					}
+					else{
+						animations[acs.controllerName].Add(SelectAfterUnderscore(auxClip.name), auxClip);
+					}
+				}
+			}
+		}
 	}
 
 	private static string SelectAfterPipe(string input){
-	    int index = input.IndexOf('|');
+		int index = input.IndexOf('|');
 
-	    if(index >= 0)
-	    	return input.Substring(index + 1);
-	    return input;
+		if(index >= 0)
+			return input.Substring(index + 1);
+		return input;
 	}
 
 	private static string SelectAfterUnderscore(string input){
-	    int index = input.IndexOf('_');
+		int index = input.IndexOf('_');
 
-	    if(index >= 0)
-	    	return input.Substring(index + 1);
-	    return input;
+		if(index >= 0)
+			return input.Substring(index + 1);
+		return input;
 	}
 
 	private static void LoadControllerSettings(){
