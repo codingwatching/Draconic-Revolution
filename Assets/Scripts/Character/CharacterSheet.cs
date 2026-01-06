@@ -241,6 +241,7 @@ public class CharacterSheet{
 		this.DEBUG_LIST.Add("Race: " + GetRace());
 		this.DEBUG_LIST.Add("IsMale: " + GetGender());
 		this.DEBUG_LIST.Add("Cronology: " + GetCronology());
+		this.DEBUG_LIST.Add("BattleStyle: " + GetBattleStyleCode());
 		this.DEBUG_LIST.Add("STR: " + GetStrength());
 		this.DEBUG_LIST.Add("PRE: " + GetPrecision());
 		this.DEBUG_LIST.Add("VIT: " + GetVitality());

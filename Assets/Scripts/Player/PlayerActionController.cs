@@ -218,8 +218,10 @@ public class PlayerActionController : MonoBehaviour {
 
 	private void RunNetcodeList(){
 		for(int i = statesPlayed.Count - 1; i >= 0; i--){
-			this.message = new NetMessage();
+			this.message = new NetMessage(NetCode.SENDANIMATIONLAYER);
 			this.message.SendAnimationLayer(Configurations.accountID, statesPlayed[i]);
+			this.cl.client.Send(this.message);
+
 			statesPlayed.RemoveAt(i);
 		} 
 	}

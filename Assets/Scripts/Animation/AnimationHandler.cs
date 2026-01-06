@@ -58,7 +58,9 @@ public class AnimationHandler : MonoBehaviour {
 
 		if(!overrideState){
 			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[0])).shortNameHash]];
-			currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
+
+			if(this.isPlayer)
+				currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
 
 			if(givenMap.state == currentMap.state){
 				StopLayer(givenMap.stopLayer);

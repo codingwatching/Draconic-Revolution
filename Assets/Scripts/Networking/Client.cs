@@ -134,7 +134,7 @@ public class Client
 
 			Array.Copy(receiveBuffer, 0, this.dataBuffer, this.packetIndex, bytesReceived);
 
-			NetMessage.Broadcast(NetBroadcast.RECEIVED, dataBuffer[0], 0, this.packetSize);
+			NetMessage.Broadcast(NetBroadcast.RECEIVED, dataBuffer[0], Configurations.accountID, this.packetSize);
 
 			NetMessage receivedMessage = new NetMessage(this.dataBuffer, 0);
 			this.queue.Add(receivedMessage);
@@ -153,6 +153,8 @@ public class Client
 	// Sends a byte[] to the server
 	public bool Send(NetMessage message){
 		try{
+			NetMessage.Broadcast(NetBroadcast.SENT, dataBuffer[0], Configurations.accountID, message.size);
+
 			this.socket.Send(this.LengthPacket(message.size), 4, SocketFlags.None);
 			this.socket.Send(message.GetMessage(), message.size, SocketFlags.None);
 			return true;
@@ -185,7 +187,7 @@ public class Client
 		if(data.Length == 0)
 			return;
 
-		NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], 0, 0);
+		NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], Configurations.accountID, data.Length);
 
 		switch((NetCode)data[0]){
 			case NetCode.ACCEPTEDCONNECT:

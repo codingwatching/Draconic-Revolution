@@ -87,7 +87,7 @@ public struct NetMessage
 		else if(bc == NetBroadcast.SENT && NetMessage.broadcastSent)
 			Debug.Log("Sent: " + (NetCode)netcode + " | " + id + " > " + length);
 		else if(bc == NetBroadcast.PROCESSED && NetMessage.broadcastProcessed)
-			Debug.Log("Processed: " + (NetCode)netcode + " | " + id);
+			Debug.Log("Processed: " + (NetCode)netcode + " | " + id + " > " + length);
 		else if(bc == NetBroadcast.TEST){
 			Debug.Log("TESTING: " + (NetCode)netcode + " | " + id + " > " + length);
 		}
@@ -419,12 +419,11 @@ public struct NetMessage
 
 	// Client or Server sends AnimatorState name and layer for a given playerCode (Should expand into all entities later)
 	public void SendAnimationLayer(ulong playerCode, string stateName){
-		int lenName;
-
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
 		NetDecoder.WriteUshort((ushort)stateName.Length, NetMessage.buffer, 9);
-		lenName = NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
-		this.size = 11 + lenName;
+		NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
+
+		this.size = 11 + stateName.Length;
 	}
 
 	// Client or Server sends battle style name of a particular player (Should expand into all entities later)

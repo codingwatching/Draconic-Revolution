@@ -348,7 +348,7 @@ public class Server
 	// Discovers what to do with a Message received from Server
 	public void HandleReceivedMessage(byte[] data, ulong id){
 		try{
-			NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], id, 0);
+			NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], id, data.Length);
 		}
 		catch{
 			return;
