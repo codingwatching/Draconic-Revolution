@@ -116,6 +116,11 @@ public class AnimationHandler : MonoBehaviour {
 
 	}
 
+	// Force plays a state for non-player characters (Used by Client)
+	public void Play(string state, int layer){
+		this.tpAnimator.CrossFade(state, this.animationCrossfadeTime, layer:layer);
+	}
+
 	// Plays/Stops/Registers ShapeKey Animations based on the settings inputted
 	public void Play(string shapeKey, ShapeKeyAnimationSettings settings){
 		if(!this.INIT)

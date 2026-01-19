@@ -147,9 +147,9 @@ public class EntityHandler
 		RunSingleActivation(EntityType.DROP, code, pos);
 	}
 
-	public void AnimateBone(ulong code, string stateName){
+	public void AnimateBone(ulong code, string stateName, int layer){
 		if(this.playerAnimations.ContainsKey(code)){
-			this.playerAnimations[code].Play(stateName);
+			this.playerAnimations[code].Play(stateName, layer);
 		}
 	}
 

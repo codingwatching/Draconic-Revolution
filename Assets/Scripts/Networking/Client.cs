@@ -710,11 +710,12 @@ public class Client
 	// Receives from server a single AnimationState for a player
 	private void SendAnimationLayer(byte[] data){
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
-		ushort nameSize = NetDecoder.ReadUshort(data, 9);
-		string stateName = NetDecoder.ReadString(data, 11, nameSize);
+		int layer = NetDecoder.ReadInt(data, 9);
+		ushort nameSize = NetDecoder.ReadUshort(data, 13);
+		string stateName = NetDecoder.ReadString(data, 15, nameSize);
 		
 		if(playerCode != Configurations.accountID)
-			this.entityHandler.AnimateBone(playerCode, stateName);
+			this.entityHandler.AnimateBone(playerCode, stateName, layer);
 	}
 
 	// Receives from server a single BattleStyle name for a player

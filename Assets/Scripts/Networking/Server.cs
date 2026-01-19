@@ -1378,15 +1378,16 @@ public class Server
 	// Receives an AnimationLayer from a player
 	public void SendAnimationLayer(byte[] data, ulong id){
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
-		ushort nameSize = NetDecoder.ReadUshort(data, 9);
-		string stateName = NetDecoder.ReadString(data, 11, nameSize);
+		int layer = NetDecoder.ReadInt(data, 9);
+		ushort nameSize = NetDecoder.ReadUshort(data, 13);
+		string stateName = NetDecoder.ReadString(data, 15, nameSize);
 
 		if(id != playerCode)
 			return;
 
 		NetMessage message;
 		message = new NetMessage(NetCode.SENDANIMATIONLAYER);
-		message.SendAnimationLayer(playerCode, stateName);
+		message.SendAnimationLayer(playerCode, new AnimationData(stateName, layer));
 
 		this.SendToClientsExcept(id, message);
 	}

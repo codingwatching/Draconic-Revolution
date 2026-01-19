@@ -418,12 +418,13 @@ public struct NetMessage
 	}
 
 	// Client or Server sends AnimatorState name and layer for a given playerCode (Should expand into all entities later)
-	public void SendAnimationLayer(ulong playerCode, string stateName){
+	public void SendAnimationLayer(ulong playerCode, AnimationData data){
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
-		NetDecoder.WriteUshort((ushort)stateName.Length, NetMessage.buffer, 9);
-		NetDecoder.WriteString(stateName, NetMessage.buffer, 11);
+		NetDecoder.WriteInt(data.layer, NetMessage.buffer, 9);
+		NetDecoder.WriteUshort((ushort)data.name.Length, NetMessage.buffer, 13);
+		NetDecoder.WriteString(data.name, NetMessage.buffer, 15);
 
-		this.size = 11 + stateName.Length;
+		this.size = 15 + data.name.Length;
 	}
 
 	// Client or Server sends battle style name of a particular player (Should expand into all entities later)

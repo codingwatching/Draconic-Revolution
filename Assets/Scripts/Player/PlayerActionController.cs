@@ -36,7 +36,7 @@ public class PlayerActionController : MonoBehaviour {
 	private List<bool> ignoreFP;
 
 	// NetCode
-	private static List<string> statesPlayed;
+	private static List<AnimationData> statesPlayed;
 	private NetMessage message;
 
 	// Cache
@@ -103,7 +103,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.restrictions = new HashSet<PlayerActionRestriction>();
 		this.currentlyQueuedState = new HashSet<string>();
 		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
-		statesPlayed = new List<string>();
+		statesPlayed = new List<AnimationData>();
 	}
 
 	public void UseStyle(int style){
@@ -202,7 +202,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.lastMove = pmt;
 	}
 
-	public static void RegisterClientMessage(string stateName){PlayerActionController.statesPlayed.Insert(0, stateName);}
+	public static void RegisterClientMessage(AnimationData data){PlayerActionController.statesPlayed.Insert(0, data);}
 
 	// Used only in Menu
 	public static void UseStyle(Animator animator, string styleName, bool isMale){
