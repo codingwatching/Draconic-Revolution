@@ -45,6 +45,11 @@ public struct NetMessage
 		return NetMessage.buffer;
 	}
 
+	// Assigns the current NetCode to the first element of the buffer
+	public void Reset(){
+		NetMessage.buffer[0] = (byte)this.code;
+	}
+
 	// Gets size of buffer
 	public int GetSize(){
 		return this.size;
@@ -107,6 +112,7 @@ public struct NetMessage
 		else
 			len = 0;
 
+		Reset();
 		NetDecoder.WriteLong(accountID, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(playerRenderDistance, NetMessage.buffer, 9);
 		NetDecoder.WriteInt(seed, NetMessage.buffer, 13);
@@ -117,6 +123,7 @@ public struct NetMessage
 
 	// Server sending player character position
 	public void SendServerInfo(float xPos, float yPos, float zPos, float xDir, float yDir, float zDir, uint day, byte hour, byte minute){
+		Reset();
 		NetDecoder.WriteFloat(xPos, NetMessage.buffer, 1);
 		NetDecoder.WriteFloat(yPos, NetMessage.buffer, 5);
 		NetDecoder.WriteFloat(zPos, NetMessage.buffer, 9);
@@ -133,12 +140,14 @@ public struct NetMessage
 	
 	// Client asking for a chunk information to Server
 	public void RequestChunkLoad(ChunkPos pos){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		this.size = 10;
 	}
 
 	// Client asking for Server to unload a chunk
 	public void RequestChunkUnload(ChunkPos pos){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		this.size = 10;
 	}
@@ -146,7 +155,7 @@ public struct NetMessage
 	// Server sending chunk information to Client
 	public void SendChunk(Chunk c){
 		// {CODE} [ChunkPos] [blockSize] [hpSize] [stateSize] | Respective data
-		
+		Reset();
 		int headerSize = RegionFileHandler.chunkHeaderSize;
 		int blockDataSize = Compression.CompressBlocks(c, NetMessage.buffer, 22+headerSize);
 		int hpDataSize = Compression.CompressMetadataHP(c, NetMessage.buffer, 22+headerSize+blockDataSize);
@@ -165,6 +174,7 @@ public struct NetMessage
 
 	// Sends a BUD packet to the server
 	public void SendBUD(BUDSignal bud, int timeOffset){
+		Reset();
 		NetDecoder.WriteInt((int)bud.type, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(bud.x, NetMessage.buffer, 5);
 		NetDecoder.WriteInt(bud.y, NetMessage.buffer, 9);
@@ -180,6 +190,7 @@ public struct NetMessage
 	// Client or Server send a single voxel data to each other
 	// Keywords "Slot" and "NewQuantity" are used only in Place operations for Client->Server messages
 	public void DirectBlockUpdate(BUDCode type, ChunkPos pos, int x, int y, int z, int facing, ushort blockCode, ushort state, ushort hp, byte slot=0, byte newQuantity=0){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -196,6 +207,7 @@ public struct NetMessage
 
 	// Clients sends their position to Server
 	public void ClientPlayerPosition(float x, float y, float z, float rotX, float rotY, float rotZ){
+		Reset();
 		NetDecoder.WriteFloat(x, NetMessage.buffer, 1);
 		NetDecoder.WriteFloat(y, NetMessage.buffer, 5);
 		NetDecoder.WriteFloat(z, NetMessage.buffer, 9);
@@ -207,6 +219,7 @@ public struct NetMessage
 
 	// Client sends a voxel coordinate to trigger OnInteraction in server
 	public void Interact(ChunkPos pos, int x, int y, int z, int facing){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -217,6 +230,7 @@ public struct NetMessage
 
 	// Server sends VFX data to Client
 	public void VFXData(ChunkPos pos, int x, int y, int z, int facing, ushort blockCode, ushort state){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -229,6 +243,7 @@ public struct NetMessage
 
 	// Server sends VFX change of state to Client
 	public void VFXChange(ChunkPos pos, int x, int y, int z, int facing, ushort blockCode, ushort state){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -241,6 +256,7 @@ public struct NetMessage
 
 	// Server sends VFX deletion information to Client
 	public void VFXBreak(ChunkPos pos, int x, int y, int z, ushort blockCode, ushort state){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -252,6 +268,7 @@ public struct NetMessage
 
 	// Sends time data to Client
 	public void SendGameTime(uint day, byte hour, byte minute){
+		Reset();
 		NetDecoder.WriteUint(day, NetMessage.buffer, 1);
 		NetDecoder.WriteByte(hour, NetMessage.buffer, 5);
 		NetDecoder.WriteByte(minute, NetMessage.buffer, 6);
@@ -260,6 +277,7 @@ public struct NetMessage
 
 	// Server sends entity data to Client
 	public void PlayerLocation(ulong code, float posX, float posY, float posZ, float dirX, float dirY, float dirZ){
+		Reset();
 		NetDecoder.WriteLong(code, NetMessage.buffer, 1);
 		NetDecoder.WriteFloat3(posX, posY, posZ, NetMessage.buffer, 9);
 		NetDecoder.WriteFloat3(dirX, dirY, dirZ, NetMessage.buffer, 21);
@@ -271,12 +289,14 @@ public struct NetMessage
 
 	// Client requests a player's appearance information
 	public void RequestPlayerAppearance(ulong code){
+		Reset();
 		NetDecoder.WriteLong(code, NetMessage.buffer, 1);
 		this.size = 9;
 	}
 
 	// Server sends player appearance information to Client
 	public void SendPlayerAppearance(ulong code, CharacterAppearance app, bool isMale, ushort item, byte quantity){
+		Reset();
 		NetDecoder.WriteLong(code, NetMessage.buffer, 1);
 		NetDecoder.WriteCharacterAppearance(app, NetMessage.buffer, 9);
 		NetDecoder.WriteBool(isMale, NetMessage.buffer, 256);
@@ -287,6 +307,7 @@ public struct NetMessage
 
 	// Server sends the item in a player's hand to the Client
 	public void PlayerItemHand(ulong code, Item it){
+		Reset();
 		NetDecoder.WriteLong(code, NetMessage.buffer, 1);
 		NetDecoder.WriteItem(it, NetMessage.buffer, 9);
 		this.size = 11;
@@ -294,6 +315,7 @@ public struct NetMessage
 
 	// Server sends a deletion command to out-of-bounds entities to Client
 	public void EntityDelete(EntityType type, ulong code){
+		Reset();
 		NetDecoder.WriteByte((byte)type, NetMessage.buffer, 1);
 		NetDecoder.WriteLong(code, NetMessage.buffer, 2);
 		this.size = 10;
@@ -301,6 +323,7 @@ public struct NetMessage
 
 	// Client sends the chunk the player is currently in
 	public void ClientChunk(ChunkPos lastPos, ChunkPos newPos){
+		Reset();
 		NetDecoder.WriteChunkPos(lastPos, NetMessage.buffer, 1);
 		NetDecoder.WriteChunkPos(newPos, NetMessage.buffer, 10);
 		this.size = 19;
@@ -308,6 +331,7 @@ public struct NetMessage
 
 	// Client sends item information for server to create a Dropped Item Entity
 	public void DropItem(float posX, float posY, float posZ, float moveX, float moveY, float moveZ, ushort itemCode, byte amount, byte slotId){
+		Reset();
 		NetDecoder.WriteFloat3(posX, posY, posZ, NetMessage.buffer, 1);
 		NetDecoder.WriteFloat3(moveX, moveY, moveZ, NetMessage.buffer, 13);
 		NetDecoder.WriteUshort(itemCode, NetMessage.buffer, 25);
@@ -318,6 +342,7 @@ public struct NetMessage
 
 	// Item Entity Data
 	public void ItemEntityData(float posX, float posY, float posZ, float rotX, float rotY, float rotZ, ushort itemCode, byte amount, ulong entityCode){
+		Reset();
 		NetDecoder.WriteFloat3(posX, posY, posZ, NetMessage.buffer, 1);
 		NetDecoder.WriteFloat3(rotX, rotY, rotZ, NetMessage.buffer, 13);
 		NetDecoder.WriteUshort(itemCode, NetMessage.buffer, 25);
@@ -328,6 +353,7 @@ public struct NetMessage
 
 	// Clients sends list of blocks that require a LOAD BUD operation
 	public void BatchLoadBUD(ChunkPos pos){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		this.size = 10;	
 	}
@@ -335,6 +361,7 @@ public struct NetMessage
 	// Client or server sends a block damage operation to server
 	// TODO: Add Damage Type
 	public void BlockDamage(ChunkPos pos, int x, int y, int z, ushort newHPOrDamage, bool shouldRedrawChunk){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -346,12 +373,14 @@ public struct NetMessage
 
 	// Server sends inventory information to client
 	public void SendInventory(byte[] data, int length){
+		Reset();
 		Array.Copy(data, 0, NetMessage.buffer, 1, length);
 		this.size = 1 + length;
 	}
 
 	// Server sends a client an order to register an SFX into SFXLoader
 	public void SFXPlay(ChunkPos pos, int x, int y, int z, ushort blockCode, ushort state){
+		Reset();
 		NetDecoder.WriteChunkPos(pos, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(x, NetMessage.buffer, 10);
 		NetDecoder.WriteInt(y, NetMessage.buffer, 14);
@@ -363,6 +392,7 @@ public struct NetMessage
 
 	// Server sends clients the bytes that composes a Noise (used for global weather noise)
 	public void SendNoise(byte[] noise, int seed){
+		Reset();
 		NetDecoder.WriteByteArray(noise, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(seed, NetMessage.buffer, 1+noise.Length);
 		this.size = 1+noise.Length+4;
@@ -370,18 +400,21 @@ public struct NetMessage
 
 	// Client asks for existance of Character ID. Used before World load
 	public void RequestCharacterExistence(ulong id){
+		Reset();
 		NetDecoder.WriteLong(id, NetMessage.buffer, 1);
 		this.size = 9;
 	}
 
 	// Client asks for CharacterSheet
 	public void RequestCharacterSheet(ulong id){
+		Reset();
 		NetDecoder.WriteLong(id, NetMessage.buffer, 1);
 		this.size = 9;
 	}
 
 	// Server sends character appearance and a flag
 	public void SendCharacterPreload(CharacterAppearance? app, bool isMale){
+		Reset();
 		if(app == null){
 			NetDecoder.WriteBool(false, NetMessage.buffer, 1);
 			NetDecoder.WriteZeros(2, 249, NetMessage.buffer);
@@ -397,6 +430,7 @@ public struct NetMessage
 
 	// Encodes a CharacterSheet
 	public void SendCharSheet(ulong charCode, CharacterSheet sheet){
+		Reset();
 		NetDecoder.WriteLong(charCode, NetMessage.buffer, 1);
 		NetDecoder.WriteCharacterSheet(sheet, NetMessage.buffer, 9);
 
@@ -405,12 +439,14 @@ public struct NetMessage
 
 	// Client sends character hotbar position to Server
 	public void SendHotbarPosition(byte hotbarSlot){
+		Reset();
 		NetDecoder.WriteByte(hotbarSlot, NetMessage.buffer, 1);
 		this.size = 2;
 	}
 
 	// Server sends character item in hand to Clients
 	public void SendItemInHand(ulong playerCode, ushort itemID, byte amount){
+		Reset();
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
 		NetDecoder.WriteUshort(itemID, NetMessage.buffer, 9);
 		NetDecoder.WriteByte(amount, NetMessage.buffer, 11);
@@ -419,6 +455,7 @@ public struct NetMessage
 
 	// Client or Server sends AnimatorState name and layer for a given playerCode (Should expand into all entities later)
 	public void SendAnimationLayer(ulong playerCode, AnimationData data){
+		Reset();
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(data.layer, NetMessage.buffer, 9);
 		NetDecoder.WriteUshort((ushort)data.name.Length, NetMessage.buffer, 13);
@@ -429,9 +466,20 @@ public struct NetMessage
 
 	// Client or Server sends battle style name of a particular player (Should expand into all entities later)
 	public void SendBattleStyle(ulong playerCode, int code){
+		Reset();
 		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
 		NetDecoder.WriteInt(code, NetMessage.buffer, 9);
 		this.size = 13;
+	}
+
+	// Client or Server sends a message about an animator parameter change
+	// WILL BE CHANGED LATER TO ACCOMODATE ALL ENTITIES
+	public void SendAnimatorParameter(ulong playerCode, float val, string parameterName){
+		Reset();
+		NetDecoder.WriteLong(playerCode, NetMessage.buffer, 1);
+		NetDecoder.WriteFloat(val, NetMessage.buffer, 9);
+		NetDecoder.WriteString(parameterName, NetMessage.buffer, 13);
+		this.size = 13 + parameterName.Length;
 	}
 }
 
@@ -474,6 +522,7 @@ public enum NetCode{
 	SENDITEMINHAND,
 	SENDANIMATIONLAYER,
 	SENDBATTLESTYLE,
+	SENDANIMATORPARAMETER,
 	DISCONNECTINFO, // No call
 	DISCONNECT  // No call
 }

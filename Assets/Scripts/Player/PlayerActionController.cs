@@ -37,7 +37,9 @@ public class PlayerActionController : MonoBehaviour {
 
 	// NetCode
 	private static List<AnimationData> statesPlayed;
-	private NetMessage message;
+	private NetMessage animationLayerMessage = new NetMessage(NetCode.SENDANIMATIONLAYER);
+	private NetMessage animatorParameterMessage = new NetMessage(NetCode.SENDANIMATORPARAMETER);
+	private Dictionary<string, float> lastParameterValue = new Dictionary<string, float>();
 
 	// Cache
 	private float cachedTime;
@@ -179,6 +181,8 @@ public class PlayerActionController : MonoBehaviour {
 		this.animatorFP.SetBool("Sheathed", this.weaponSheathed);
 		this.animator.SetBool("ShouldMove", movementDirection.magnitude != 0);
 
+		SendAnimatorValue("Run", runMomentum);
+
 		//this.animationHandler.Test();
 
 		if(!flags.isGrounded)
@@ -218,9 +222,8 @@ public class PlayerActionController : MonoBehaviour {
 
 	private void RunNetcodeList(){
 		for(int i = statesPlayed.Count - 1; i >= 0; i--){
-			this.message = new NetMessage(NetCode.SENDANIMATIONLAYER);
-			this.message.SendAnimationLayer(Configurations.accountID, statesPlayed[i]);
-			this.cl.client.Send(this.message);
+			this.animationLayerMessage.SendAnimationLayer(Configurations.accountID, statesPlayed[i]);
+			this.cl.client.Send(this.animationLayerMessage);
 
 			statesPlayed.RemoveAt(i);
 		} 
@@ -309,5 +312,18 @@ public class PlayerActionController : MonoBehaviour {
 		}
 
 		this.currentlyQueuedState.Clear();
+	}
+
+	private void SendAnimatorValue(string parameter, float val){
+		if(!this.lastParameterValue.ContainsKey(parameter))
+			this.lastParameterValue.Add(parameter, -1);
+
+		if(this.lastParameterValue[parameter] == val)
+			return;
+
+		this.lastParameterValue[parameter] = val;
+
+		this.animatorParameterMessage.SendAnimatorParameter(Configurations.accountID, val, parameter);
+		this.cl.client.Send(this.animatorParameterMessage);
 	}
 }

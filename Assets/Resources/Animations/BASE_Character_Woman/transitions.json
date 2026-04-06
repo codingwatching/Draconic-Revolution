@@ -20,6 +20,11 @@
 			    	"mode": "if",
 			    	"parameter": "Sheathed",
 			    	"parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -42,6 +47,11 @@
 			    {
 			    	"mode": "if not",
 			    	"parameter": "Sheathed",
+			    	"parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
 			    	"parameterType": "bool"
 			    }
 			]
@@ -66,6 +76,11 @@
 			        "mode": "if",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -89,6 +104,11 @@
 			        "mode": "if not",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -112,6 +132,11 @@
 			        "mode": "if",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -135,6 +160,11 @@
 			        "mode": "if not",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -158,6 +188,11 @@
 			        "mode": "if",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -181,6 +216,11 @@
 			        "mode": "if not",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -204,6 +244,11 @@
 			        "mode": "if",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -227,6 +272,11 @@
 			        "mode": "if not",
 			        "parameter": "Sheathed",
 			        "parameterType": "bool"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -246,6 +296,11 @@
 			        "threshold": 2,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -265,6 +320,11 @@
 			        "threshold": 3,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -284,6 +344,11 @@
 			        "threshold": 4,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -303,6 +368,11 @@
 			        "threshold": 5,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -322,6 +392,11 @@
 			        "threshold": 6,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -341,6 +416,11 @@
 			        "threshold": 7,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -360,6 +440,11 @@
 			        "threshold": 8,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -379,6 +464,11 @@
 			        "threshold": 9,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},
@@ -398,6 +488,11 @@
 			        "threshold": 10,
 			        "parameter": "Attack_Combo",
 			        "parameterType": "int"
+			    },
+			    {
+			    	"mode": "if",
+			    	"parameter": "ISPLAYER",
+			    	"parameterType": "bool"
 			    }
 			]
 		},

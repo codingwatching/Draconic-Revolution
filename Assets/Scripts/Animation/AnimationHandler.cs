@@ -152,6 +152,11 @@ public class AnimationHandler : MonoBehaviour {
 		return -1f;
 	}
 
+	// Sets a Third Person's Animator Parameter to a certain value
+	public void SetParameterValue(string parameter, float val){
+		this.tpAnimator.SetFloat(parameter, val);
+	}
+
 	public void AssignAimTracker(Transform tracker){
 		this.rigControllerTP.AssignHeadTrackingSource(tracker);
 		this.rigControllerFP.AssignHeadTrackingSource(tracker);

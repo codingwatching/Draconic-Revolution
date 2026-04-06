@@ -222,6 +222,14 @@ public class EntityHandler
 		}
 	}
 
+	public void SetAnimatorParameter(EntityType type, ulong code, string parameter, float val){
+		if(type == EntityType.PLAYER){
+			if(this.playerAnimations.ContainsKey(code)){
+				this.playerAnimations[code].SetParameterValue(parameter, val);
+			}
+		}
+	}
+
 	public Vector3 GetLastPosition(EntityType type, ulong code){
 		if(type == EntityType.PLAYER)
 			return this.playerCurrentPositions[code].deltaPos;

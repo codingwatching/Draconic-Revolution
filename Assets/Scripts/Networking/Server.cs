@@ -418,6 +418,9 @@ public class Server
 			case NetCode.SENDBATTLESTYLE:
 				SendBattleStyle(data, id);
 				break;
+			case NetCode.SENDANIMATORPARAMETER:
+				SendAnimatorParameter(data, id);
+				break;
 			case NetCode.DISCONNECTINFO:
 				DisconnectInfo(id);
 				break;
@@ -1107,10 +1110,17 @@ public class Server
 
 				if(this.cl.loadedChunks[newPos].Contains(code)){
 					NetMessage liveMessage = new NetMessage(NetCode.PLAYERLOCATION);
+					NetMessage animatorParameterMessage = new NetMessage(NetCode.SENDANIMATORPARAMETER);
+					Dictionary<string, float> animatorParameters = this.entityHandler.GetParameterValues(code);
 
 					this.connectionGraph[id].Add(code);
 					liveMessage.PlayerLocation(this.cl.regionHandler.allPlayerData[id]);
-					this.Send(liveMessage.GetMessage(), liveMessage.size, code);					
+					this.Send(liveMessage.GetMessage(), liveMessage.size, code);
+
+					foreach(string parameter in animatorParameters.Keys){
+						animatorParameterMessage.SendAnimatorParameter(code, animatorParameters[parameter], parameter);
+						this.Send(animatorParameterMessage.GetMessage(), animatorParameterMessage.size, id);	
+					}		
 				}				
 			}
 		}
@@ -1402,6 +1412,19 @@ public class Server
 		NetMessage message;
 		message = new NetMessage(NetCode.SENDBATTLESTYLE);
 		message.SendBattleStyle(playerCode, style);
+		this.SendToClientsExcept(id, message);
+	}
+
+	// Receives an animator value from client
+	public void SendAnimatorParameter(byte[] data, ulong id){
+		float val = NetDecoder.ReadFloat(data, 9);
+		string parameterName = NetDecoder.ReadString(data, 13, data.Length - 13);
+
+		this.entityHandler.AddParameterValue(id, parameterName, val);
+
+		NetMessage message;
+		message = new NetMessage(NetCode.SENDANIMATORPARAMETER);
+		message.SendAnimatorParameter(id, val, parameterName);
 		this.SendToClientsExcept(id, message);
 	}
 

@@ -12,6 +12,8 @@ public class EntityHandler_Server
     public Dictionary<ChunkPos, Dictionary<ulong, AbstractAI>> playerObject;
     public Dictionary<ChunkPos, Dictionary<ulong, AbstractAI>> dropObject;
 
+    public Dictionary<ulong, Dictionary<string, float>> playerAnimatorParameters;
+
     private List<EntityID> toRemove;
     private AvailabilityQueue availableDropCodes;
     private List<EntityChunkTransaction> toChangePosition;
@@ -24,6 +26,7 @@ public class EntityHandler_Server
         this.availableDropCodes = new AvailabilityQueue();
         this.toRemove = new List<EntityID>();
         this.toChangePosition = new List<EntityChunkTransaction>();
+        this.playerAnimatorParameters = new Dictionary<ulong, Dictionary<string, float>>();
     }
 
     public void SetChunkLoader(ChunkLoader_Server cl){this.cl = cl;}
@@ -143,6 +146,25 @@ public class EntityHandler_Server
         this.playerSheet[code].SetBattleStyleCode(style);
     }
 
+    // Add an animator parameter information
+    public void AddParameterValue(ulong code, string parameterName, float val){
+        if(!this.playerAnimatorParameters.ContainsKey(code))
+            this.playerAnimatorParameters.Add(code, new Dictionary<string, float>());
+
+        if(!this.playerAnimatorParameters[code].ContainsKey(parameterName))
+            this.playerAnimatorParameters[code].Add(parameterName, val);
+        else
+            this.playerAnimatorParameters[code][parameterName] = val;
+
+    }
+
+    // Get method for Dict of Parameters
+    public Dictionary<string, float> GetParameterValues(ulong code){
+        if(!this.playerAnimatorParameters.ContainsKey(code))
+            return new Dictionary<string, float>();
+        return this.playerAnimatorParameters[code];
+    }
+
     // Issued command from Server class
     public ulong AddItem(float3 pos, float3 rot, float3 move, ushort itemCode, byte amount, ulong playerCode, ChunkLoader_Server cl){
         CastCoord coord = new CastCoord(pos);
@@ -215,6 +237,9 @@ public class EntityHandler_Server
             if(this.playerSheet.ContainsKey(code)){
                 this.playerSheet.Remove(code);
             }
+            if(this.playerAnimatorParameters.ContainsKey(code)){
+                this.playerAnimatorParameters.Remove(code);
+            }
         }
         else if(type == EntityType.DROP){
             if(this.dropObject.ContainsKey(pos)){
@@ -235,6 +260,12 @@ public class EntityHandler_Server
                 if(this.playerObject[pos].Count == 0)
                     this.playerObject.Remove(pos);
             }
+            if(this.playerSheet.ContainsKey(code)){
+                this.playerSheet.Remove(code);
+            }
+            if(this.playerAnimatorParameters.ContainsKey(code)){
+                this.playerAnimatorParameters.Remove(code);
+            }
         }
         else if(type == EntityType.DROP){
             if(this.dropObject.ContainsKey(pos)){
@@ -253,6 +284,28 @@ public class EntityHandler_Server
     // Triggered whenever an entity changes chunk
     public void SchedulePositionChange(EntityChunkTransaction ect){
         this.toChangePosition.Add(ect);
+    }
+
+    public void SetPosition(EntityType type, ulong code, ChunkPos chunk, float3 pos, float3 rot){
+        if(type == EntityType.PLAYER){
+            if(this.playerObject.ContainsKey(chunk)){
+                if(this.playerObject[chunk].ContainsKey(code)){
+                    this.playerObject[chunk][code].SetPosition(new Vector3(pos.x, pos.y, pos.z), new Vector3(rot.x, rot.y, rot.z));
+                    this.playerObject[chunk][code].SetVisionOffset(Constants.CHARACTER_MODEL_EYE_Y_OFFSET);
+                }
+            }
+        }
+    }
+
+    // Sets TerrainVision Refresh on all entities of a given chunk and EntityType
+    public void SetRefreshVision(EntityType type, ChunkPos pos){
+        if(type == EntityType.DROP){
+            if(this.Contains(type, pos)){
+                foreach(ulong code in this.dropObject[pos].Keys){
+                    this.dropObject[pos][code].SetRefreshVision();
+                }
+            }
+        }
     }
 
     // Runs removal of marked entities
@@ -290,28 +343,6 @@ public class EntityHandler_Server
             case EntityType.DROP:
                 this.dropObject[e.novel.pos][e.novel.code].markedForChange = false;
                 break;
-        }
-    }
-
-    public void SetPosition(EntityType type, ulong code, ChunkPos chunk, float3 pos, float3 rot){
-        if(type == EntityType.PLAYER){
-            if(this.playerObject.ContainsKey(chunk)){
-                if(this.playerObject[chunk].ContainsKey(code)){
-                    this.playerObject[chunk][code].SetPosition(new Vector3(pos.x, pos.y, pos.z), new Vector3(rot.x, rot.y, rot.z));
-                    this.playerObject[chunk][code].SetVisionOffset(Constants.CHARACTER_MODEL_EYE_Y_OFFSET);
-                }
-            }
-        }
-    }
-
-    // Sets TerrainVision Refresh on all entities of a given chunk and EntityType
-    public void SetRefreshVision(EntityType type, ChunkPos pos){
-        if(type == EntityType.DROP){
-            if(this.Contains(type, pos)){
-                foreach(ulong code in this.dropObject[pos].Keys){
-                    this.dropObject[pos][code].SetRefreshVision();
-                }
-            }
         }
     }
 }
