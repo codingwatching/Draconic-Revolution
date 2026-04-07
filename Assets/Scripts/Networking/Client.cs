@@ -720,8 +720,6 @@ public class Client
 		if(playerCode != Configurations.accountID){
 			this.entityHandler.AnimateBone(playerCode, stateName, layer);
 		}
-
-
 	}
 
 	// Receives from server a single BattleStyle name for a player

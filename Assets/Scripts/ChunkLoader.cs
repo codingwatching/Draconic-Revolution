@@ -20,6 +20,7 @@ public class ChunkLoader : MonoBehaviour
     private Dictionary<ChunkPos, Chunk> chunks = new Dictionary<ChunkPos, Chunk>(); 
 	public int renderDistance = 0;
 	public Transform player;
+    public Transform cam;
 	public ChunkPos currentChunk;
 	public ChunkPos newChunk;
 	public ChunkPriorityQueue requestPriorityQueue = new ChunkPriorityQueue(World.renderDistance+1);
@@ -179,8 +180,9 @@ public class ChunkLoader : MonoBehaviour
             this.player.position = new Vector3(playerX, playerY+0.8f, playerZ);
             this.playerCharacter.transform.position = new Vector3(playerX, playerY+0.8f, playerZ);
 
-            this.player.eulerAngles = new Vector3(playerDirX, playerDirY, playerDirZ);
-
+            this.player.eulerAngles = new Vector3(0, playerDirY, 0);
+            MouseLook.SetLookDirection(playerDirX);
+            
             this.currentChunk = new CastCoord(playerX, playerY, playerZ).GetChunkPos();
             this.playerPositionHandler.Activate();
 
@@ -198,13 +200,12 @@ public class ChunkLoader : MonoBehaviour
                     HandleClientCommunication();
             		WORLD_GENERATED = true;
 
-
                     this.gameUI.SetActive(true);
-                    playerCharacter.SetActive(true);
+                    this.playerCharacter.SetActive(true);
                     this.mainControllerManager.SetActive(true);
-                    this.time.SetPlayer(playerCharacter);
-                    this.playerEvents.SetPlayerObject(playerCharacter);
-                    this.client.SetRaycast(playerCharacter.GetComponent<PlayerRaycast>());
+                    this.time.SetPlayer(this.playerCharacter);
+                    this.playerEvents.SetPlayerObject(this.playerCharacter);
+                    this.client.SetRaycast(this.playerCharacter.GetComponent<PlayerRaycast>());
                     this.client.SetPlayerEvents(this.playerEvents);
                     this.playerPositionHandler.SetChunkLoaderChunkPos();
                     this.playerMovement.Init();

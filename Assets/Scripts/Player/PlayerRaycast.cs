@@ -266,7 +266,7 @@ public class PlayerRaycast : MonoBehaviour
 
 	// Sets the Camera FOV
 	public void SetFOV(){
-		cam.GetComponent<Camera>().fieldOfView = Configurations.fieldOfView;
+		this.playerCamera.fieldOfView = Configurations.fieldOfView;
 	}
 	
 	public void TakeWorldScreenshot(){

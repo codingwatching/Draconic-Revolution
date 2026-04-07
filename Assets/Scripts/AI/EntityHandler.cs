@@ -11,6 +11,8 @@ public class EntityHandler
 
 	private Dictionary<ulong, CharacterSheet> playerSheet;
 	private Dictionary<ulong, GameObject> playerObject;
+	private Dictionary<ulong, Transform> playerHead;
+
 	private Dictionary<ulong, AnimationHandler> playerAnimations;
 	private Dictionary<ulong, ushort> playerItem;
 	private Dictionary<ulong, DeltaMove> playerCurrentPositions;
@@ -29,6 +31,7 @@ public class EntityHandler
 	public EntityHandler(ChunkLoader cl){
 		this.playerSheet = new Dictionary<ulong, CharacterSheet>();
 		this.playerObject = new Dictionary<ulong, GameObject>();
+		this.playerHead = new Dictionary<ulong, Transform>();
 		this.playerItem = new Dictionary<ulong, ushort>();
 		this.playerCurrentPositions = new Dictionary<ulong, DeltaMove>();
 		this.dropObject = new Dictionary<ulong, ItemEntity>();
@@ -81,10 +84,11 @@ public class EntityHandler
 	}
 
 	public void AddPlayer(ulong code, float3 pos, float3 dir){
-		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(dir.x, dir.y, dir.z));
+		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(0, dir.y, 0));
 
 		go.name = "Player_" + code;
 		this.playerObject.Add(code, go);
+		this.playerHead.Add(code, go.transform.Find("Camera"));
 		this.playerItem.Add(code, 0);
 		this.playerCurrentPositions.Add(code, new DeltaMove(pos, dir));
 		this.playerAnimations.Add(code, null);
@@ -106,6 +110,7 @@ public class EntityHandler
 			this.playerModelHandler.DeleteModel(this.playerObject[code]);
 
 			this.playerObject[code] = this.playerModelHandler.BuildModel(this.playerObject[code], app, isMale);
+			this.playerHead[code] = this.playerObject[code].transform.Find("Camera");
 			this.playerAnimations[code] = this.playerObject[code].GetComponent<AnimationHandler>();
 
 			if(code != Configurations.accountID){
@@ -157,7 +162,8 @@ public class EntityHandler
 	public void NudgeLastPos(EntityType type, ulong code, float3 pos, float3 dir){
 		if(type == EntityType.PLAYER){	
 			this.playerObject[code].transform.position = this.playerCurrentPositions[code].deltaPos;
-			this.playerObject[code].transform.eulerAngles = this.playerCurrentPositions[code].deltaRot;
+			this.playerObject[code].transform.eulerAngles = new Vector3(0, this.playerCurrentPositions[code].deltaRot.y, 0);
+			this.playerHead[code].transform.eulerAngles = new Vector3(this.playerCurrentPositions[code].deltaRot.x, 0, 0);
 		
 			this.playerCurrentPositions[code] = new DeltaMove(pos, dir);
 		}
@@ -172,7 +178,8 @@ public class EntityHandler
 	public void Nudge(EntityType type, ulong code, Vector3 dPos, Vector3 dRot){
 		if(type == EntityType.PLAYER){
 			this.playerObject[code].transform.position += (dPos * (Time.deltaTime / TimeOfDay.timeRate));
-			this.playerObject[code].transform.eulerAngles += (dRot * (Time.deltaTime / TimeOfDay.timeRate));
+			this.playerObject[code].transform.eulerAngles += new Vector3(0, (dRot * (Time.deltaTime / TimeOfDay.timeRate)).y, 0);
+			this.playerHead[code].transform.eulerAngles += new Vector3((dRot * (Time.deltaTime / TimeOfDay.timeRate)).x, 0, 0);
 		}
 		else if(type == EntityType.DROP){
 			this.dropObject[code].go.transform.position += (dPos * (Time.deltaTime / TimeOfDay.timeRate));
@@ -193,6 +200,7 @@ public class EntityHandler
 			
 			this.playerObject[code].SetActive(false);
 			GameObject.Destroy(this.playerObject[code]);
+			this.playerHead.Remove(code);
 			this.playerObject.Remove(code);
 			this.playerItem.Remove(code);
 			this.playerCurrentPositions.Remove(code);

@@ -157,11 +157,6 @@ public class AnimationHandler : MonoBehaviour {
 		this.tpAnimator.SetFloat(parameter, val);
 	}
 
-	public void AssignAimTracker(Transform tracker){
-		this.rigControllerTP.AssignHeadTrackingSource(tracker);
-		this.rigControllerFP.AssignHeadTrackingSource(tracker);
-	}
-
 	public static string GetStateName(AnimatorStateInfo stateInfo){return hashToName[stateInfo.shortNameHash];}
 
 	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}

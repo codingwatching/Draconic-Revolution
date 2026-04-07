@@ -260,7 +260,7 @@ public class PlayerPositionHandler : MonoBehaviour
             // If has moved
             if(this.playerTransform.position != this.lastPos || this.playerTransform.eulerAngles != this.lastRot){
                 NetMessage posMessage = new NetMessage(NetCode.CLIENTPLAYERPOSITION);
-                posMessage.ClientPlayerPosition(this.playerTransform.position.x, this.playerTransform.position.y, this.playerTransform.position.z, this.playerTransform.eulerAngles.x, this.playerTransform.eulerAngles.y, this.playerTransform.eulerAngles.z);
+                posMessage.ClientPlayerPosition(this.playerTransform.position.x, this.playerTransform.position.y, this.playerTransform.position.z, this.cameraTransform.eulerAngles.x, this.playerTransform.eulerAngles.y, this.playerTransform.eulerAngles.z);
                 this.cl.client.Send(posMessage);
             }
         }
