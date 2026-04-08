@@ -30,6 +30,7 @@ public class PlayerActionController : MonoBehaviour {
 	private float attackExitTime = .8f;
 	private HashSet<PlayerActionType> registeredAction;
 	private HashSet<PlayerActionRestriction> restrictions;
+	private Dictionary<PlayerActionRestriction, Coroutine> restrictionTimer;
 	private HashSet<string> currentlyQueuedState;
 	private List<string> playlist;
 	private List<bool> overrideState;
@@ -103,6 +104,7 @@ public class PlayerActionController : MonoBehaviour {
 		this.overrideState = new List<bool>();
 		this.ignoreFP = new List<bool>();
 		this.restrictions = new HashSet<PlayerActionRestriction>();
+		this.restrictionTimer = new Dictionary<PlayerActionRestriction, Coroutine>();
 		this.currentlyQueuedState = new HashSet<string>();
 		this.restrictions.Add(PlayerActionRestriction.PRIMARY);
 		statesPlayed = new List<AnimationData>();
@@ -135,6 +137,10 @@ public class PlayerActionController : MonoBehaviour {
 	}
 
 	public void Sheathe(){
+		// Maybe change the restriction condition in the future to ignore this if certain states are currently playing
+		if(this.restrictions.Contains(PlayerActionRestriction.SHEATHE))
+			return;
+
 		this.weaponSheathed = !this.weaponSheathed;
 
 		if(this.weaponSheathed){
@@ -151,8 +157,14 @@ public class PlayerActionController : MonoBehaviour {
 	public void RegisterRestriction(PlayerActionRestriction rest, float timeout){
 		this.restrictions.Add(rest);
 
-		if(timeout > 0)
-			StartCoroutine(RestrictionRoutine(rest, timeout));
+		if(timeout > 0){
+			if(this.restrictionTimer.ContainsKey(rest)){
+				StopCoroutine(this.restrictionTimer[rest]);
+				this.restrictionTimer.Remove(rest);
+			}
+
+			this.restrictionTimer.Add(rest, StartCoroutine(RestrictionRoutine(rest, timeout)));
+		}
 	}
 
 	public void RemoveRestriction(PlayerActionRestriction rest){this.restrictions.Remove(rest);}
@@ -165,6 +177,7 @@ public class PlayerActionController : MonoBehaviour {
 			return;
 
 		this.registeredAction.Add(PlayerActionType.PRIMARY_ACTION);
+		RegisterRestriction(PlayerActionRestriction.SHEATHE, 1.5f);
 	}
 
 	public void VerifyMovement(Vector3 facingDirection, Vector3 movementDirection, float runMomentum, float gravity, MovementFlags flags){
