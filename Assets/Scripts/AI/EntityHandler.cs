@@ -163,7 +163,7 @@ public class EntityHandler
 		if(type == EntityType.PLAYER){	
 			this.playerObject[code].transform.position = this.playerCurrentPositions[code].deltaPos;
 			this.playerObject[code].transform.eulerAngles = new Vector3(0, this.playerCurrentPositions[code].deltaRot.y, 0);
-			this.playerHead[code].transform.eulerAngles = new Vector3(this.playerCurrentPositions[code].deltaRot.x, 0, 0);
+			this.playerHead[code].transform.localRotation = Quaternion.Euler(this.playerCurrentPositions[code].deltaRot.x, 0, 0);
 		
 			this.playerCurrentPositions[code] = new DeltaMove(pos, dir);
 		}
