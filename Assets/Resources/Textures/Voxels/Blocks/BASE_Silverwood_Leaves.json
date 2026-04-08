@@ -14,7 +14,7 @@
     "needsRotation": false,
     "customBreak": false,
     "customPlace": false,
-    "drawRegardless": false,
+    "drawLiquid": false,
     "maxHP":  1,
     "indestructible": false,
     "tileTop":  "BASE_Silverwood_Leaves",

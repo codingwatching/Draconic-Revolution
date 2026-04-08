@@ -492,7 +492,7 @@ public class ChunkLoader_Server : MonoBehaviour
                 slots[i] = new ItemPlayerInventorySlot(ItemLoader.GetID("BASE_Torch"), 50);
             }
             else if(i == 3){
-                slots[i] = new ItemPlayerInventorySlot(ItemLoader.GetID("BASE_Stone"), 50);
+                slots[i] = new ItemPlayerInventorySlot(ItemLoader.GetID("BASE_Water"), 50);
             }
             else{
                 slots[i] = new EmptyPlayerInventorySlot();

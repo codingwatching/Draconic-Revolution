@@ -170,7 +170,7 @@ public struct BuildChunkJob : IJob{
 	[ReadOnly]
 	public NativeArray<bool> objectWashable;
 	[ReadOnly]
-	public NativeArray<bool> blockDrawRegardless;
+	public NativeArray<bool> blockDrawLiquid;
 	[ReadOnly]
 	public NativeArray<ushort> blockHP;
 	[ReadOnly]
@@ -212,8 +212,6 @@ public struct BuildChunkJob : IJob{
 						y = renderMap[x*Chunk.chunkWidth];
 					else
 						y = renderMap[x*Chunk.chunkWidth+(Chunk.chunkWidth-1)];
-
-					isInBorder = true;
 				}
 				else{
 					y = renderMap[x*Chunk.chunkWidth+z];
@@ -229,14 +227,7 @@ public struct BuildChunkJob : IJob{
 				}
 
 				for(; y >= yMin; y--){
-					if(verticalCode != 0){
-						if(CheckCorner(x, y, z))
-							continue;
-						if(CheckBorder(x, y, z))
-							isInBorder = true;
-						else
-							isInBorder = false;
-					}
+					isInBorder = CheckBorder(x, y, z);
 
 					if(y == Chunk.chunkDepth && isSurfaceChunk && verticalCode == 0){
 						thisBlock = 0;
@@ -249,55 +240,40 @@ public struct BuildChunkJob : IJob{
 						isBlock = thisBlock <= ushort.MaxValue/2;
 					}
 
-		    		// Handles DrawRegardless cases
+		    		// Handles DrawLiquid cases
 		    		if(isBlock){
-			    		if(blockDrawRegardless[thisBlock]){
+			    		if(blockDrawLiquid[thisBlock] && !isInBorder){
 			    			bool isABlock;
 			    			bool isAtTheBorder;
 			    			int3 auxC;
+			    			int i = 4;
 
-			    			for(int i=0; i < 6; i++){
-					    		if(x < 0)
-					    			continue;
+				    		if(y >= Chunk.chunkDepth)
+				    			continue;
 
-					    		if(x >= Chunk.chunkWidth)
-					    			continue;
+				    		if(y < 0)
+				    			continue;
 
-					    		if(z < 0)
-					    			continue;
+		    				auxC = GetCoords(x, y, z, i);
+		    				isAtTheBorder = CheckBorder(auxC.x, auxC.y, auxC.z);
+				    		neighborBlock = GetBlockData(auxC.x, auxC.y, auxC.z, isAtTheBorder);
+				    		neighborState = GetBlockState(auxC.x, auxC.y, auxC.z, isAtTheBorder);
+				    		isABlock = neighborBlock <= ushort.MaxValue/2;
 
-					    		if(z >= Chunk.chunkWidth)
-					    			continue;
-
-					    		if(y >= Chunk.chunkDepth)
-					    			continue;
-
-					    		if(y < 0)
-					    			continue;
-
-			    				auxC = GetCoords(x, y, z, i);
-			    				isAtTheBorder = CheckBorder(auxC.x, auxC.y, auxC.z);
-					    		neighborBlock = GetBlockData(auxC.x, auxC.y, auxC.z, isAtTheBorder);
-					    		neighborState = GetBlockState(auxC.x, auxC.y, auxC.z, isAtTheBorder);
-					    		isABlock = neighborBlock <= ushort.MaxValue/2;
-
-					    		if(isABlock){
-						    		if(blockSeamless[thisBlock]){
-						    			if(CheckSeams(thisBlock, neighborBlock, thisState, neighborState)){
-						    				continue;
-						    			}
-						    		}
-						    	}
-						    	else{
-						    		if(objectSeamless[thisBlock]){
-						    			if(CheckSeams(thisBlock, neighborBlock, thisState, neighborState)){
-						    				continue;
-						    			}
-						    		}
-						    	}
-
-						    	LoadMesh(x, y, z, i, thisBlock, load, cacheCubeVert, cacheCubeUV, cacheCubeNormal, y == Chunk.chunkDepth & isSurfaceChunk);
-			    			}
+				    		if(isABlock){
+					    		if(blockSeamless[thisBlock]){
+					    			if(!CheckSeams(thisBlock, neighborBlock, thisState, neighborState)){
+					    				LoadMesh(x, y, z, i, thisBlock, load, cacheCubeVert, cacheCubeUV, cacheCubeNormal, y == Chunk.chunkDepth & isSurfaceChunk);
+					    			}
+					    		}
+					    	}
+					    	else{
+					    		if(objectSeamless[thisBlock]){
+					    			if(!CheckSeams(thisBlock, neighborBlock, thisState, neighborState)){
+					    				LoadMesh(x, y, z, i, thisBlock, load, cacheCubeVert, cacheCubeUV, cacheCubeNormal, y == Chunk.chunkDepth & isSurfaceChunk);
+					    			}
+					    		}
+					    	}
 			    		}
 		    		}
 
@@ -362,8 +338,8 @@ public struct BuildChunkJob : IJob{
 				    			continue;
 				    		}
 
-			    			// Cuts down handling of DrawRegardless blocks here
-			    			if(blockDrawRegardless[neighborBlock])
+			    			// Cuts down handling of DrawLiquid blocks here
+			    			if(blockDrawLiquid[neighborBlock] && i == 4)
 			    				continue;
 
 							// Handles Liquid chunks

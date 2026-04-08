@@ -51,8 +51,6 @@ public class AnimationHandler : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
-		Debug.Log($"State: {stateName} -- override: {overrideState} -- ignoreFP: {ignoreFP}");
-
 		bool skipThirdPerson = false;
 		AnimationStateMapping givenMap, currentMap, currentMapFP;
 

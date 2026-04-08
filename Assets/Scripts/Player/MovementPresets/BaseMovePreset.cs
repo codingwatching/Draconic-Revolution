@@ -30,6 +30,10 @@ public abstract class BaseMovePreset {
     protected float maximumImpactAngleTolerance = -0.7f;
     protected float maximumAllowedMomentumAfterImpact = 0.3f;
 
+    // Fov
+    protected float maximumFovDeacceleration = 0.4f;
+    protected float maximumFovAcceleration = 0.8f;
+
     protected static List<MathOperation>[] modifier;
 
     public BaseMovePreset(CharacterSheet sheet){
@@ -198,7 +202,17 @@ public abstract class BaseMovePreset {
         if(currentRunMomentum == 0 && cam.fieldOfView == Configurations.fieldOfView)
             return;
 
-        cam.fieldOfView = Configurations.fieldOfView + Mathf.Lerp(0, GetPovAdjustment(), currentRunMomentum/GetMaxRunningMomentum());
+        float newFov = Configurations.fieldOfView + Mathf.Lerp(0, GetPovAdjustment(), currentRunMomentum/GetMaxRunningMomentum());
+
+        if(newFov < cam.fieldOfView && cam.fieldOfView - newFov > this.maximumFovDeacceleration){
+            cam.fieldOfView -= this.maximumFovDeacceleration;
+        }
+        else if(newFov > cam.fieldOfView && newFov - cam.fieldOfView > this.maximumFovAcceleration){
+            cam.fieldOfView += this.maximumFovAcceleration;
+        }
+        else{
+            cam.fieldOfView = newFov;
+        }
     }
 
     public virtual float CalculateImpact(Vector3 movement, float momentum, Vector3 impactNormal){

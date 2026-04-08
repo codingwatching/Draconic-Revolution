@@ -14,7 +14,7 @@
     "needsRotation": false,
     "customBreak":  true,
     "customPlace":  true,
-    "drawRegardless":  true,
+    "drawLiquid":  true,
     "maxHP":  1,
     "indestructible": false
 }

@@ -123,7 +123,7 @@ public class VoxelLoader : BaseLoader {
             BlockEncyclopediaECS.blockWashable[i] = blockBook[i].washable;
             BlockEncyclopediaECS.blockAffectLight[i] = blockBook[i].affectLight;
             BlockEncyclopediaECS.blockLuminosity[i] = blockBook[i].luminosity;
-            BlockEncyclopediaECS.blockDrawRegardless[i] = blockBook[i].drawRegardless;
+            BlockEncyclopediaECS.blockDrawLiquid[i] = blockBook[i].drawLiquid;
         }
 
         // Loads all object meshes

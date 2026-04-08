@@ -21,7 +21,7 @@ public class Blocks
 	public bool needsRotation = false;
 	public bool customBreak = false;
 	public bool customPlace = false;
-	public bool drawRegardless = false;
+	public bool drawLiquid = false;
 	public ushort maxHP;
 	public bool indestructible;
 	
