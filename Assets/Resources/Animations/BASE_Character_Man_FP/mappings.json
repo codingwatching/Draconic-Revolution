@@ -3,7 +3,7 @@
 		{
 			"state": "Empty",
 			"layers": [""],
-			"priority": 0
+			"priority": 1
 		},
 		{
 			"state": "Moving Forward",

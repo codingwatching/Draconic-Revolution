@@ -18,8 +18,8 @@
 		},
 		{
 			"state": "On Air",
-			"layers": [""],
-			"priority": 5,
+			"layers": ["", "Bottom"],
+			"priority": 101,
 			"stoplayer": ["Bottom"]
 		},
 		{

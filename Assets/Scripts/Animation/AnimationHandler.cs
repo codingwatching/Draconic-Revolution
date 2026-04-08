@@ -51,6 +51,8 @@ public class AnimationHandler : MonoBehaviour {
 		if(!this.INIT)
 			return;
 
+		Debug.Log($"State: {stateName} -- override: {overrideState} -- ignoreFP: {ignoreFP}");
+
 		bool skipThirdPerson = false;
 		AnimationStateMapping givenMap, currentMap, currentMapFP;
 
@@ -94,15 +96,13 @@ public class AnimationHandler : MonoBehaviour {
 					StopLayer(givenMap.stopLayer);
 					this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
 
-
-
 					break;
 				}
 			}
 		}
 
 		// Handling First Person
-		if(this.isPlayer && !ignoreFP){
+		if(this.isPlayer && !ignoreFP && !overrideState){
 			currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
 
 			if(!this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
@@ -110,7 +110,9 @@ public class AnimationHandler : MonoBehaviour {
 			}
 
 			if(givenMap.state != currentMapFP.state){
-				this.fpAnimator.CrossFade(givenMap.state, this.animationCrossfadeTime);
+				if(givenMap.priority <= currentMapFP.priority){
+					this.fpAnimator.CrossFade(givenMap.state, this.animationCrossfadeTime);
+				}
 			}
 		}
 
