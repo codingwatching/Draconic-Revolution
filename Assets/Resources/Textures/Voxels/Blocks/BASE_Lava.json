@@ -36,5 +36,11 @@
     "onBodyMovementMultiplierMaxSpeed": 0.4,
     "onBodyMovementMultiplierGravityAcceleration": 0.6,
     "onBodyMovementMultiplierMaxGravityTime": 1.2,
-    "onBodyMovementMultiplierJumpHeight": 1.2
+    "onBodyMovementMultiplierJumpHeight": 1.2,
+    "vignetteName": "BASE_Lava",
+    "vignetteColor": {
+        "r": 0.29,
+        "g": 0.06,
+        "b": 0.02
+    }
 }

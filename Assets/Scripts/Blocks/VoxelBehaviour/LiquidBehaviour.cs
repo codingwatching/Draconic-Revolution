@@ -40,8 +40,11 @@ public class LiquidBehaviour : VoxelBehaviour{
 	public float onBodyMovementMultiplierGravityAcceleration;
 	public float onBodyMovementMultiplierMaxGravityTime;
 	public float onBodyMovementMultiplierJumpHeight;
+	public string vignetteName;
+	public Color vignetteColor;
 
 	private ushort liquidCode; // Post Serialize Set
+	private VignetteData vignetteData;
 	private MathOperation penaltyDrag;
 	private MathOperation penaltyMaxSpeed;
 	private MathOperation penaltyGravityAcceleration;
@@ -159,6 +162,16 @@ public class LiquidBehaviour : VoxelBehaviour{
 		this.penaltyMaxGravityAccelerationTime = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierMaxGravityTime};
 		this.penaltyJumpHeight = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = onBodyMovementMultiplierJumpHeight};
 		this.penaltyPOV = new MathOperation{code = (ushort)MovementModifierCode.LIQUID, operation = '*', number = 0f};
+		
+		this.vignetteData = new VignetteData{
+			vignetteEffectName = this.vignetteName,
+			color = this.vignetteColor,
+			center = new Vector2(-2f, -2f),
+			intensity = 1f,
+			smoothness = 1f,
+			roundness = 1f,
+			effectTime = 0.12f
+		};
 	}
 
 	public override void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
@@ -192,6 +205,9 @@ public class LiquidBehaviour : VoxelBehaviour{
 			RemoveMods(cl);
 			cl.playerMovement.ChangeMoveset(Moveset.SWIM);
 		}
+
+		if(!((MovementFlags)cl.playerMovement.flags).isJumping)
+			cl.vignetteController.Add(this.vignetteData);
 	}
 
 	public override void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
@@ -203,6 +219,8 @@ public class LiquidBehaviour : VoxelBehaviour{
 			AddMods(cl);
 			cl.playerMovement.ChangeMoveset(Moveset.NORMAL);
 		}
+
+		cl.vignetteController.Remove(this.vignetteData);
 	}
 
 	private void AddMods(ChunkLoader cl){

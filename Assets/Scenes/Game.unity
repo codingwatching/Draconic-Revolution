@@ -20964,6 +20964,8 @@ MonoBehaviour:
   playerPositionHandler: {fileID: 59614825}
   voxelLightHandler: {fileID: 2085928825}
   playerActionController: {fileID: 59614828}
+  ambientHandler: {fileID: 1484502059}
+  vignetteController: {fileID: 1912773814}
   playerCharacter: {fileID: 59614818}
   playerEvents: {fileID: 59614819}
   playerModelHandler: {fileID: 59614826}
@@ -31069,6 +31071,7 @@ GameObject:
   - component: {fileID: 1912773809}
   - component: {fileID: 1912773812}
   - component: {fileID: 1912773813}
+  - component: {fileID: 1912773814}
   m_Layer: 9
   m_Name: Camera
   m_TagString: Untagged
@@ -31330,6 +31333,19 @@ AudioReverbZone:
   m_Density: 100
   m_LFReference: 250
   m_RoomLF: 0
+--- !u!114 &1912773814
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1912773807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32e49fc0948d364bbae3214aabed803, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ambientHandler: {fileID: 1484502059}
 --- !u!1 &1917954630
 GameObject:
   m_ObjectHideFlags: 0

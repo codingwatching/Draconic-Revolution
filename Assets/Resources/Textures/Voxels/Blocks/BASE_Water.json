@@ -36,5 +36,11 @@
     "onBodyMovementMultiplierMaxSpeed": 0.6,
     "onBodyMovementMultiplierGravityAcceleration": 0.5,
     "onBodyMovementMultiplierMaxGravityTime": 2.0,
-    "onBodyMovementMultiplierJumpHeight": 1.0
+    "onBodyMovementMultiplierJumpHeight": 1.0,
+    "vignetteName": "BASE_Water",
+    "vignetteColor": {
+        "r": 0.09,
+        "g": 0.43,
+        "b": 0.81
+    }
 }

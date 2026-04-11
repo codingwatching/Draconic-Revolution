@@ -56,6 +56,8 @@ public class ChunkLoader : MonoBehaviour
     public PlayerPositionHandler playerPositionHandler;
     public VoxelLightHandler voxelLightHandler;
     public PlayerActionController playerActionController;
+    public AmbientHandler ambientHandler;
+    public VignetteController vignetteController;
 
     // Initialization
     public GameObject playerCharacter;
