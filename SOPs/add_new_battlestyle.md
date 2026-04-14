@@ -37,7 +37,7 @@ The Json structure is as follows:
 			}
 		]
 	}
-}
+} 
 ```
 
 | Field | Type | Description |
