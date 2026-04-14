@@ -223,7 +223,7 @@ Following I will present a list of the concepts that exist in the current Alpha 
 |Procedural Structure Generation|World Gen|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Procedural Cave Generation|World Gen|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Different Biomes|World Gen|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
-|Basic Player Movement and Camera|Core|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:x:
+|Basic Player Movement and Camera|Core|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Block Breaking, Placing and Interacting|Core|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Voxel Updates|Core|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
 |Day and Night Cycle|Core|Pre-Dev|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:
