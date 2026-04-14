@@ -2,21 +2,20 @@
 
 using System;
 using System.Collections.Generic;
-using UnityEditor.Animations;
 using UnityEngine;
+using UnityEditor;
+using UnityEditor.Animations;
 
 [Serializable]
 public class BlendTreeSettings {
-	public string clipA;
-	public string clipB;
 	public float minThreshold;
 	public float maxThreshold;
 	public BlendingParameterSettings blendParameter;
 
 	// Requires a dict of <string, Motion> to be created by the AnimationLoader first
 	public BlendTree Build(string blendTreeName, Dictionary<string, Motion> clips){
-		if(!clips.ContainsKey(this.clipA) || !clips.ContainsKey(this.clipB))
-			throw new AnimationImportException($"BlendTreeSettings references clips that may not exist: {this.clipA} and {this.clipB}");
+		string clipA = $"{blendTreeName}_A";
+		string clipB = $"{blendTreeName}_B";
 
 		BlendTree tree = new BlendTree();
 
@@ -24,8 +23,8 @@ public class BlendTreeSettings {
 		tree.useAutomaticThresholds = false;
 		tree.minThreshold = this.minThreshold;
 		tree.maxThreshold = this.maxThreshold;
-		tree.AddChild(clips[this.clipA], this.minThreshold);
-		tree.AddChild(clips[this.clipB], this.maxThreshold);
+		tree.AddChild(clips[clipA], this.minThreshold);
+		tree.AddChild(clips[clipB], this.maxThreshold);
 		tree.blendParameter = this.blendParameter.parameterName;
 		tree.blendType = BlendTreeType.Simple1D;
 

@@ -80,6 +80,7 @@ public class VoxelLoader : BaseLoader {
 
 	public static Blocks GetBlock(ushort code){return blockBook[code];}
 	public static BlocklikeObject GetObject(ushort code){return objectBook[ushort.MaxValue - code];}
+	public static bool IsBlock(ushort code){return code <= (ushort.MaxValue/2);}
 
 	public static string GetName(ushort code){
 		if(code <= ushort.MaxValue/2)
@@ -122,7 +123,7 @@ public class VoxelLoader : BaseLoader {
             BlockEncyclopediaECS.blockWashable[i] = blockBook[i].washable;
             BlockEncyclopediaECS.blockAffectLight[i] = blockBook[i].affectLight;
             BlockEncyclopediaECS.blockLuminosity[i] = blockBook[i].luminosity;
-            BlockEncyclopediaECS.blockDrawRegardless[i] = blockBook[i].drawRegardless;
+            BlockEncyclopediaECS.blockDrawLiquid[i] = blockBook[i].drawLiquid;
         }
 
         // Loads all object meshes

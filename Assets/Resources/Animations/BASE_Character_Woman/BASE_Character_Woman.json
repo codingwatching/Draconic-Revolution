@@ -11,8 +11,6 @@
 		{"name": "Going Up-Woman", "loop": true},
 		{"name": "Idle-Woman", "loop": true},
 		{"name": "IdleHand-Woman", "loop": true},
-		{"name": "Jump End-Woman", "loop": false},
-		{"name": "Jump Start-Woman", "loop": false},
 		{"name": "Punch1-Normal-Woman", "loop": false},
 		{"name": "Punch2-Normal-Woman", "loop": false},
 		{"name": "Punch3-Normal-Woman", "loop": false},

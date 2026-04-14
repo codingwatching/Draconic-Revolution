@@ -553,7 +553,7 @@ public class Chunk
 			blockWashable = BlockEncyclopediaECS.blockWashable,
 			objectWashable = BlockEncyclopediaECS.objectWashable,
 			blockTiles = BlockEncyclopediaECS.blockTiles,
-			blockDrawRegardless = BlockEncyclopediaECS.blockDrawRegardless,
+			blockDrawLiquid = BlockEncyclopediaECS.blockDrawLiquid,
 			blockHP = BlockEncyclopediaECS.blockHP,
 			objectHP = BlockEncyclopediaECS.objectHP
 		};

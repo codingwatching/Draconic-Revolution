@@ -28,6 +28,7 @@ public class AnimationTransitionSettings {
 		ast.interruptionSource = this.interruption;
 		ast.offset = this.offset;
 		ast.name = $"{this.sourceState} -> {this.destinationState}";
+		ast.orderedInterruption = true;
 
 		return ast;
 	}
@@ -40,6 +41,7 @@ public class AnimationTransitionSettings {
 		other.interruptionSource = this.interruption;
 		other.offset = this.offset;
 		other.name = $"{this.sourceState} -> {this.destinationState}";
+		other.orderedInterruption = true;
 
 		if(this.conditions != null){
 			foreach(AnimationTransitionConditionSettings condition in this.conditions){

@@ -51,10 +51,12 @@ public class CharacterBuilderMenu{
 		FixArmature(isMale);
 		PutAddon(race, isMale);
 		AddEssential(race, isMale);
+		RefreshAnimations(isMale);
 	}
 
-	public void ChangeAnimationGender(RuntimeAnimatorController animation){
+	public void ChangeAnimationGender(RuntimeAnimatorController animation, bool isMale){
 		this.animator.runtimeAnimatorController = animation;
+		RefreshAnimations(isMale);
 	}
 
 	public GameObject Get(ModelType type){
@@ -95,6 +97,7 @@ public class CharacterBuilderMenu{
 	public void ChangeGender(Race race, bool isMale){
 		PutAddon(race, isMale);
 		AddEssential(race, isMale);
+		RefreshAnimations(isMale);
 	}
 
 	public void Add(ModelType type, GameObject obj, string name, bool isReload=false){
@@ -546,5 +549,9 @@ public class CharacterBuilderMenu{
 
 	private Vector3 ElementWiseMult(Vector3 a, Vector3 b){
 		return new Vector3(a.x * b.x, a.y * b.y, a.z * b.z);
+	}
+
+	private void RefreshAnimations(bool isMale){
+		PlayerActionController.UseStyle(this.animator, "BASE_Idle", isMale);
 	}
 }

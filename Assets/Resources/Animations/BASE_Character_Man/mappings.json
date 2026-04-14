@@ -1,31 +1,112 @@
 {
 	"data": [
 		{
-			"type": "play_on",
-			"targetLayer": "Full Torso",
-			"playState": "Punch 1",
-			"currentState": "On Air",
-			"currentLayer": ""
+			"state": "T-Pose",
+			"layers": [""],
+			"priority": 999
 		},
 		{
-			"type": "play_on",
-			"targetLayer": "Bottom",
-			"playState": "Moving Forward",
-			"currentState": "Idle Hand",
-			"currentLayer": ""
+			"state": "Empty",
+			"layers": ["", "Bottom", "Full Torso", "Right Arm", "Left Arm", "Head", "Pre-Cinematic Add", "Cinematic Override", "Post-Cinematic Add"],
+			"priority": 1000
 		},
 		{
-			"type": "continue_current_on",
-			"targetLayer": "Bottom",
-			"currentState": "Moving Forward",
-			"currentLayer": "",
-			"playState": "Idle Hand"
+			"state": "Idle",
+			"layers": [""],
+			"priority": 900,
+			"stopLayer": ["Bottom"]
 		},
 		{
-			"type": "stop_layers",
-			"playState": "Jump End",
-			"targetLayer": "",
-			"stop_layers": ["Bottom", "Full Torso", "Head"]
+			"state": "On Air",
+			"layers": ["", "Bottom"],
+			"priority": 101,
+			"stoplayer": ["Bottom"]
+		},
+		{
+			"state": "Moving Forward",
+			"layers": ["", "Bottom"],
+			"priority": 100
+		},
+		{
+			"state": "Walk Backward",
+			"layers": ["", "Bottom"],
+			"priority": 100
+		},
+		{
+			"state": "Walk Left",
+			"layers": ["", "Bottom"],
+			"priority": 100
+		},
+		{
+			"state": "Walk Right",
+			"layers": ["", "Bottom"],
+			"priority": 100
+		},
+		{
+			"state": "Idle Hand",
+			"layers": [""],
+			"priority": 50,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 1",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 2",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 3",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 4",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 5",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 6",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 7",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 8",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 9",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
+		},
+		{
+			"state": "Attack 10",
+			"layers": ["", "Full Torso"],
+			"priority": 1,
+			"stopLayer": ["Bottom"]
 		}
 	]
 }

@@ -42,7 +42,7 @@ public abstract class VoxelBehaviour {
     // Constructor and Deserialization
 	public virtual void PostDeserializationSetup(bool isClient){return;}
 
-	// Events
+	// Block Events
 	public virtual void OnBlockUpdate(BUDCode type, int x, int y, int z, int budX, int budY, int budZ, int facing, ChunkLoader_Server cl){return;}
 	public virtual int OnInteract(ChunkPos pos, int x, int y, int z, ChunkLoader_Server cl){return 0;}
 	public virtual int OnPlace(ChunkPos pos, int x, int y, int z, int facing, ChunkLoader_Server cl){return 0;}
@@ -55,4 +55,12 @@ public abstract class VoxelBehaviour {
 	public virtual bool PlacementRule(ChunkPos pos, int x, int y, int z, int direction, ChunkLoader_Server cl){return true;}
 	public virtual Vector3 GetOffsetVector(ushort state){return Vector3.zero;}
 	public virtual int2 GetRotationValue(ushort state){return new int2(0,0);}
+
+	// Player Interaction Events 
+	public virtual void OnPlayerStepEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerStepExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerHeadEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
+	public virtual void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){return;}
 }

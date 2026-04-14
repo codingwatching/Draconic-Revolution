@@ -14,7 +14,7 @@
     "needsRotation": false,
     "customBreak": false,
     "customPlace": false,
-    "drawRegardless": false,
+    "drawLiquid": false,
     "maxHP":  1,
     "indestructible": false,
     "tileTop":  "BASE_Pine_Leaves",
@@ -24,7 +24,11 @@
 --->Behaviours
 {
     "onPlace": "PlaceSetStateBehaviour",
-    "onBlockUpdate": "UpdateDecaySecondaryBlockBehaviour"
+    "onBlockUpdate": "UpdateDecaySecondaryBlockBehaviour",
+    "onPlayerBodyEnter": "PlayerMovementEnterMultiplyBehaviour",
+    "onPlayerBodyExit": "PlayerMovementExitMultiplyBehaviour",
+    "onPlayerHeadEnter": "PlayerMovementEnterMultiplyBehaviour",
+    "onPlayerHeadExit": "PlayerMovementExitMultiplyBehaviour"
 }
 --->PlaceSetStateBehaviour
 {
@@ -36,4 +40,21 @@
     "decayDistance": 7,
     "assignedMainBlock": "BASE_Pine_Log",
     "thisBlock": "BASE_Pine_Leaves"
+}
+--->PlayerMovementEnterMultiplyBehaviour
+{
+    "onlyApplyOnce": true,
+    "maxSpeed": 0.7,
+    "drag": 1.2,
+    "momentumGrowth": 0.8,
+    "gravityAcceleration": 0.85,
+    "maxRunningMomentum": 0.01
+}
+--->PlayerMovementExitMultiplyBehaviour
+{
+    "maxSpeed": 0.7,
+    "drag": 1.2,
+    "momentumGrowth": 0.8,
+    "gravityAcceleration": 0.85,
+    "maxRunningMomentum": 0.01
 }

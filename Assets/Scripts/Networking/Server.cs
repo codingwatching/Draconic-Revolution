@@ -348,7 +348,7 @@ public class Server
 	// Discovers what to do with a Message received from Server
 	public void HandleReceivedMessage(byte[] data, ulong id){
 		try{
-			NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], id, 0);
+			NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], id, data.Length);
 		}
 		catch{
 			return;
@@ -414,6 +414,12 @@ public class Server
 				break;
 			case NetCode.SENDANIMATIONLAYER:
 				SendAnimationLayer(data, id);
+				break;
+			case NetCode.SENDBATTLESTYLE:
+				SendBattleStyle(data, id);
+				break;
+			case NetCode.SENDANIMATORPARAMETER:
+				SendAnimatorParameter(data, id);
 				break;
 			case NetCode.DISCONNECTINFO:
 				DisconnectInfo(id);
@@ -1104,10 +1110,17 @@ public class Server
 
 				if(this.cl.loadedChunks[newPos].Contains(code)){
 					NetMessage liveMessage = new NetMessage(NetCode.PLAYERLOCATION);
+					NetMessage animatorParameterMessage = new NetMessage(NetCode.SENDANIMATORPARAMETER);
+					Dictionary<string, float> animatorParameters = this.entityHandler.GetParameterValues(code);
 
 					this.connectionGraph[id].Add(code);
 					liveMessage.PlayerLocation(this.cl.regionHandler.allPlayerData[id]);
-					this.Send(liveMessage.GetMessage(), liveMessage.size, code);					
+					this.Send(liveMessage.GetMessage(), liveMessage.size, code);
+
+					foreach(string parameter in animatorParameters.Keys){
+						animatorParameterMessage.SendAnimatorParameter(code, animatorParameters[parameter], parameter);
+						this.Send(animatorParameterMessage.GetMessage(), animatorParameterMessage.size, id);	
+					}		
 				}				
 			}
 		}
@@ -1375,17 +1388,43 @@ public class Server
 	// Receives an AnimationLayer from a player
 	public void SendAnimationLayer(byte[] data, ulong id){
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
-		ushort nameSize = NetDecoder.ReadUshort(data, 9);
-		string stateName = NetDecoder.ReadString(data, 11, nameSize);
-		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
+		int layer = NetDecoder.ReadInt(data, 9);
+		ushort nameSize = NetDecoder.ReadUshort(data, 13);
+		string stateName = NetDecoder.ReadString(data, 15, nameSize);
 
 		if(id != playerCode)
 			return;
 
 		NetMessage message;
 		message = new NetMessage(NetCode.SENDANIMATIONLAYER);
-		message.SendAnimationLayer(playerCode, stateName, layer);
+		message.SendAnimationLayer(playerCode, new AnimationData(stateName, layer));
 
+		this.SendToClientsExcept(id, message);
+	}
+
+	// Receives a BattleStyle change request from client
+	public void SendBattleStyle(byte[] data, ulong id){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		int style = NetDecoder.ReadInt(data, 9);
+
+		this.entityHandler.ChangeBattleStyle(playerCode, style);
+
+		NetMessage message;
+		message = new NetMessage(NetCode.SENDBATTLESTYLE);
+		message.SendBattleStyle(playerCode, style);
+		this.SendToClientsExcept(id, message);
+	}
+
+	// Receives an animator value from client
+	public void SendAnimatorParameter(byte[] data, ulong id){
+		float val = NetDecoder.ReadFloat(data, 9);
+		string parameterName = NetDecoder.ReadString(data, 13, data.Length - 13);
+
+		this.entityHandler.AddParameterValue(id, parameterName, val);
+
+		NetMessage message;
+		message = new NetMessage(NetCode.SENDANIMATORPARAMETER);
+		message.SendAnimatorParameter(id, val, parameterName);
 		this.SendToClientsExcept(id, message);
 	}
 

@@ -21,7 +21,7 @@ public class Blocks
 	public bool needsRotation = false;
 	public bool customBreak = false;
 	public bool customPlace = false;
-	public bool drawRegardless = false;
+	public bool drawLiquid = false;
 	public ushort maxHP;
 	public bool indestructible;
 	
@@ -44,6 +44,12 @@ public class Blocks
 	private VoxelBehaviour onVFXBreak;
 	private VoxelBehaviour onSFXPlay;
 	private VoxelBehaviour placementRule;
+	private VoxelBehaviour onPlayerStepEnter;
+	private VoxelBehaviour onPlayerStepExit;
+	private VoxelBehaviour onPlayerBodyEnter;
+	private VoxelBehaviour onPlayerBodyExit;
+	private VoxelBehaviour onPlayerHeadEnter;
+	private VoxelBehaviour onPlayerHeadExit;
 
 
     // Handles the emittion of BUD to neighboring blocks
@@ -139,6 +145,26 @@ public class Blocks
     public VoxelBehaviour GetPlacementRule() { return placementRule; }
     public void SetPlacementRule(VoxelBehaviour val) { placementRule = val; }
 
+    public VoxelBehaviour GetOnPlayerStepEnter() { return onPlayerStepEnter; }
+    public void SetOnPlayerStepEnter(VoxelBehaviour val) { onPlayerStepEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerStepExit() { return onPlayerStepExit; }
+    public void SetOnPlayerStepExit(VoxelBehaviour val) { onPlayerStepExit = val; }
+
+    public VoxelBehaviour GetOnPlayerBodyEnter() { return onPlayerBodyEnter; }
+    public void SetOnPlayerBodyEnter(VoxelBehaviour val) { onPlayerBodyEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerBodyExit() { return onPlayerBodyExit; }
+    public void SetOnPlayerBodyExit(VoxelBehaviour val) { onPlayerBodyExit = val; }
+
+    public VoxelBehaviour GetOnPlayerHeadEnter() { return onPlayerHeadEnter; }
+    public void SetOnPlayerHeadEnter(VoxelBehaviour val) { onPlayerHeadEnter = val; }
+
+    public VoxelBehaviour GetOnPlayerHeadExit() { return onPlayerHeadExit; }
+    public void SetOnPlayerHeadExit(VoxelBehaviour val) { onPlayerHeadExit = val; }
+
+
+
 	/*
 	VIRTUAL METHODS
 	*/
@@ -209,6 +235,42 @@ public class Blocks
 		return this.placementRule.PlacementRule(pos, blockX, blockY, blockZ, direction, cl);
 	}
 
+	public virtual void OnPlayerStepEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerStepEnter == null)
+			return;
+		this.onPlayerStepEnter.OnPlayerStepEnter(location, sheet, cl);
+	}
+
+	public virtual void OnPlayerStepExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerStepExit == null)
+			return;
+		this.onPlayerStepExit.OnPlayerStepExit(location, sheet, cl);
+	}
+
+	public virtual void OnPlayerHeadEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerHeadEnter == null)
+			return;
+		this.onPlayerHeadEnter.OnPlayerHeadEnter(location, sheet, cl);
+	}
+
+	public virtual void OnPlayerHeadExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerHeadExit == null)
+			return;
+		this.onPlayerHeadExit.OnPlayerHeadExit(location, sheet, cl);
+	}
+
+	public virtual void OnPlayerBodyEnter(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerBodyEnter == null)
+			return;
+		this.onPlayerBodyEnter.OnPlayerBodyEnter(location, sheet, cl);
+	}
+
+	public virtual void OnPlayerBodyExit(PlayerVoxelLocation location, CharacterSheet sheet, ChunkLoader cl){
+		if(this.onPlayerBodyExit == null)
+			return;
+		this.onPlayerBodyExit.OnPlayerBodyExit(location, sheet, cl);
+	}
+
 	public void SetupAfterSerialize(bool isClient){
 		if(this.onBlockUpdate != null)
 			onBlockUpdate.PostDeserializationSetup(isClient);
@@ -230,5 +292,17 @@ public class Blocks
 			onSFXPlay.PostDeserializationSetup(isClient);
 		if(this.placementRule != null)
 			placementRule.PostDeserializationSetup(isClient);
+		if(this.onPlayerBodyEnter != null)
+			onPlayerBodyEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerBodyExit != null)
+			onPlayerBodyExit.PostDeserializationSetup(isClient);
+		if(this.onPlayerHeadEnter != null)
+			onPlayerHeadEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerHeadExit != null)
+			onPlayerHeadExit.PostDeserializationSetup(isClient);
+		if(this.onPlayerStepEnter != null)
+			onPlayerStepEnter.PostDeserializationSetup(isClient);
+		if(this.onPlayerStepExit != null)
+			onPlayerStepExit.PostDeserializationSetup(isClient);
 	}
 }

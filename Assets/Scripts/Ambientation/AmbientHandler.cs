@@ -72,6 +72,9 @@ public class AmbientHandler : MonoBehaviour
         this.pbsky = null;
         this.clouds = null;
         this.whiteBalance = null;
+        this.fog = null;
+        this.lgg = null;
+        this.exposure = null;
     }
 
     void Start(){

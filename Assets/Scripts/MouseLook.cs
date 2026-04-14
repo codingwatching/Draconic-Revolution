@@ -18,7 +18,7 @@ public class MouseLook : MonoBehaviour
     private Vector3 position;
     private Vector3 rotation;
 
-	private float xRotation = 0f;
+	private static float xRotation = 0f;
 
 
     void Start(){
@@ -41,6 +41,15 @@ public class MouseLook : MonoBehaviour
 
         transform.localRotation = Quaternion.Euler(xRotation, 0, 0);
         playerBody.Rotate(Vector3.up * mouseX);
+    }
+
+    public static void SetLookDirection(float direction){
+        if(direction < -90f)
+            xRotation = direction + 360f;
+        else if(direction > 90f)
+            xRotation = direction - 360f;
+        else
+            xRotation = direction;
     }
 
     public static void ToggleMouseCursor(bool b){

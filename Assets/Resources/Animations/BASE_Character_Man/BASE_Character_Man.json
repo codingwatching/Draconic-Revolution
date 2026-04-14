@@ -11,8 +11,6 @@
 		{"name": "Going Up-Man", "loop": true},
 		{"name": "Idle-Man", "loop": true},
 		{"name": "IdleHand-Man", "loop": true},
-		{"name": "Jump End-Man", "loop": false},
-		{"name": "Jump Start-Man", "loop": false},
 		{"name": "Punch1-Normal-Man", "loop": false},
 		{"name": "Punch2-Normal-Man", "loop": false},
 		{"name": "Punch3-Normal-Man", "loop": false},

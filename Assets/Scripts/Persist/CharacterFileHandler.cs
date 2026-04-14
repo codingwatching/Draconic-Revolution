@@ -7,7 +7,7 @@ using UnityEngine;
 /*
 .cdat file
 
-CharacterName(20) | Alignment(1) | Religion(1) | Race(1) | Gender(1) | Cronology(1) | [25]
+CharacterName(20) | Alignment(1) | Religion(1) | Race(1) | Gender(1) | Cronology(1) | BattleStyle(4) | [29]
 Strength(Attribute 6) | Precision(6) | Vitality(6) | Evasion(6) | Magic(6) | Charisma(6) | [36]
 FireRes(6) | IceRes(6) | LightningRes(6) | PoisonRes(6) | CurseRes(6) | Speed(6) | [36]
 Health(DepletableAtt 5) | Mana(5) | Power(5) | Sanity(5) | Protection(5) | Weight(5) | Poise(5) | [35]
@@ -31,7 +31,7 @@ public class CharacterFileHandler{
 	private Stream indexFile;
 
 	private byte[] indexArray = new byte[16];
-	private byte[] buffer = new byte[1222]; // Total CharacterSheet size 
+	private byte[] buffer = new byte[1226]; // Total CharacterSheet size 
 
 	private Dictionary<ulong, ulong> index = new Dictionary<ulong, ulong>();
 

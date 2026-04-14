@@ -18,6 +18,12 @@ public static class VoxelDeserializer {
 	private static VoxelBehaviour onVFXBreakEvent;
 	private static VoxelBehaviour onSFXPlayEvent;
 	private static VoxelBehaviour placementRuleEvent;
+	private static VoxelBehaviour onPlayerStepEnter;
+	private static VoxelBehaviour onPlayerStepExit;
+	private static VoxelBehaviour onPlayerBodyEnter;
+	private static VoxelBehaviour onPlayerBodyExit;
+	private static VoxelBehaviour onPlayerHeadEnter;
+	private static VoxelBehaviour onPlayerHeadExit;
 
 	// Objects Placeholders
 	private static ModelIdentityBehaviour modelIdentityEvent;
@@ -99,6 +105,24 @@ public static class VoxelDeserializer {
 				case "placementRule":
 					block.SetPlacementRule(placementRuleEvent);
 					break;
+				case "onPlayerStepEnter":
+					block.SetOnPlayerStepEnter(onPlayerStepEnter);
+					break;
+				case "onPlayerStepExit":
+					block.SetOnPlayerStepExit(onPlayerStepExit);
+					break;
+				case "onPlayerBodyEnter":
+					block.SetOnPlayerBodyEnter(onPlayerBodyEnter);
+					break;
+				case "onPlayerBodyExit":
+					block.SetOnPlayerBodyExit(onPlayerBodyExit);
+					break;
+				case "onPlayerHeadEnter":
+					block.SetOnPlayerHeadEnter(onPlayerHeadEnter);
+					break;
+				case "onPlayerHeadExit":
+					block.SetOnPlayerHeadExit(onPlayerHeadExit);
+					break;
 				default:
 					Debug.Log("ERROR WHILE TRYING TO DE-SERIALIZE AN EVENT: " + ev);
 					break;
@@ -147,6 +171,24 @@ public static class VoxelDeserializer {
 					break;
 				case "modelIdentity":
 					obj.SetModelIdentity(modelIdentityEvent);
+					break;
+				case "onPlayerStepEnter":
+					obj.SetOnPlayerStepEnter(onPlayerStepEnter);
+					break;
+				case "onPlayerStepExit":
+					obj.SetOnPlayerStepExit(onPlayerStepExit);
+					break;
+				case "onPlayerBodyEnter":
+					obj.SetOnPlayerBodyEnter(onPlayerBodyEnter);
+					break;
+				case "onPlayerBodyExit":
+					obj.SetOnPlayerBodyExit(onPlayerBodyExit);
+					break;
+				case "onPlayerHeadEnter":
+					obj.SetOnPlayerHeadEnter(onPlayerHeadEnter);
+					break;
+				case "onPlayerHeadExit":
+					obj.SetOnPlayerHeadExit(onPlayerHeadExit);
 					break;
 				default:
 					Debug.Log("ERROR WHILE TRYING TO DE-SERIALIZE AN EVENT: " + ev);
@@ -248,6 +290,12 @@ public static class VoxelDeserializer {
 				return JsonUtility.FromJson<ConfigurablePositionBehaviour>(jsonSerial);
 			case "ConfigurableRotationBehaviour":
 				return JsonUtility.FromJson<ConfigurableRotationBehaviour>(jsonSerial);
+			case "PlayerMovementEnterMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementEnterMultiplyBehaviour>(jsonSerial);
+			case "PlayerMovementExitMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementExitMultiplyBehaviour>(jsonSerial);
+			case "PlayerMovementStepMultiplyBehaviour":
+				return JsonUtility.FromJson<PlayerMovementStepMultiplyBehaviour>(jsonSerial);
 			default:
 				Debug.Log("ERROR WHEN TRYING TO DE-SERIALIZE BEHAVIOUR: " + val);
 				return new LiquidBehaviour();
@@ -294,6 +342,24 @@ public static class VoxelDeserializer {
 				break;
 			case "rotationValue":
 				rotationValueEvent = vx;
+				break;
+			case "onPlayerStepEnter":
+				onPlayerStepEnter = vx;
+				break;
+			case "onPlayerStepExit":
+				onPlayerStepExit = vx;
+				break;
+			case "onPlayerBodyEnter":
+				onPlayerBodyEnter = vx;
+				break;
+			case "onPlayerBodyExit":
+				onPlayerBodyExit = vx;
+				break;
+			case "onPlayerHeadEnter":
+				onPlayerHeadEnter = vx;
+				break;
+			case "onPlayerHeadExit":
+				onPlayerHeadExit = vx;
 				break;
 			default:
 				Debug.Log("ERROR WHILE TRYING TO DE-SERIALIZE AN EVENT: " + key);

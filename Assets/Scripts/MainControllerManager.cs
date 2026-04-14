@@ -35,6 +35,9 @@ public class MainControllerManager : MonoBehaviour
     public PlayerRaycast raycast;
     public Transform playerCamera;
     public ChunkLoader cl;
+    public PlayerMovement playerMovement;
+    public PlayerActionController playerActionController;
+
 
     // Locks
     private bool LOCK_MOUSE1 = false;
@@ -67,7 +70,6 @@ public class MainControllerManager : MonoBehaviour
         mouseY = val.Get<Vector2>().y;
     }
 
-    // Mouse Camera Look
     public void OnMovement(InputValue val){
         movementX = val.Get<Vector2>().x;
         movementZ = val.Get<Vector2>().y;
@@ -75,6 +77,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnPrimaryAction(){
     	if(!MainControllerManager.InUI && !LOCK_MOUSE1){
+            playerActionController.RegisterPrimaryAction();
             raycast.BreakBlock();
             LOCK_MOUSE1 = true;
         }
@@ -87,6 +90,12 @@ public class MainControllerManager : MonoBehaviour
         }
     }
 
+    public void OnSheathe(){
+        if(!MainControllerManager.InUI){
+            this.playerActionController.Sheathe();
+        }
+    }
+
     public void OnInteract(){
         if(!MainControllerManager.InUI && !LOCK_INTERACT){
             raycast.Interact();
@@ -96,6 +105,7 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleGravity(){
         gravityHack = !gravityHack;
+        this.playerMovement.AddKnockback(Vector3.forward, 5f);
     }
 
     public void OnPrefabRead(){
@@ -108,6 +118,11 @@ public class MainControllerManager : MonoBehaviour
 
     public void OnToggleFreeCam(){
         freecam = !freecam;
+
+        if(freecam)
+            this.playerMovement.ChangeMoveset(Moveset.FREECAM);
+        else
+            this.playerMovement.ChangeMoveset(Moveset.NORMAL);
     }
 
     public void OnShifting(){

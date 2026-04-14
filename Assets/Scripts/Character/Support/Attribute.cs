@@ -14,10 +14,12 @@ public class Attribute{
 	public Attribute(){}
 	public Attribute(short baseAtt){
 		this.baseAtt = baseAtt;
+		this.multiplier = 1f;
 	}
 	public Attribute(short b, short e){
 		this.baseAtt = b;
 		this.equipped = e;
+		this.multiplier = 1f;
 	}
 	public Attribute(short b, float m){
 		this.baseAtt = b;

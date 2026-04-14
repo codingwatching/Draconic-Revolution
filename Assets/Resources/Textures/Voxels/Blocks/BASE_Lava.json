@@ -14,7 +14,7 @@
     "needsRotation": false,
     "customBreak":  true,
     "customPlace":  true,
-    "drawRegardless":  true,
+    "drawLiquid":  true,
     "maxHP":  1,
     "indestructible": false
 }
@@ -22,10 +22,25 @@
 {
 	"onPlace": "LiquidBehaviour",
     "onBreak": "LiquidBehaviour",
-    "onBlockUpdate": "LiquidBehaviour"
+    "onBlockUpdate": "LiquidBehaviour",
+    "onPlayerBodyEnter": "LiquidBehaviour",
+    "onPlayerBodyExit": "LiquidBehaviour",
+    "onPlayerHeadEnter": "LiquidBehaviour",
+    "onPlayerHeadExit": "LiquidBehaviour",
 }
 --->LiquidBehaviour
 {
     "liquidName": "BASE_Lava",
-    "viscosityDelay": 60
+    "viscosityDelay": 60,
+    "onBodyMovementMultiplierDrag": 4.0,
+    "onBodyMovementMultiplierMaxSpeed": 0.4,
+    "onBodyMovementMultiplierGravityAcceleration": 0.6,
+    "onBodyMovementMultiplierMaxGravityTime": 1.2,
+    "onBodyMovementMultiplierJumpHeight": 1.2,
+    "vignetteName": "BASE_Lava",
+    "vignetteColor": {
+        "r": 0.29,
+        "g": 0.06,
+        "b": 0.02
+    }
 }

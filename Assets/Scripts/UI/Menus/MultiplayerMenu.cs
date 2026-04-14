@@ -51,11 +51,8 @@ public class MultiplayerMenu : Menu
 
 	public void StartLocalGame(){
 		World.SetAccountID(Configurations.accountID);
-
 		World.SetIP(LOCALHOST);
-
 		World.SetToServer();
-
 		SceneManager.LoadScene("Blank");
 	}
 

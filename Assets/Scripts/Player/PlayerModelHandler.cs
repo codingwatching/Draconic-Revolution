@@ -5,6 +5,7 @@ public class PlayerModelHandler : MonoBehaviour {
 	public GameObject parent;
 	private CharacterController controller;
 	private AnimationHandler animationHandler;
+	private PlayerActionController playerActionController;
 	private bool isMale;
 	private bool INIT = false;
 
@@ -19,6 +20,7 @@ public class PlayerModelHandler : MonoBehaviour {
 
 	public void Awake(){
 		this.animationHandler = this.parent.AddComponent<AnimationHandler>();
+		this.playerActionController = this.parent.GetComponent<PlayerActionController>();
 
 		this.controller = this.parent.GetComponent<CharacterController>();
 
@@ -76,10 +78,12 @@ public class PlayerModelHandler : MonoBehaviour {
 			if(isMale){
 				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Man"), AnimationLoader.GetController("BASE_Character_Man_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
 				this.animationHandler.Init("BASE_Character_Man", this.characterBuilder, isUserCharacter:true);
+				this.playerActionController.UseStyle("BASE_Unarmed-Man");
 			}
 			else{
 				this.characterBuilder = new CharacterBuilder(this.parent, AnimationLoader.GetController("BASE_Character_Woman"), AnimationLoader.GetController("BASE_Character_Woman_FP"), app, this.plainClothingMaterial, this.dragonHornMaterial, this.dragonSkinMaterial, this.eyeMaterial, isMale, isPlayerCharacter);
 				this.animationHandler.Init("BASE_Character_Woman", this.characterBuilder, isUserCharacter:true);
+				this.playerActionController.UseStyle("BASE_Unarmed-Woman");
 			}
 
 			this.characterBuilder.Build();

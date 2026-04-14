@@ -10,28 +10,52 @@ using UnityEditor.Animations;
 [Serializable]
 public class AnimationStateSettings {
 	public string name;
-	public string clip;
 	public string layer;
 	public bool isBlendTree;
 	public bool isDefaultState;
 	public BlendTreeSettings blendTree;
 
-	public AnimatorState Build(AnimatorController animatorController, Dictionary<string, Motion> animations){
+	public AnimatorState Build(AnimatorController animatorController, Dictionary<string, Motion> animations, string animationsClipPath){
 		AnimatorState state = new AnimatorState();
+		AnimationClip clip = new AnimationClip();
 
 		state.name = this.name;
+		clip.name = this.name;
 
 		if(this.isBlendTree){
-			BlendTree blendTree = this.blendTree.Build(this.name, animations);
-			state.motion = blendTree;
+			AnimationClip clipB = new AnimationClip();
+
+			clip.name = $"{state.name}_A";
+			clipB.name = $"{state.name}_B";
+
+			if(!animations.ContainsKey($"{state.name}_A")){
+				animations.Add($"{state.name}_A", clip);
+				AssetDatabase.CreateAsset(clip, $"{animationsClipPath}{state.name}_A.anim");
+			}
+
+			if(!animations.ContainsKey($"{state.name}_B")){
+				animations.Add($"{state.name}_B", clipB);
+				AssetDatabase.CreateAsset(clipB, $"{animationsClipPath}{state.name}_B.anim");
+			}
+
+			BlendTree bt = this.blendTree.Build(this.name, animations);
+			state.motion = bt;
+
 			AnimatorControllerParameter acp = this.blendTree.blendParameter.Build();
 
 			if(!CheckControllerHasParameter(acp.name, animatorController)){
 				animatorController.AddParameter(acp);
 			}
+
+			AssetDatabase.AddObjectToAsset(bt, animatorController);
 		}
-		else if(clip != ""){
-			state.motion = animations[clip];
+		else{
+			if(!animations.ContainsKey(state.name)){
+				animations.Add(state.name, clip);
+				AssetDatabase.CreateAsset(clip, $"{animationsClipPath}{state.name}.anim");
+			}
+
+			state.motion = animations[state.name];
 		}
 
 		return state;

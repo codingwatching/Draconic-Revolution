@@ -11,27 +11,37 @@ public class EntityHandler
 
 	private Dictionary<ulong, CharacterSheet> playerSheet;
 	private Dictionary<ulong, GameObject> playerObject;
+	private Dictionary<ulong, Transform> playerHead;
+
 	private Dictionary<ulong, AnimationHandler> playerAnimations;
 	private Dictionary<ulong, ushort> playerItem;
 	private Dictionary<ulong, DeltaMove> playerCurrentPositions;
 	private Dictionary<ulong, ItemEntity> dropObject;
 	private Dictionary<ulong, DeltaMove> dropCurrentPositions;
+	private Dictionary<ulong, int> playerBattleStyle;
 	private GameObject droppedItemBase = GameObject.Find("----- PrefabModels -----/DroppedItemBase");
 
 	private int currentTogglingCounter;
+
 	private static readonly int MAX_COUNTER_VALUE = 4;
+	private static RuntimeAnimatorController BASE_MALE_CONTROLLER;
+	private static RuntimeAnimatorController BASE_FEMALE_CONTROLLER;
 
 
 	public EntityHandler(ChunkLoader cl){
 		this.playerSheet = new Dictionary<ulong, CharacterSheet>();
 		this.playerObject = new Dictionary<ulong, GameObject>();
+		this.playerHead = new Dictionary<ulong, Transform>();
 		this.playerItem = new Dictionary<ulong, ushort>();
 		this.playerCurrentPositions = new Dictionary<ulong, DeltaMove>();
 		this.dropObject = new Dictionary<ulong, ItemEntity>();
 		this.dropCurrentPositions = new Dictionary<ulong, DeltaMove>();
 		this.playerAnimations = new Dictionary<ulong, AnimationHandler>();
+		this.playerBattleStyle = new Dictionary<ulong, int>();
 		this.cl = cl;
 		this.playerModelHandler = cl.playerModelHandler;
+		BASE_MALE_CONTROLLER = AnimationLoader.GetController("BASE_Character_Man");
+		BASE_FEMALE_CONTROLLER = AnimationLoader.GetController("BASE_Character_Woman");
 	}
 
 	/*
@@ -74,13 +84,15 @@ public class EntityHandler
 	}
 
 	public void AddPlayer(ulong code, float3 pos, float3 dir){
-		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(dir.x, dir.y, dir.z));
+		GameObject go = GameObject.Instantiate(GameObject.Find("----- PrefabModels -----/PlayerModel"), new Vector3(pos.x, pos.y, pos.z), Quaternion.Euler(0, dir.y, 0));
 
 		go.name = "Player_" + code;
 		this.playerObject.Add(code, go);
+		this.playerHead.Add(code, go.transform.Find("Camera"));
 		this.playerItem.Add(code, 0);
 		this.playerCurrentPositions.Add(code, new DeltaMove(pos, dir));
 		this.playerAnimations.Add(code, null);
+		this.playerBattleStyle.Add(code, -1);
 		RunSingleActivation(EntityType.PLAYER, code, pos);
 	}
 
@@ -98,11 +110,37 @@ public class EntityHandler
 			this.playerModelHandler.DeleteModel(this.playerObject[code]);
 
 			this.playerObject[code] = this.playerModelHandler.BuildModel(this.playerObject[code], app, isMale);
+			this.playerHead[code] = this.playerObject[code].transform.Find("Camera");
 			this.playerAnimations[code] = this.playerObject[code].GetComponent<AnimationHandler>();
+
+			if(code != Configurations.accountID){
+				SetPlayerBattleStyle(code, this.playerSheet[code].GetBattleStyleCode());
+			}
 
 			return true;
 		}
 		return false;
+	}
+
+	public void SetPlayerBattleStyle(ulong code, int style){
+		if(this.playerBattleStyle[code] == style)
+			return;
+
+		bool isMale = this.playerSheet[code].GetGender();
+		this.playerBattleStyle[code] = style;
+
+		BattleStyleData bsd = AnimationLoader.GetBattleStyle(style);
+		AnimatorOverrideController animationOverrideController;
+
+		if(isMale)
+			animationOverrideController = new AnimatorOverrideController(BASE_MALE_CONTROLLER);
+		else
+			animationOverrideController = new AnimatorOverrideController(BASE_FEMALE_CONTROLLER);
+
+		animationOverrideController = ApplyOverrides(animationOverrideController, bsd.GetOverrides());
+
+		this.playerAnimations[code].GetThirdPersonAnimator().runtimeAnimatorController = animationOverrideController;
+		this.playerSheet[code].SetBattleStyleCode(style);
 	}
 
 	public void AddItem(ulong code, float3 pos, float3 dir, ItemStack its){
@@ -114,11 +152,9 @@ public class EntityHandler
 		RunSingleActivation(EntityType.DROP, code, pos);
 	}
 
-	public void AnimateBone(ulong code, string stateName, string layerName){
-		BoneAnimationRequest request = new BoneAnimationRequest(stateName, layerName);
-
+	public void AnimateBone(ulong code, string stateName, int layer){
 		if(this.playerAnimations.ContainsKey(code)){
-			this.playerAnimations[code].Play(request);
+			this.playerAnimations[code].Play(stateName, layer);
 		}
 	}
 
@@ -126,7 +162,8 @@ public class EntityHandler
 	public void NudgeLastPos(EntityType type, ulong code, float3 pos, float3 dir){
 		if(type == EntityType.PLAYER){	
 			this.playerObject[code].transform.position = this.playerCurrentPositions[code].deltaPos;
-			this.playerObject[code].transform.eulerAngles = this.playerCurrentPositions[code].deltaRot;
+			this.playerObject[code].transform.eulerAngles = new Vector3(0, this.playerCurrentPositions[code].deltaRot.y, 0);
+			this.playerHead[code].transform.localRotation = Quaternion.Euler(this.playerCurrentPositions[code].deltaRot.x, 0, 0);
 		
 			this.playerCurrentPositions[code] = new DeltaMove(pos, dir);
 		}
@@ -141,7 +178,8 @@ public class EntityHandler
 	public void Nudge(EntityType type, ulong code, Vector3 dPos, Vector3 dRot){
 		if(type == EntityType.PLAYER){
 			this.playerObject[code].transform.position += (dPos * (Time.deltaTime / TimeOfDay.timeRate));
-			this.playerObject[code].transform.eulerAngles += (dRot * (Time.deltaTime / TimeOfDay.timeRate));
+			this.playerObject[code].transform.eulerAngles += new Vector3(0, (dRot * (Time.deltaTime / TimeOfDay.timeRate)).y, 0);
+			this.playerHead[code].transform.eulerAngles += new Vector3((dRot * (Time.deltaTime / TimeOfDay.timeRate)).x, 0, 0);
 		}
 		else if(type == EntityType.DROP){
 			this.dropObject[code].go.transform.position += (dPos * (Time.deltaTime / TimeOfDay.timeRate));
@@ -162,11 +200,13 @@ public class EntityHandler
 			
 			this.playerObject[code].SetActive(false);
 			GameObject.Destroy(this.playerObject[code]);
+			this.playerHead.Remove(code);
 			this.playerObject.Remove(code);
 			this.playerItem.Remove(code);
 			this.playerCurrentPositions.Remove(code);
 			this.playerSheet.Remove(code);
 			this.playerAnimations.Remove(code);
+			this.playerBattleStyle.Remove(code);
 			this.cl.sfx.RemoveEntitySFX(new EntityID(type, code));
 		}
 		else if(type == EntityType.DROP){
@@ -186,6 +226,14 @@ public class EntityHandler
 				else{
 					this.dropObject[code].PlaySpinAnimation();
 				}
+			}
+		}
+	}
+
+	public void SetAnimatorParameter(EntityType type, ulong code, string parameter, float val){
+		if(type == EntityType.PLAYER){
+			if(this.playerAnimations.ContainsKey(code)){
+				this.playerAnimations[code].SetParameterValue(parameter, val);
 			}
 		}
 	}
@@ -253,5 +301,13 @@ public class EntityHandler
 		this.playerItem[playerCode] = item;
 		ItemLoader.GetItem(item).OnHoldClient(this.cl, new ItemStack(item, quantity), playerCode);
 
+	}
+
+	private AnimatorOverrideController ApplyOverrides(AnimatorOverrideController controller, StateClipPair[] overrides){
+		foreach(StateClipPair over in overrides){
+			controller[Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.state}")] = Resources.Load<AnimationClip>($"{AnimationLoader.ANIMATION_CLIP_RESFOLDER}{over.clip}");
+		}
+
+		return controller;
 	}
 }

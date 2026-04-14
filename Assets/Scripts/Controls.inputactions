@@ -51,6 +51,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "Sheathe",
+                    "type": "Button",
+                    "id": "6a6461b6-ca9f-4aba-9ed6-8d98b29e21e1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "Mouse Look",
                     "type": "Value",
                     "id": "6f61dff5-6a91-4041-b888-22ef7d85d4b0",
@@ -599,6 +608,17 @@
                     "processors": "",
                     "groups": "Keyboard and Mouse",
                     "action": "DebugKey2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "cfc9f709-5e17-48d6-b3cb-d2fb2697d21d",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "Keyboard and Mouse",
+                    "action": "Sheathe",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

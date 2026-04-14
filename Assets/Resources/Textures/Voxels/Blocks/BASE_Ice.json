@@ -14,7 +14,22 @@
     "needsRotation": false,
     "customBreak": false,
     "customPlace": false,
-    "drawRegardless": false,
+    "drawLiquid": false,
     "maxHP":  30,
     "indestructible": false
+}
+--->Behaviours
+{
+    "onPlayerStepEnter": "PlayerMovementStepMultiplyBehaviour",
+    "onPlayerStepExit": "PlayerMovementStepMultiplyBehaviour"
+}
+--->PlayerMovementStepMultiplyBehaviour
+{
+    "maxSpeed": 1.3,
+    "drag": 0.07,
+    "momentumGrowth": 0.1,
+    "minimumMomentumToStop": 0.1,
+    "runMomentumGrowth": 0.2,
+    "runMomentumDecrease": 0.07,
+    "povAdjustment": 1.3
 }

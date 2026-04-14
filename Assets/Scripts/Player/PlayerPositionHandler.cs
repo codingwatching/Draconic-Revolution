@@ -14,12 +14,14 @@ public class PlayerPositionHandler : MonoBehaviour
     public AudioReverbZone reverb;
     public VoxelLightHandler voxelLightHandler;
     public PlayerSheetController playerSheetController;
+    public PlayerMovement playerMovement;
 
     // Position Stuff
     private CastCoord coord = new CastCoord(false);
     private CastCoord lastCoord = new CastCoord(false);
     private Vector3 lastPos = Vector3.zero;
     private Vector3 lastRot = Vector3.zero;
+    private PlayerVoxelLocation playerVoxelLocation = PlayerVoxelLocation.zero;
     private string currentBiome = "";
     private string lastBiome = "";
     private static readonly int TICKS = 4;
@@ -140,6 +142,72 @@ public class PlayerPositionHandler : MonoBehaviour
         }
     }
 
+    private PlayerVoxelLocation CalculateVoxelLocation(){
+        CastCoord head = new CastCoord(cameraTransform.position);
+        CastCoord body = new CastCoord(playerTransform.position);
+        CastCoord feet;
+        PlayerVoxelLocation newLocation;
+
+        if(this.playerMovement.IsGrounded()){
+            feet = new CastCoord(playerTransform.position + Vector3.down);
+            newLocation = new PlayerVoxelLocation{
+                feet = this.cl.GetBlock(feet, errorZero:true),
+                body = this.cl.GetBlock(body, errorZero:true),
+                head = this.cl.GetBlock(head, errorZero:true)
+            };
+        }
+        else{
+            newLocation = new PlayerVoxelLocation{
+                feet = 0,
+                body = this.cl.GetBlock(body, errorZero:true),
+                head = this.cl.GetBlock(head, errorZero:true)
+            };
+        }
+
+        return newLocation;
+    }
+
+    private void ApplyBlockInteraction(PlayerVoxelLocation newLocation){
+        if(this.playerVoxelLocation.feet != newLocation.feet){
+            if(VoxelLoader.IsBlock(this.playerVoxelLocation.feet))
+                VoxelLoader.GetBlock(this.playerVoxelLocation.feet).OnPlayerStepExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            else
+                VoxelLoader.GetObject(this.playerVoxelLocation.feet).OnPlayerStepExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+
+            if(VoxelLoader.IsBlock(newLocation.feet))
+                VoxelLoader.GetBlock(newLocation.feet).OnPlayerStepEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            else
+                VoxelLoader.GetObject(newLocation.feet).OnPlayerStepEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+        }
+
+        if(this.playerVoxelLocation.head != newLocation.head){
+            if(VoxelLoader.IsBlock(this.playerVoxelLocation.head))
+                VoxelLoader.GetBlock(this.playerVoxelLocation.head).OnPlayerHeadExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            else
+                VoxelLoader.GetObject(this.playerVoxelLocation.head).OnPlayerHeadExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+        
+            if(VoxelLoader.IsBlock(newLocation.head))
+                VoxelLoader.GetBlock(newLocation.head).OnPlayerHeadEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            else
+                VoxelLoader.GetObject(newLocation.head).OnPlayerHeadEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+        }
+
+        if(this.playerVoxelLocation.body != newLocation.body){
+            if(VoxelLoader.IsBlock(this.playerVoxelLocation.body))
+                VoxelLoader.GetBlock(this.playerVoxelLocation.body).OnPlayerBodyExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            else
+                VoxelLoader.GetObject(this.playerVoxelLocation.body).OnPlayerBodyExit(newLocation, this.playerSheetController.GetSheet(), this.cl);
+        
+            if(VoxelLoader.IsBlock(newLocation.body)){
+                VoxelLoader.GetBlock(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+            }
+            else
+                VoxelLoader.GetObject(newLocation.body).OnPlayerBodyEnter(newLocation, this.playerSheetController.GetSheet(), this.cl);
+        }
+
+        this.playerVoxelLocation = newLocation;
+    }
+
     private void RenewPositionalInformation(){
         if(this.cl == null)
             return;
@@ -149,6 +217,8 @@ public class PlayerPositionHandler : MonoBehaviour
         this.tickCounter--;
 
         coord = new CastCoord(playerTransform.position);
+
+        ApplyBlockInteraction(CalculateVoxelLocation());
 
         if(this.currentBiome != "")
             this.lastBiome = this.currentBiome;
@@ -190,7 +260,7 @@ public class PlayerPositionHandler : MonoBehaviour
             // If has moved
             if(this.playerTransform.position != this.lastPos || this.playerTransform.eulerAngles != this.lastRot){
                 NetMessage posMessage = new NetMessage(NetCode.CLIENTPLAYERPOSITION);
-                posMessage.ClientPlayerPosition(this.playerTransform.position.x, this.playerTransform.position.y, this.playerTransform.position.z, this.playerTransform.eulerAngles.x, this.playerTransform.eulerAngles.y, this.playerTransform.eulerAngles.z);
+                posMessage.ClientPlayerPosition(this.playerTransform.position.x, this.playerTransform.position.y, this.playerTransform.position.z, this.cameraTransform.eulerAngles.x, this.playerTransform.eulerAngles.y, this.playerTransform.eulerAngles.z);
                 this.cl.client.Send(posMessage);
             }
         }

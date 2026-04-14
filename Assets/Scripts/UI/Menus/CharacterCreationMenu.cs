@@ -327,7 +327,7 @@ public class CharacterCreationMenu : Menu{
 
         LoadDefaultModel(isReload:true);
         this.characterBuilder.ChangeRace(Race.HUMAN, true);
-        this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Man"));
+        this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Man"), true);
         UpdateColorInAllModel();
     }
 
@@ -796,9 +796,9 @@ public class CharacterCreationMenu : Menu{
         this.characterBuilder.ChangeGender(this.race, this.selectedGenderIsMale);
 
         if(this.selectedGenderIsMale)
-            this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Man"));
+            this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Man"), true);
         else
-            this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Woman"));
+            this.characterBuilder.ChangeAnimationGender(AnimationLoader.GetController("BASE_Character_Woman"), false);
 
         this.selectedDiv = ModelType.GENERAL;
         ToggleDiv(this.generalButton);

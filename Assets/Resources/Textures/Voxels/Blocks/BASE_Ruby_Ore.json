@@ -14,7 +14,7 @@
     "needsRotation": false,
     "customBreak": false,
     "customPlace": false,
-    "drawRegardless": false,
+    "drawLiquid": false,
     "maxHP":  380,
     "indestructible": false,
     "tileTop":  "BASE_Ruby_Ore",

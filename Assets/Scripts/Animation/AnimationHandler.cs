@@ -14,7 +14,10 @@ public class AnimationHandler : MonoBehaviour {
 	private ShapeKeyAnimator shapeKeyAnimator;
 	private ProceduralAnimationRigController rigControllerTP;
 	private ProceduralAnimationRigController rigControllerFP;
-	private Dictionary<BoneAnimationRequest, List<AnimationStateMapping>> stateMappings = new Dictionary<BoneAnimationRequest, List<AnimationStateMapping>>();
+	private float animationCrossfadeTime = 0.06f;
+
+	private static Dictionary<string, AnimationStateMapping> stateMappings;
+	private static Dictionary<int, string> hashToName; 
 
 	public void Init(string controllerName, CharacterBuilder firstPersonBuilder, bool isUserCharacter=false){
 		Transform tpParent = this.transform.Find("TP-Rig");
@@ -44,33 +47,78 @@ public class AnimationHandler : MonoBehaviour {
 
 
 	// Plays bone animation
-	public void Play(BoneAnimationRequest request){
+	public void Play(string stateName, bool overrideState=false, bool ignoreFP=false){
 		if(!this.INIT)
 			return;
 
-		bool found = false;
-		int stateHash = Animator.StringToHash(request.name);
+		bool skipThirdPerson = false;
+		AnimationStateMapping givenMap, currentMap, currentMapFP;
 
-		if(this.stateMappings.ContainsKey(request)){
-			for(int i=0; i < this.stateMappings[request].Count; i++){
-				if(HandleBoneRequest(this.stateMappings[request][i])){
-					found = true;
-					break;
-				}
-			}
+		givenMap = AnimationHandler.stateMappings[stateName];
 
-			if(!found){
-				this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
+		if(!overrideState){
+			currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[0])).shortNameHash]];
+
+			if(this.isPlayer)
+				currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
+
+			if(givenMap.state == currentMap.state){
+				StopLayer(givenMap.stopLayer);
+				skipThirdPerson = true;
 			}
 		}
 		else{
-			this.tpAnimator.CrossFade(request.name, 0.1f, layer:this.tpAnimator.GetLayerIndex(request.layer));
+			currentMap = givenMap;
 		}
 
-		if(this.isPlayer){
-			if(this.fpAnimator.HasState(this.tpAnimator.GetLayerIndex(request.layer), stateHash))
-				this.fpAnimator.CrossFade(request.name, 0.1f);
+		if(skipThirdPerson){}
+		else if(VerifyLayerStates(givenMap.layers[0], currentMap.priority)){}
+		else if(overrideState){
+			StopLayer(givenMap.stopLayer);
+			this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[0]));
+
+			if(this.isPlayer && !ignoreFP){
+				if(this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
+					this.fpAnimator.CrossFade(stateName, this.animationCrossfadeTime);
+				}
+				else{
+					this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime);
+				}
+			}
 		}
+		else{
+			for(int i=0; i < givenMap.layers.Length; i++){
+				currentMap = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetState(this.tpAnimator.GetLayerIndex(givenMap.layers[i])).shortNameHash]];
+
+				if(givenMap.priority <= currentMap.priority){
+					StopLayer(givenMap.stopLayer);
+					this.tpAnimator.CrossFade(stateName, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(givenMap.layers[i]));
+
+					break;
+				}
+			}
+		}
+
+		// Handling First Person
+		if(this.isPlayer && !ignoreFP && !overrideState){
+			currentMapFP = AnimationHandler.stateMappings[AnimationHandler.hashToName[GetStateFP(0).shortNameHash]];
+
+			if(!this.fpAnimator.HasState(0, Animator.StringToHash(stateName))){
+				givenMap = AnimationHandler.stateMappings["Empty"];
+			}
+
+			if(givenMap.state != currentMapFP.state){
+				if(givenMap.priority <= currentMapFP.priority){
+					this.fpAnimator.CrossFade(givenMap.state, this.animationCrossfadeTime);
+				}
+			}
+		}
+
+	}
+
+	// Force plays a state for non-player characters (Used by Client)
+	public void Play(string state, int layer){
+		this.tpAnimator.CrossFade(state, this.animationCrossfadeTime, layer:layer);
 	}
 
 	// Plays/Stops/Registers ShapeKey Animations based on the settings inputted
@@ -81,73 +129,127 @@ public class AnimationHandler : MonoBehaviour {
 		this.shapeKeyAnimator.Play(shapeKey, settings);
 	}
 
-	public void AssignAimTracker(Transform tracker){
-		this.rigControllerTP.AssignHeadTrackingSource(tracker);
-		this.rigControllerFP.AssignHeadTrackingSource(tracker);
-	}
 
-	private void SetFirstPersonRotation(CharacterBuilder builder){
-		builder.SetFirstPersonRotation(rigControllerFP);
-	}
+	// Looks for every Layer to find if the current playing State is StateName and return the normalizedTime
+	// Return -1 if no state like that is found
+	public float GetAnimationTime(string stateName){
+		AnimatorStateInfo stateInfo;
 
-	// Returns true if boneRequest plays the animation
-	private bool HandleBoneRequest(AnimationStateMapping mapping){
-		AnimatorStateInfo currentState = this.tpAnimator.GetCurrentAnimatorStateInfo(this.tpAnimator.GetLayerIndex(mapping.currentLayer));
+		for(int i=0; i < this.tpAnimator.layerCount; i++){
+			stateInfo = this.tpAnimator.GetCurrentAnimatorStateInfo(i);
 
-		switch(mapping.GetMapType()){
-			case AnimationStateMappingType.PLAY_ON:
-				return PlayOn(currentState, mapping);
-			case AnimationStateMappingType.CONTINUE_CURRENT_ON:
-				return ContinueCurrentOn(currentState, mapping);
-			case AnimationStateMappingType.STOP_LAYERS:
-				return StopLayers(mapping);
-			default:
-				return false;
-		}
-	}
-
-	private bool PlayOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
-		if(currentState.IsName(mapping.currentState)){
-			this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
-			return true;
-		}
-
-		return false;
-	}
-
-	private bool ContinueCurrentOn(AnimatorStateInfo currentState, AnimationStateMapping mapping){
-		if(currentState.IsName(mapping.currentState)){
-			this.tpAnimator.Play(mapping.currentState, this.tpAnimator.GetLayerIndex(mapping.targetLayer), normalizedTime:currentState.normalizedTime);
-			this.tpAnimator.Play(mapping.playState, this.tpAnimator.GetLayerIndex(mapping.currentLayer));
-			return true;
-		}
-
-		return false;
-	}
-
-	private bool StopLayers(AnimationStateMapping mapping){
-		string[] layers = mapping.stop_layers;
-
-		for(int i=0; i < layers.Length; i++){
-			// Plays the default layer state
-			this.tpAnimator.CrossFade(0, 0.1f, layer:this.tpAnimator.GetLayerIndex(layers[i]));
-		}
-
-		this.tpAnimator.CrossFade(mapping.playState, 0.1f, layer:this.tpAnimator.GetLayerIndex(mapping.targetLayer));
-		return true;
-	}
-
-	private void LoadMapping(string controllerName){
-		BoneAnimationRequest request;
-
-		foreach(AnimationStateMapping map in AnimationLoader.GetAnimationMapping(controllerName)){
-			request = new BoneAnimationRequest(map.playState, map.currentLayer);
-
-			if(!this.stateMappings.ContainsKey(request)){
-				this.stateMappings.Add(request, new List<AnimationStateMapping>());
+			if(stateInfo.IsName(stateName)){
+				return stateInfo.normalizedTime;
 			}
 
-			this.stateMappings[request].Add(map);
+			stateInfo = this.tpAnimator.GetNextAnimatorStateInfo(i);
+
+			if(stateInfo.IsName(stateName)){
+				return stateInfo.normalizedTime;
+			}
+		}
+
+		return -1f;
+	}
+
+	// Sets a Third Person's Animator Parameter to a certain value
+	public void SetParameterValue(string parameter, float val){
+		this.tpAnimator.SetFloat(parameter, val);
+	}
+
+	public static string GetStateName(AnimatorStateInfo stateInfo){return hashToName[stateInfo.shortNameHash];}
+
+	public Animator GetThirdPersonAnimator(){return this.tpAnimator;}
+	public Animator GetFirstPersonAnimator(){return this.fpAnimator;}
+
+	private AnimatorStateInfo GetState(int layer){
+		AnimatorStateInfo stateInfo;
+
+		stateInfo = this.tpAnimator.GetNextAnimatorStateInfo(layer);
+
+		if(stateInfo.shortNameHash == 0){
+			return this.tpAnimator.GetCurrentAnimatorStateInfo(layer);
+		}
+
+		return stateInfo;
+	}
+
+	private AnimatorStateInfo GetStateFP(int layer){
+		AnimatorStateInfo stateInfo;
+
+		stateInfo = this.fpAnimator.GetNextAnimatorStateInfo(layer);
+
+		if(stateInfo.shortNameHash == 0){
+			return this.fpAnimator.GetCurrentAnimatorStateInfo(layer);
+		}
+
+		return stateInfo;
+	}
+
+	private void StopLayer(int layer){
+		if(layer != 0){
+			this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layer);
+		}
+		else{
+			this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
+			this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
 		}
 	}
+
+	private void StopLayer(string[] layers){
+		if(layers == null)
+			return;
+
+		int layerIndex;
+
+		for(int i=0; i < layers.Length; i++){
+			layerIndex = this.tpAnimator.GetLayerIndex(layers[i]);
+
+			if(layerIndex != 0){
+				this.tpAnimator.CrossFade("Empty", this.animationCrossfadeTime, layer:layerIndex);
+			}
+			else{
+				this.tpAnimator.CrossFade("Idle", this.animationCrossfadeTime, 0);
+				this.fpAnimator.CrossFade("Empty", this.animationCrossfadeTime, 0);
+			}
+		}
+	}
+
+	private bool VerifyLayerStates(string layerName, int priority){
+		string state;
+
+		if(layerName == "")
+			layerName = "Base Layer";
+
+		for(int i=this.tpAnimator.GetLayerIndex(layerName)+1; i < this.tpAnimator.layerCount; i++){
+			state = AnimationHandler.hashToName[GetState(i).shortNameHash];
+
+			if(ArrayContains(layerName, AnimationHandler.stateMappings[state].layers)){
+				if(priority > AnimationHandler.stateMappings[state].priority){
+					StopLayer(i);
+					this.tpAnimator.CrossFade(state, this.animationCrossfadeTime, layer:this.tpAnimator.GetLayerIndex(layerName));
+					return true;
+				} 
+			}
+		}
+
+		return false;
+	}
+
+	private void SetFirstPersonRotation(CharacterBuilder builder){builder.SetFirstPersonRotation(rigControllerFP);}
+
+	private void LoadMapping(string controllerName){
+		if(AnimationHandler.stateMappings != null)
+			return;
+
+		AnimationHandler.stateMappings = new Dictionary<string, AnimationStateMapping>();
+		AnimationHandler.hashToName = new Dictionary<int, string>();
+
+		foreach(AnimationStateMapping map in AnimationLoader.GetAnimationMapping(controllerName)){
+			AnimationHandler.stateMappings.Add(map.state, map);
+			AnimationHandler.hashToName.Add(Animator.StringToHash(map.state), map.state);
+		}
+	}
+
+	private bool ArrayContains(string element, string[] arr){return Array.IndexOf(arr, element) >= 0;}
 }

@@ -134,7 +134,7 @@ public class Client
 
 			Array.Copy(receiveBuffer, 0, this.dataBuffer, this.packetIndex, bytesReceived);
 
-			NetMessage.Broadcast(NetBroadcast.RECEIVED, dataBuffer[0], 0, this.packetSize);
+			NetMessage.Broadcast(NetBroadcast.RECEIVED, dataBuffer[0], Configurations.accountID, this.packetSize);
 
 			NetMessage receivedMessage = new NetMessage(this.dataBuffer, 0);
 			this.queue.Add(receivedMessage);
@@ -153,6 +153,8 @@ public class Client
 	// Sends a byte[] to the server
 	public bool Send(NetMessage message){
 		try{
+			NetMessage.Broadcast(NetBroadcast.SENT, dataBuffer[0], Configurations.accountID, message.size);
+
 			this.socket.Send(this.LengthPacket(message.size), 4, SocketFlags.None);
 			this.socket.Send(message.GetMessage(), message.size, SocketFlags.None);
 			return true;
@@ -185,7 +187,7 @@ public class Client
 		if(data.Length == 0)
 			return;
 
-		NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], 0, 0);
+		NetMessage.Broadcast(NetBroadcast.PROCESSED, data[0], Configurations.accountID, data.Length);
 
 		switch((NetCode)data[0]){
 			case NetCode.ACCEPTEDCONNECT:
@@ -250,6 +252,12 @@ public class Client
 				break;
 			case NetCode.SENDANIMATIONLAYER:
 				SendAnimationLayer(data);
+				break;
+			case NetCode.SENDBATTLESTYLE:
+				SendBattleStyle(data);
+				break;
+			case NetCode.SENDANIMATORPARAMETER:
+				SendAnimatorParameter(data);
 				break;
 			default:
 				Debug.Log("UNKNOWN NETMESSAGE RECEIVED: " + (NetCode)data[0]);
@@ -705,12 +713,33 @@ public class Client
 	// Receives from server a single AnimationState for a player
 	private void SendAnimationLayer(byte[] data){
 		ulong playerCode = NetDecoder.ReadUlong(data, 1);
-		ushort nameSize = NetDecoder.ReadUshort(data, 9);
-		string stateName = NetDecoder.ReadString(data, 11, nameSize);
-		string layer = NetDecoder.ReadString(data, 11 + nameSize, data.Length - (11 + nameSize));
+		int layer = NetDecoder.ReadInt(data, 9);
+		ushort nameSize = NetDecoder.ReadUshort(data, 13);
+		string stateName = NetDecoder.ReadString(data, 15, nameSize);
+
+		if(playerCode != Configurations.accountID){
+			this.entityHandler.AnimateBone(playerCode, stateName, layer);
+		}
+	}
+
+	// Receives from server a single BattleStyle name for a player
+	private void SendBattleStyle(byte[] data){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		int styleCode = NetDecoder.ReadInt(data, 9);
+		
+		if(playerCode != Configurations.accountID)
+			this.entityHandler.SetPlayerBattleStyle(playerCode, styleCode);
+	}
+
+	// Receives from server a parameter from an animator
+	// Needs to be expanded later to accomodate all entities
+	private void SendAnimatorParameter(byte[] data){
+		ulong playerCode = NetDecoder.ReadUlong(data, 1);
+		float val = NetDecoder.ReadFloat(data, 9);
+		string parameter = NetDecoder.ReadString(data, 13, data.Length - 13);
 
 		if(playerCode != Configurations.accountID)
-			this.entityHandler.AnimateBone(playerCode, stateName, layer);
+			this.entityHandler.SetAnimatorParameter(EntityType.PLAYER, playerCode, parameter, val);
 	}
 
 	/* ================================================================================ */
